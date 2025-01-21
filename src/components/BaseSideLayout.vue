@@ -53,13 +53,18 @@
       </div>
     </nav>
 
-    <main class="flex-1 flex flex-col min-h-screen bg-gradient-to-br to-[--p-primary-50] from-gray-100">
+    <main
+        class="flex-1 flex flex-col min-h-screen bg-gradient-to-br to-[--p-primary-50] from-gray-100 dark:from-gray-800 dark:to[--p-primary-50]">
       <header class="bg-white border-b border-[--p-primary-300] pl-3 pr-4 flex items-center">
         <Button class="block sm:hidden" @click="handleMobileMenuToggle" icon="pi pi-bars" text></Button>
         <div>
           {{ route.name }}
         </div>
         <div class="ml-auto flex gap-x-2 py-1">
+<!--          <Button @click="toggleDarkMode"-->
+<!--                  rounded-->
+<!--                  :severity="isDarkMode ?  'contrast':'warn'"-->
+<!--                  :icon="isDarkMode ? 'pi pi-moon': 'pi pi-sun'"/>-->
           <Button type="button"
                   icon="pi pi-bell"
                   rounded
@@ -114,6 +119,12 @@ const isMobileMenuOpen = ref(false)
 const userMenuPanel = ref()
 const notificationPanel = ref()
 const route = useRoute()
+const isDarkMode = ref(false)
+
+function toggleDarkMode() {
+  document.documentElement.classList.toggle('dark')
+  isDarkMode.value = document.documentElement.classList.contains('dark')
+}
 
 function toggleUserMenuPanel(event) {
   userMenuPanel.value.toggle(event)
@@ -143,6 +154,11 @@ function handleDarkModeToggle() {
   color: var(--p-primary-700);
   font-weight: 600;
   transition: all 0.3s ease;
+}
+
+.dark .active-link a {
+  background: var(--p-primary-900);
+  color: var(--p-primary-100);
 }
 
 a {

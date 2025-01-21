@@ -22,7 +22,7 @@
 import Dialog from 'primevue/dialog'
 import ProgressSpinner from 'primevue/progressspinner'
 import {ref} from 'vue'
-import {useLoaderStore} from "@/stores/LoaderStore.js";
+import {useLoaderStore} from "../stores/LoaderStore.js";
 
 
 const loaderStore = useLoaderStore()

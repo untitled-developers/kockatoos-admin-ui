@@ -8,6 +8,11 @@
     "build": "vite build",
     "preview": "vite preview"
   },
+  "files": [
+    "src/components",
+    "src/composables",
+    "src/stores"
+  ],
   "dependencies": {
     "@primevue/themes": "^4.2.5",
     "axios": "^1.7.9",
