@@ -1,6 +1,6 @@
 <template>
   <BaseApp>
-    <BaseSideLayout :navigation-items="items">
+    <BaseSideLayout :navigation-items="items" dark-side-bar>
       <template #logo>
         <img src="https://cdn2.thecatapi.com/images/MTczNzcxNA.jpg" class="h-18 w-auto">
       </template>

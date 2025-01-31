@@ -24,26 +24,37 @@
   </Drawer>
   <div class="flex min-h-screen">
     <!-- Sidebar Navigation -->
-    <nav class="w-52 flex-none border-r border-[--p-primary-300] sticky top-0 h-screen sm:block hidden">
+    <nav
+        :class="['w-64 flex-none border-r border-[--p-primary-300] sticky top-0 h-screen sm:block hidden', darkSideBar ? 'bg-[--sidebar-dark-bg]' : '']">
       <div class="flex items-center px-4 py-2">
         <slot name="logo"></slot>
       </div>
-      <div>
+      <div class="mt-4">
         <PanelMenu :model="navigationItems" multiple class="w-full" :pt="{
           panel:{
             style: {
-              border: 'none'
+              border: 'none',
+              background: darkSideBar ? 'var(--sidebar-dark-nav-bg)' : 'auto'
             }
+          },
+          headerContent: {
+            class: darkSideBar ? 'hover:bg-[--sidebar-dark-nav-hover-bg]' : ''
+          },
+          itemContent: {
+            class: darkSideBar ? 'hover:bg-[--sidebar-dark-nav-hover-bg]' : ''
           }
         }">
           <template #item="{ item }">
-            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" active-class="active-link">
-              <a v-ripple class="flex items-center cursor-pointer text-surface-700 dark:text-surface-0 px-4 py-2"
+            <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route"
+                         :active-class="darkSideBar ? 'active-dark-sidebar-link' : 'active-link'">
+              <a v-ripple
+                 :class="['flex items-center cursor-pointer text-surface-700 dark:text-surface-0 px-4 py-2', darkSideBar ? 'text-white' : '']"
                  :href="href" @click="navigate">
                 <span class="ml-2">{{ item.label }}</span>
               </a>
             </router-link>
-            <a v-else v-ripple class="flex items-center cursor-pointer text-surface-700 dark:text-surface-0 px-4 py-2"
+            <a v-else v-ripple
+               :class="['flex items-center cursor-pointer text-surface-700 dark:text-surface-0 px-4 py-2', darkSideBar ? 'text-white' : '']"
                :href="item.url" :target="item.target">
               <span class="ml-2">{{ item.label }}</span>
               <span v-if="item.items" class="pi pi-angle-down text-primary ml-auto"/>
@@ -61,10 +72,10 @@
           {{ route.name }}
         </div>
         <div class="ml-auto flex gap-x-2 py-1">
-<!--          <Button @click="toggleDarkMode"-->
-<!--                  rounded-->
-<!--                  :severity="isDarkMode ?  'contrast':'warn'"-->
-<!--                  :icon="isDarkMode ? 'pi pi-moon': 'pi pi-sun'"/>-->
+          <!--          <Button @click="toggleDarkMode"-->
+          <!--                  rounded-->
+          <!--                  :severity="isDarkMode ?  'contrast':'warn'"-->
+          <!--                  :icon="isDarkMode ? 'pi pi-moon': 'pi pi-sun'"/>-->
           <Button type="button"
                   icon="pi pi-bell"
                   rounded
@@ -113,6 +124,13 @@ const props = defineProps({
   navigationItems: {
     type: Array,
     required: true
+  },
+  /**
+   * when enabled you must create the correspondent css variables in root
+   */
+  darkSideBar: {
+    type: Boolean,
+    default: false
   }
 })
 const isMobileMenuOpen = ref(false)
@@ -148,6 +166,13 @@ function handleDarkModeToggle() {
 </script>
 
 <style scoped>
+.active-dark-sidebar-link a {
+  background: var(--sidebar-dark-nav-active-bg);
+  border-radius: 6px;
+  color: var(--sidebar-dark-nav-active-color);
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
 .active-link a {
   background: var(--p-primary-100);
   border-radius: 6px;

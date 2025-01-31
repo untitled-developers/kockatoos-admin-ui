@@ -7,13 +7,11 @@
   }
 }">
     <template #start>
-      <h1 class="text-xl text-cyan-800 dark:text-cyan-300 font-medium py:4">
-        {{ props.title }}
-      </h1>
+      <Button icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
+      <slot name="actions-start"></slot>
     </template>
     <template #end>
-      <slot name="actions"></slot>
-      <Button icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
+      <slot name="actions-end"></slot>
     </template>
   </Toolbar>
   <Toolbar :pt="{
@@ -33,57 +31,49 @@
           severity="secondary"
           class="mr-2">
       </Button>
-      <slot name="filters-start"></slot>
-      <div class="flex flex-wrap items-center" v-if="filters?.length">
-        <Button label="Clear Filters" @click="handleClearFilters" icon="pi pi-filter-slash"
-                severity="secondary"></Button>
-        <FloatLabel v-for="filter in filters" :key="filter.field" variant="on" class="mx-2 my-2">
-          <InputText
-              v-if="filter.type === 'text'"
-              :id="filter.field"
-              v-model="filter.value as string | null"
-              autocomplete="off"
-              @change="handleFilterChange"
-          />
-
-          <Select
-              v-else-if="filter.type === 'dropdown'"
-              :id="filter.field"
-              v-model="filter.value"
-              :options="filter.options"
-              @change="handleFilterChange"
-              show-clear
-              optionLabel="label"
-              optionValue="value"
-          />
-
-          <MultiSelect
-              v-else-if="filter.type === 'multiselect'"
-              :id="filter.field"
-              v-model="filter.value"
-              :options="filter.options"
-              @change="handleFilterChange"
-              optionLabel="label"
-              show-clear
-              optionValue="value"
-              display="chip"
-          />
-          <DatePicker
-              v-else-if="filter.type === 'date'"
-              :id="filter.field"
-              v-model="filter.value as Date | Date[] | (Date | null)[] | null | undefined"
-              @update:modelValue="handleFilterChange"
-              dateFormat="dd/mm/yy"
-          />
-
-          <label :for="filter.field">{{ filter.label }}</label>
-        </FloatLabel>
-
-      </div>
-      <slot name="filters-end"></slot>
-      <slot name="controls-start"></slot>
+      <!--      <div class="flex flex-wrap items-center" v-if="filters?.length">-->
+      <!--        <Button label="Clear Filters" @click="handleClearFilters" icon="pi pi-filter-slash"-->
+      <!--                severity="secondary"></Button>-->
+      <!--        <FloatLabel v-for="filter in filters" :key="filter.field" variant="on" class="mx-2 my-2">-->
+      <!--          <InputText-->
+      <!--              v-if="filter.type === 'text'"-->
+      <!--              :id="filter.field"-->
+      <!--              v-model="filter.value"-->
+      <!--              autocomplete="off"-->
+      <!--              @change="handleFilterChange"-->
+      <!--          />-->
+      <!--          <Select-->
+      <!--              v-else-if="filter.type === 'dropdown'"-->
+      <!--              :id="filter.field"-->
+      <!--              v-model="filter.value"-->
+      <!--              :options="filter.options"-->
+      <!--              @change="handleFilterChange"-->
+      <!--              show-clear-->
+      <!--              optionLabel="label"-->
+      <!--              optionValue="value"-->
+      <!--          />-->
+      <!--          <MultiSelect-->
+      <!--              v-else-if="filter.type === 'multiselect'"-->
+      <!--              :id="filter.field"-->
+      <!--              v-model="filter.value"-->
+      <!--              :options="filter.options"-->
+      <!--              @change="handleFilterChange"-->
+      <!--              optionLabel="label"-->
+      <!--              show-clear-->
+      <!--              optionValue="value"-->
+      <!--              display="chip"-->
+      <!--          />-->
+      <!--          <DatePicker-->
+      <!--              v-else-if="filter.type === 'date'"-->
+      <!--              :id="filter.field"-->
+      <!--              v-model="filter.value"-->
+      <!--              @update:modelValue="handleFilterChange"-->
+      <!--              dateFormat="dd/mm/yy"-->
+      <!--          />-->
+      <!--          <label :for="filter.field">{{ filter.label }}</label>-->
+      <!--        </FloatLabel>-->
+      <!--      </div>-->
     </template>
-    Date | Date[] | (Date | null)[] | null | undefined
     <template #center>
       <slot name="controls-center"></slot>
     </template>
@@ -112,8 +102,7 @@
              :rows-per-page-options="[5, 20, 50, 100]"
              :loading="isTableLoading"
              :value="tableData">
-    <Column v-if="withSelection" selectionMode="multiple" headerStyle="width: 3rem">
-    </Column>
+    <Column v-if="withSelection" selectionMode="multiple" headerStyle="width: 3rem"/>
     <Column header=""
             aria-label="Actions"
             class="w-12"
@@ -144,12 +133,9 @@ import {onMounted, ref} from "vue";
 import useFetch from "../composables/useFetch.js";
 import useDialog from "../composables/useDialog.js";
 import BaseCrudTableActionsDropdown from "./BaseCrudTableActionsDropdown.vue";
+import useAlerts from "../composables/useAlerts.js";
 
 const props = defineProps({
-  title: {
-    type: String,
-    required: true
-  },
   endpoint: {
     type: String,
     required: true
@@ -179,13 +165,12 @@ const props = defineProps({
 })
 const filters = defineModel('filters')
 const selectedRecords = defineModel('selectedRecord')
+const emits = defineEmits(['row-click'])
+
 const {
   openDialog
 } = useDialog()
-const emits = defineEmits(['row-click'])
-defineExpose({
-  fetchData
-})
+
 const fetch = useFetch()
 const isTableLoading = ref(false)
 const tableData = ref([])
@@ -194,6 +179,22 @@ const paginationQuery = ref({
   totalRecords: 0,
   page: 0
 })
+
+const {
+  alertError
+} = useAlerts()
+
+const sortingQuery = ref([props.defaultSort])
+
+const recordActionsPopover = ref()
+
+function toggleActionsDropdown(event) {
+  recordActionsPopover.value.toggle(event)
+}
+
+function handleFilterChange() {
+  fetchData()
+}
 
 function handleAddNewButton() {
   openDialog(props.addDialog, {
@@ -204,18 +205,6 @@ function handleAddNewButton() {
     }
   })
 }
-
-function handleFilterChange() {
-  fetchData()
-}
-
-const recordActionsPopover = ref()
-
-function toggleActionsDropdown(event) {
-  recordActionsPopover.value.toggle(event)
-}
-
-const sortingQuery = ref([props.defaultSort])
 
 function handleSortChange(event) {
   if (event.multiSortMeta) {
@@ -280,10 +269,8 @@ function createFilterQuery(filters) {
   return queryParams
 }
 
-
-async function fetchData() {
+async function getData() {
   try {
-    isTableLoading.value = true
     const fetchResponse = await fetch.get(props.endpoint, {
       params: {
         page: paginationQuery.value.page,
@@ -297,10 +284,32 @@ async function fetchData() {
 
   } catch (error) {
     console.log(error)
-  } finally {
-    isTableLoading.value = false
+    alertError('Error Fetching Data')
   }
 }
+
+/**
+ * Fetch data with showing the loading spinner
+ * @returns {Promise<void>}
+ */
+async function fetchData() {
+  isTableLoading.value = true
+  await getData()
+  isTableLoading.value = false
+}
+
+/**
+ * Fetch data without showing the loading spinner
+ * @returns {Promise<void>}
+ */
+async function silentFetchData() {
+  await getData()
+}
+
+defineExpose({
+  fetchData,
+  silentFetchData
+})
 
 onMounted(() => {
   fetchData()

@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import Fluid from "primevue/fluid";
 
 const props = defineProps({
