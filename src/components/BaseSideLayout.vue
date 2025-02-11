@@ -41,7 +41,7 @@
             class: darkSideBar ? 'hover:bg-[--sidebar-dark-nav-hover-bg] focus:bg-[--sidebar-dark-nav-hover-bg]' : ''
           },
           itemContent: {
-            class: darkSideBar ? 'hover:bg-[--sidebar-dark-nav-hover-bg] focus:bg-[--sidebar-dark-nav-hover-bg]' : ''
+            class: darkSideBar ? '[.p-panelmenu-item.p-focus>&]:bg-[--sidebar-dark-nav-hover-bg] hover:bg-[--sidebar-dark-nav-hover-bg] focus:bg-[--sidebar-dark-nav-hover-bg]' : ''
           }
         }">
           <template #item="{ item }">
@@ -125,9 +125,6 @@ const props = defineProps({
     type: Array,
     required: true
   },
-  /**
-   * when enabled you must create the correspondent css variables in root
-   */
   darkSideBar: {
     type: Boolean,
     default: false
