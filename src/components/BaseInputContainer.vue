@@ -7,10 +7,13 @@
       <div>
         <slot></slot>
       </div>
+      <p class="my-0 text-gray-600 text-sm">
+        {{ helpText }}
+      </p>
     </Fluid>
 
-    <template v-if="props.invalid.length > 0 && props.shouldShowError">
-      <p v-for="error in invalid" class="text-red-600">
+    <template v-if="errors.length > 0 && showErrors">
+      <p v-for="error in errors" class="text-red-600">
         {{ error }}
       </p>
     </template>
@@ -23,11 +26,11 @@ import Fluid from "primevue/fluid";
 const props = defineProps({
   label: String,
   helpText: String,
-  shouldShowError: {
+  showErrors: {
     type: Boolean,
     default: false
   },
-  invalid: {
+  errors: {
     type: Array,
     default: []
   }

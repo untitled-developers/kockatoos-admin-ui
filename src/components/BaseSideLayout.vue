@@ -38,10 +38,10 @@
             }
           },
           headerContent: {
-            class: darkSideBar ? 'hover:bg-[--sidebar-dark-nav-hover-bg]' : ''
+            class: darkSideBar ? 'hover:bg-[--sidebar-dark-nav-hover-bg] focus:bg-[--sidebar-dark-nav-hover-bg]' : ''
           },
           itemContent: {
-            class: darkSideBar ? 'hover:bg-[--sidebar-dark-nav-hover-bg]' : ''
+            class: darkSideBar ? 'hover:bg-[--sidebar-dark-nav-hover-bg] focus:bg-[--sidebar-dark-nav-hover-bg]' : ''
           }
         }">
           <template #item="{ item }">

@@ -10,24 +10,77 @@
     <div>
       <Button label="DIALOG" @click="handleOpenDialog"></Button>
     </div>
+    <div>
+      <BaseForm :form-schema="formSchema"
+                v-model:form-data="formData"
+                form-id="test">
+        <template #form="{errors}">
+          <BaseInputContainer label="Name"
+                              :errors="errors.name._errors"
+                              show-errors>
+            <InputText v-model="formData.name" @blur="handleNameBlur"/>
+          </BaseInputContainer>
+          <BaseInputContainer label="Email"
+                              :errors="errors.email._errors"
+                              :show-errors="didSubmit">
+            <InputText v-model="formData.email"/>
+          </BaseInputContainer>
+          <BaseInputContainer label="Nested"
+                              :errors="errors.nested.test._errors"
+                              :show-errors="didSubmit">
+            <InputText v-model="formData.nested.test"/>
+          </BaseInputContainer>
+          <Button label="Submit" @click="handleSubmit(errors)"></Button>
+        </template>
+      </BaseForm>
+    </div>
   </div>
 
 </template>
 
 <script setup>
 import {Button} from "primevue";
-import BaseApp from "../components/BaseApp.vue";
 import useAlerts from "../composables/useAlerts.js";
 import useConfirmDialog from "../composables/useConfirmDialog.js";
 import useDialog from "../composables/useDialog.js";
 import TestDialog from "../views/components/TestDialog.vue";
-import BaseSideLayout from "../components/BaseSideLayout.vue";
+import {z} from "zod";
+import {ref} from "vue";
+import BaseForm from "../components/BaseForm.vue";
+import {InputText} from "primevue";
+import BaseInputContainer from "../components/BaseInputContainer.vue";
 
 const {confirmSuccess} = useConfirmDialog()
 const {
   alertError
 } = useAlerts()
 const {openDialog} = useDialog()
+
+const formData = ref({
+  name: '',
+  email: '',
+  nested: {
+    test: ''
+  }
+})
+
+const formSchema = z.object({
+  name: z.string().min(1).max(5),
+  email: z.string().min(1).max(5).email(),
+  nested: z.object({
+    test: z.string().min(1).max(5)
+  })
+})
+const didSubmit = ref(false)
+const showNameError = ref(false)
+
+function handleSubmit() {
+  didSubmit.value = true
+}
+
+function handleNameBlur() {
+  showNameError.value = true
+}
 
 function handleOpenDialog() {
   openDialog(TestDialog)

@@ -1,60 +1,49 @@
 <template>
-  <Drawer
-      style="width: 500px"
+  <Dialog
+      modal
+      :draggable="false"
+      block-scroll
       :visible="true"
-      :header="props.header"
-      :position="isFullScreen ? 'full' : props.position"
+      :style="{
+        width: width,
+        height: fullHeight ? '100%' : 'auto',
+      }"
+      :pt="{
+        root: {
+          class: fullScreen ? 'p-dialog-maximized' : ''
+        }
+      }"
+      :closable="false"
+      :position="position"
   >
-    <template #container>
-      <div class="dialog-container px-4 py-2 max-h-screen overflow-auto">
-        <template v-if="props.withHeader">
-          <div v-if="!slots.header" class="px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-x-2">
-              <h2 class="text-xl font-semibold">{{ props.header }}</h2>
-            </div>
-            <div class="flex gap-x-2">
-              <Button
-                  v-if="props.withFullScreen"
-                  @click="handleFullScreen"
-                  icon="pi pi-window-maximize"
-                  severity="secondary"
-                  outlined
-                  aria-label="Expand"
-              />
-              <Button
-                  @click="emit('close')"
+    <template #header>
+      <div class="flex items-center justify-between w-full">
+        <h2 class="font-medium text-xl">
+          {{ header }}
+        </h2>
+        <div>
+          <Button severity="secondary"
                   icon="pi pi-times"
-                  severity="secondary"
-                  outlined
-                  aria-label="Cancel"
-              />
-            </div>
-          </div>
-          <div v-else>
-            <slot name="header"></slot>
-          </div>
-        </template>
-        <div class="px-4 py-2">
-          <slot name="content"></slot>
-        </div>
-        <div class="">
-          <div class="flex justify-end px-4 py-5">
-            <div class="flex items-center gap-x-2">
-              <Button v-if="props.withCloseButton"
-                      label="Close"
-                      severity="secondary"
-                      @click="emit('close')"/>
-              <slot name="actions"></slot>
-            </div>
-          </div>
+                  size="large"
+                  text
+                  @click="handleClose"></Button>
         </div>
       </div>
     </template>
-  </Drawer>
+    <slot name="content"></slot>
+    <template #footer>
+      <div class="flex justify-end gap-x-2 pt-4">
+        <Button label="Close"
+                severity="secondary"
+                @click="handleClose"/>
+        <slot name="actions"></slot>
+      </div>
+    </template>
+  </Dialog>
 </template>
 
 <script setup>
-import Drawer from 'primevue/drawer'
+import Dialog from "primevue/dialog";
 import {onMounted, onUnmounted, ref, useSlots} from 'vue'
 import Button from 'primevue/button'
 
@@ -65,20 +54,20 @@ const props = defineProps({
   },
   position: {
     type: String,
-    default: 'right',
+    default: 'full',
     validator: (value) => ['right', 'left', 'top', 'bottom', 'full'].includes(value)
   },
-  withFullScreen: {
+  fullScreen: {
     type: Boolean,
     default: false
   },
-  withHeader: {
+  fullHeight: {
     type: Boolean,
-    default: true
+    default: false
   },
-  withCloseButton: {
-    type: Boolean,
-    default: true
+  width: {
+    type: String,
+    default: '500px'
   }
 })
 
@@ -86,16 +75,11 @@ const emit = defineEmits(['close', 'submit', 'full-screen'])
 const isFullScreen = ref(false)
 const slots = useSlots()
 
-function handleFullScreen() {
-  isFullScreen.value = !isFullScreen.value
+function handleClose() {
+  console.log('Closing')
+  emit('close')
 }
 
-onMounted(() => {
-  document.body.style.overflow = 'hidden'
-})
-onUnmounted(() => {
-  document.body.style.overflow = 'auto'
-})
 </script>
 
 <style scoped></style>
