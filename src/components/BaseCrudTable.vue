@@ -233,13 +233,14 @@ function handleResetSort() {
 }
 
 function mapSortToQueryParams() {
-  return sortingQuery.value.map(sort => {
+  return sortingQuery.value.reduce((acc, sort, index) => {
     const direction = sort.order === 1 ? 'asc' : 'desc'
     return {
-      sortBy: sort.field,
-      sortAs: direction
+      ...acc,
+      [`orderByFields[${index}][field]`]: sort.field,
+      [`orderByFields[${index}][direction]`]: direction
     }
-  })
+  }, {})
 }
 
 function handlePageChange(event) {
@@ -275,7 +276,7 @@ async function getData() {
       params: {
         page: paginationQuery.value.page,
         perPage: paginationQuery.value.rows,
-        sortBy: mapSortToQueryParams(),
+        ...mapSortToQueryParams(),
         // ...filters.value?.length && createFilterQuery(filters.value)
       }
     })
