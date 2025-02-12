@@ -32,10 +32,26 @@
     </template>
     <slot name="content"></slot>
     <template #footer>
+      <Toolbar>
+        <template #start>
+          <slot name="footer-start"></slot>
+        </template>
+        <template #center>
+          <slot name="footer-center"></slot>
+        </template>
+        <template #end>
+
+          <Button label="Close"
+                  v-if="withCloseButton"
+                  severity="secondary"
+                  @click="handleClose"/>
+          <slot name="footer-end"></slot>
+        </template>
+
+      </Toolbar>
+
       <div class="flex justify-end gap-x-2 pt-4">
-        <Button label="Close"
-                severity="secondary"
-                @click="handleClose"/>
+
         <slot name="actions"></slot>
       </div>
     </template>
@@ -44,7 +60,7 @@
 
 <script setup>
 import Dialog from "primevue/dialog";
-import {onMounted, onUnmounted, ref, useSlots} from 'vue'
+import {Toolbar} from "primevue";
 import Button from 'primevue/button'
 
 const props = defineProps({
@@ -54,8 +70,7 @@ const props = defineProps({
   },
   position: {
     type: String,
-    default: 'full',
-    validator: (value) => ['right', 'left', 'top', 'bottom', 'full'].includes(value)
+    default: 'center',
   },
   fullScreen: {
     type: Boolean,
@@ -68,15 +83,16 @@ const props = defineProps({
   width: {
     type: String,
     default: '500px'
+  },
+  withCloseButton:{
+    type: Boolean,
+    default: true
   }
 })
 
-const emit = defineEmits(['close', 'submit', 'full-screen'])
-const isFullScreen = ref(false)
-const slots = useSlots()
+const emit = defineEmits(['close',])
 
 function handleClose() {
-  console.log('Closing')
   emit('close')
 }
 

@@ -63,6 +63,8 @@ const formData = ref({
     test: ''
   }
 })
+console.log('AHHHHHHHHHH')
+console.log(Object.keys(formData.value))
 
 const formSchema = z.object({
   name: z.string().min(1).max(5),

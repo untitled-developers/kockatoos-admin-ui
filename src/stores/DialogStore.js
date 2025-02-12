@@ -5,20 +5,19 @@ import {defineStore} from 'pinia'
 export const useDialogStore = defineStore('dialog', () => {
     const dialogsList = ref([])
 
+    function generateRandomId() {
+        return Math.random()
+    }
+
     function openDialog(component, config = {props: {}, handlers: {}}) {
+        const newDialogId = generateRandomId()
         const newDialog = {
             component: markRaw(component),
             props: {},
+            id: newDialogId,
             handlers: {
                 close: () => {
-                    const newDialogIndex = dialogsList.value.findIndex(
-                        (dialog) => dialog.component === component
-                    )
-                    if (newDialogIndex === -1) {
-                        throw new Error(
-                            `Close Dialog Event Handler: Dialog  Not Found, make sure that your dialog is opened before calling this method.`
-                        )
-                    }
+                    const newDialogIndex = getDialogIndexById(newDialogId)
                     dialogsList.value.splice(newDialogIndex, 1)
                 }
             }
@@ -30,27 +29,34 @@ export const useDialogStore = defineStore('dialog', () => {
             newDialog.handlers = {...newDialog.handlers, ...config.handlers}
         }
         dialogsList.value.push(newDialog)
+        return newDialogId
     }
 
-    function closeDialog(component) {
-        const newDialogIndex = dialogsList.value.findIndex((dialog) => dialog.component === component)
-        if (newDialogIndex === -1) {
-            throw new Error(
-                `Close Dialog Event Handler: Dialog Not Found, make sure that your dialog is opened before calling this method.`
-            )
-        }
+    function closeDialog(dialogId) {
+        const newDialogIndex = getDialogIndexById(dialogId)
         dialogsList.value.splice(newDialogIndex, 1)
     }
 
-    function updateDialogProps(component, handler) {
-        const dialogIndex = dialogsList.value.findIndex((dialog) => dialog.component === component)
+    function getDialogIndexById(id) {
+        const dialogIndex = dialogsList.value.findIndex((dialog) => dialog.id === id)
         if (dialogIndex === -1) {
             throw new Error(
-                `Update Dialog Prop: Dialog Not Found, make sure that your dialog is opened before calling this method.`
+                `Get Dialog Index By Id: Dialog Not Found, make sure that your dialog is opened before calling this method.`
             )
         }
+        return dialogIndex
+    }
+
+    function updateDialogProps(dialogId, handler) {
+        const dialogIndex = getDialogIndexById(dialogId)
         dialogsList.value[dialogIndex].props = handler(dialogsList.value[dialogIndex].props)
     }
 
-    return {dialogsList, openDialog, closeDialog, updateDialogProps}
+    function refreshDialog(dialogId) {
+        const dialogIndex = getDialogIndexById(dialogId)
+        dialogsList.value[dialogIndex].key = generateRandomId()
+
+    }
+
+    return {dialogsList, openDialog, closeDialog, updateDialogProps, refreshDialog}
 })

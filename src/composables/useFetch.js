@@ -1,3 +1,3 @@
-export default function useAxios() {
+export default function useFetch() {
     return window.axios;
 }

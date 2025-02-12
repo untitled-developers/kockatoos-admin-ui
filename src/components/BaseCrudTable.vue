@@ -168,7 +168,10 @@ const selectedRecords = defineModel('selectedRecord')
 const emits = defineEmits(['row-click'])
 
 const {
-  openDialog
+  openDialog,
+  closeDialog,
+  updateDialogProps,
+  refreshDialog
 } = useDialog()
 
 const fetch = useFetch()
@@ -196,11 +199,53 @@ function handleFilterChange() {
   fetchData()
 }
 
+const addDialogId = ref(null)
+
 function handleAddNewButton() {
-  openDialog(props.addDialog, {
+  addDialogId.value = openDialog(props.addDialog, {
     handlers: {
       'submit': () => {
         fetchData()
+      },
+      'next-record': (record) => {
+        const currentRecordIndex = tableData.value.findIndex(row => row.id === record.id)
+        if (currentRecordIndex === -1) {
+          return
+        }
+        const nextRecordIndex = currentRecordIndex + 1
+        if (nextRecordIndex >= tableData.value.length) {
+          closeDialog(addDialogId.value)
+          return
+        }
+        const nextRecord = tableData.value[nextRecordIndex]
+        updateDialogProps(addDialogId.value, (oldProps) => {
+          return {
+            ...oldProps,
+            'record': nextRecord
+          }
+        })
+        refreshDialog(addDialogId.value)
+
+      },
+      'previous-record': () => {
+        const currentRecordIndex = tableData.value.findIndex(row => row.id === record.id)
+        if (currentRecordIndex === -1) {
+          return
+        }
+        const previousRecordIndex = currentRecordIndex - 1
+        if (previousRecordIndex < 0) {
+          closeDialog(addDialogId.value)
+          return
+        }
+        const previousRecord = tableData.value[previousRecordIndex]
+        updateDialogProps(addDialogId.value, (oldProps) => {
+          return {
+            ...oldProps,
+            'record': previousRecord
+          }
+        })
+        refreshDialog(addDialogId.value)
+
       }
     }
   })

@@ -1,5 +1,6 @@
 <template>
-  <form :id="formId">
+  {{ errors }}
+  <form :id="formId" @submit.prevent="handleSubmit">
     <slot name="form" :errors="errors"></slot>
   </form>
 </template>
@@ -18,14 +19,35 @@ const props = defineProps({
 })
 const formData = defineModel('formData')
 
-const {validateData} = useValidateData()
+const emits = defineEmits(['submit'])
+
+const {
+  validateData
+} = useValidateData()
 
 const errors = computed(() => {
   return validateData(props.formSchema, formData.value)
 })
+
+function hasErrors(errorObj) {
+  return Object.values(errorObj).some(value => {
+    if (Array.isArray(value._errors) && value._errors.length > 0) {
+      return true
+    }
+    if (typeof value === 'object') {
+      return hasErrors(value)
+    }
+    return false
+  })
+}
+
 defineExpose({
   errors
 })
+
+function handleSubmit() {
+  emits('submit', hasErrors(errors.value))
+}
 </script>
 
 <style scoped>

@@ -1,5 +1,6 @@
 <template>
   <component
+      :id="dialog.id"
       v-for="dialog in dialogStore.dialogsList"
       :is="dialog.component"
       v-on="dialog.handlers"
@@ -8,7 +9,7 @@
 </template>
 
 <script setup>
-import { useDialogStore } from '../stores/DialogStore'
+import {useDialogStore} from '../stores/DialogStore'
 
 const dialogStore = useDialogStore()
 </script>
