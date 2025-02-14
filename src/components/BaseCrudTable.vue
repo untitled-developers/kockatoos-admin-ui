@@ -79,6 +79,12 @@
     </template>
     <template #end>
       <slot name="controls-end"></slot>
+      <IconField>
+        <InputIcon class="pi pi-search"/>
+        <InputText @change="handleSearchQueryChange"
+                   v-model="searchQuery"
+                   placeholder="Search"/>
+      </IconField>
     </template>
   </Toolbar>
   <DataTable size="large"
@@ -209,6 +215,9 @@ const {
 } = useAlerts()
 
 const sortingQuery = ref([props.defaultSort])
+const loadingRows = ref([])
+
+const searchQuery = ref('')
 
 function handleFilterChange() {
   fetchData()
@@ -367,12 +376,32 @@ function createFilterQuery(filters) {
   return queryParams
 }
 
+function rowClassHandler(rowData) {
+  const filteredRow = loadingRows.value.find(row => row[props.rowIdentifier] === rowData[props.rowIdentifier])
+  if (filteredRow) {
+    return 'relative after:backdrop-blur-sm after:bg-white/10  after:content-[""] after:absolute after:w-full after:top-0 after:left-0 after:h-full after:z-10'
+  }
+}
+
+function startRowLoading(record) {
+  loadingRows.value.push(record)
+}
+
+function stopRowLoading(record) {
+  loadingRows.value = loadingRows.value.filter(row => row[props.rowIdentifier] !== record[props.rowIdentifier])
+}
+
+function handleSearchQueryChange() {
+  fetchData()
+}
+
 async function getData() {
   try {
     const fetchResponse = await fetch.get(props.endpoint, {
       params: {
         page: paginationQuery.value.page,
         perPage: paginationQuery.value.rows,
+        searchFor: searchQuery.value,
         ...mapSortToQueryParams(),
         // ...filters.value?.length && createFilterQuery(filters.value)
       }

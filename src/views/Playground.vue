@@ -11,29 +11,7 @@
       <Button label="DIALOG" @click="handleOpenDialog"></Button>
     </div>
     <div>
-      <BaseForm :form-schema="formSchema"
-                v-model:form-data="formData"
-                form-id="test">
-        <template #form="{errors}">
-         {{ JSON.stringify(errors)}}
-          <BaseInputContainer label="Name"
-                              :errors="errors?.name?._errors"
-                              show-errors>
-            <InputText v-model="formData.name" @blur="handleNameBlur"/>
-          </BaseInputContainer>
-          <BaseInputContainer label="Email"
-                              :errors="errors?.email?._errors"
-                              :show-errors="didSubmit">
-            <InputText v-model="formData.email"/>
-          </BaseInputContainer>
-          <BaseInputContainer label="Nested"
-                              :errors="errors?.nested?.test._errors"
-                              :show-errors="didSubmit">
-            <InputText v-model="formData.nested.test"/>
-          </BaseInputContainer>
-          <Button label="Submit" @click="handleSubmit(errors)"></Button>
-        </template>
-      </BaseForm>
+
     </div>
   </div>
 
@@ -47,7 +25,6 @@ import useDialog from "../composables/useDialog.js";
 import TestDialog from "../views/components/TestDialog.vue";
 import {z} from "zod";
 import {ref} from "vue";
-import BaseForm from "../components/BaseForm.vue";
 import {InputText} from "primevue";
 import BaseInputContainer from "../components/BaseInputContainer.vue";
 
