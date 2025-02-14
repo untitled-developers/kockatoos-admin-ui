@@ -1,4 +1,4 @@
-import useFetch from "@/composables/useFetch.js";
+import useFetch from "./useFetch.js";
 
 export default function useCrudApi(endpoint) {
     const fetch = useFetch()

@@ -15,18 +15,19 @@
                 v-model:form-data="formData"
                 form-id="test">
         <template #form="{errors}">
+         {{ JSON.stringify(errors)}}
           <BaseInputContainer label="Name"
-                              :errors="errors.name._errors"
+                              :errors="errors?.name?._errors"
                               show-errors>
             <InputText v-model="formData.name" @blur="handleNameBlur"/>
           </BaseInputContainer>
           <BaseInputContainer label="Email"
-                              :errors="errors.email._errors"
+                              :errors="errors?.email?._errors"
                               :show-errors="didSubmit">
             <InputText v-model="formData.email"/>
           </BaseInputContainer>
           <BaseInputContainer label="Nested"
-                              :errors="errors.nested.test._errors"
+                              :errors="errors?.nested?.test._errors"
                               :show-errors="didSubmit">
             <InputText v-model="formData.nested.test"/>
           </BaseInputContainer>

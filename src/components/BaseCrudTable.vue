@@ -110,6 +110,18 @@
       <template #body="slotProps">
         <BaseCrudTableActionsDropdown>
           <slot name="record-actions" :record="slotProps.data"></slot>
+          <Button v-if="withEdit" label="Edit"
+                  @click="handleEditButtonClick(slotProps.data)"
+                  icon="pi pi-pen-to-square"
+                  text
+                  size="small"
+                  severity="info"/>
+          <Button v-if="withDelete" label="Delete"
+                  @click="handleDeleteButtonClick(slotProps.data)"
+                  icon="pi pi-trash"
+                  text
+                  size="small"
+                  severity="danger"/>
         </BaseCrudTableActionsDropdown>
       </template>
     </Column>
@@ -120,11 +132,7 @@
 <script setup>
 import {
   DataTable,
-  DatePicker,
   Column,
-  FloatLabel,
-  InputText,
-  MultiSelect,
   Select,
   Toolbar
 } from "primevue";
@@ -134,13 +142,15 @@ import useFetch from "../composables/useFetch.js";
 import useDialog from "../composables/useDialog.js";
 import BaseCrudTableActionsDropdown from "./BaseCrudTableActionsDropdown.vue";
 import useAlerts from "../composables/useAlerts.js";
+import useConfirmDialog from "../composables/useConfirmDialog.js";
+
 
 const props = defineProps({
   endpoint: {
     type: String,
     required: true
   },
-  addDialog: {
+  editDialog: {
     type: Object,
     required: true
   },
@@ -159,8 +169,15 @@ const props = defineProps({
   },
   withRecordActions: {
     type: Boolean,
-    required: false,
-    default: false
+    default: true
+  },
+  withEdit: {
+    type: Boolean,
+    default: true
+  },
+  withDelete: {
+    type: Boolean,
+    default: true
   }
 })
 const filters = defineModel('filters')
@@ -174,6 +191,9 @@ const {
   refreshDialog
 } = useDialog()
 
+const {
+  confirmDanger
+} = useConfirmDialog()
 const fetch = useFetch()
 const isTableLoading = ref(false)
 const tableData = ref([])
@@ -184,27 +204,56 @@ const paginationQuery = ref({
 })
 
 const {
-  alertError
+  alertError,
+  alertSuccess
 } = useAlerts()
 
 const sortingQuery = ref([props.defaultSort])
-
-const recordActionsPopover = ref()
-
-function toggleActionsDropdown(event) {
-  recordActionsPopover.value.toggle(event)
-}
 
 function handleFilterChange() {
   fetchData()
 }
 
-const addDialogId = ref(null)
+const editDialogId = ref(null)
 
 function handleAddNewButton() {
-  addDialogId.value = openDialog(props.addDialog, {
+  openEditDialog()
+}
+
+function handleEditButtonClick(record) {
+  openEditDialog(record)
+}
+
+function handleDeleteButtonClick(record) {
+  confirmDanger({
+    header: `Delete Record?`,
+    message: `Are you sure you want to delete this record?`,
+    onConfirm: () => {
+      deleteRecord(record)
+    }
+  })
+}
+
+async function deleteRecord(record) {
+  try {
+    await fetch.delete(`${props.endpoint}/${record.id}`)
+    alertSuccess('Record Deleted Successfully')
+    await fetchData()
+  } catch (error) {
+    console.log(error)
+    alertError('Error Deleting Record')
+  }
+}
+
+function openEditDialog(record) {
+  editDialogId.value = openDialog(props.editDialog, {
     handlers: {
       'submit': () => {
+        if (record) {
+          alertSuccess('Record Updated Successfully')
+        } else {
+          alertSuccess('Record Created Successfully')
+        }
         fetchData()
       },
       'next-record': (record) => {
@@ -214,17 +263,17 @@ function handleAddNewButton() {
         }
         const nextRecordIndex = currentRecordIndex + 1
         if (nextRecordIndex >= tableData.value.length) {
-          closeDialog(addDialogId.value)
+          closeDialog(editDialogId.value)
           return
         }
         const nextRecord = tableData.value[nextRecordIndex]
-        updateDialogProps(addDialogId.value, (oldProps) => {
+        updateDialogProps(editDialogId.value, (oldProps) => {
           return {
             ...oldProps,
             'record': nextRecord
           }
         })
-        refreshDialog(addDialogId.value)
+        refreshDialog(editDialogId.value)
 
       },
       'previous-record': () => {
@@ -234,19 +283,22 @@ function handleAddNewButton() {
         }
         const previousRecordIndex = currentRecordIndex - 1
         if (previousRecordIndex < 0) {
-          closeDialog(addDialogId.value)
+          closeDialog(editDialogId.value)
           return
         }
         const previousRecord = tableData.value[previousRecordIndex]
-        updateDialogProps(addDialogId.value, (oldProps) => {
+        updateDialogProps(editDialogId.value, (oldProps) => {
           return {
             ...oldProps,
             'record': previousRecord
           }
         })
-        refreshDialog(addDialogId.value)
+        refreshDialog(editDialogId.value)
 
       }
+    },
+    props: {
+      record: record ?? null
     }
   })
 }

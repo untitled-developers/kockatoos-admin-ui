@@ -25,14 +25,20 @@
           <Button severity="secondary"
                   icon="pi pi-times"
                   size="large"
-                  text
+                  rounded
                   @click="handleClose"></Button>
         </div>
       </div>
     </template>
     <slot name="content"></slot>
     <template #footer>
-      <Toolbar>
+      <Toolbar class="w-full" :pt="{
+        root: {
+          style:{
+            border: 'none'
+          }
+        }
+      }">
         <template #start>
           <slot name="footer-start"></slot>
         </template>
@@ -40,7 +46,6 @@
           <slot name="footer-center"></slot>
         </template>
         <template #end>
-
           <Button label="Close"
                   v-if="withCloseButton"
                   severity="secondary"
@@ -49,11 +54,6 @@
         </template>
 
       </Toolbar>
-
-      <div class="flex justify-end gap-x-2 pt-4">
-
-        <slot name="actions"></slot>
-      </div>
     </template>
   </Dialog>
 </template>
