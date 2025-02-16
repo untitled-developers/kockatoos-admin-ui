@@ -12,7 +12,6 @@ export default function useConfirmDialog() {
 
         confirm.require({
             group: "headless",
-            // @ts-ignore
             type: config.type,
             message: config.message,
             header: config.header,

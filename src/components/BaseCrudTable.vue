@@ -24,13 +24,13 @@
   }
     }">
     <template #start>
-      <Button
-          label="Reset Sort"
-          @click="handleResetSort"
-          icon="pi pi-sort-alt-slash"
-          severity="secondary"
-          class="mr-2">
-      </Button>
+      <!--      <Button-->
+      <!--          label="Reset Sort"-->
+      <!--          @click="handleResetSort"-->
+      <!--          icon="pi pi-sort-alt-slash"-->
+      <!--          severity="secondary"-->
+      <!--          class="mr-2">-->
+      <!--      </Button>-->
       <!--      <div class="flex flex-wrap items-center" v-if="filters?.length">-->
       <!--        <Button label="Clear Filters" @click="handleClearFilters" icon="pi pi-filter-slash"-->
       <!--                severity="secondary"></Button>-->
@@ -94,6 +94,7 @@
              paginator
              sort-mode="multiple"
              lazy
+             striped-rows
              @sort="handleSortChange"
              :selection-mode="withSelection ? 'multiple' : undefined"
              v-model:selection="selectedRecords"
@@ -139,7 +140,9 @@
 import {
   DataTable,
   Column,
-  Select,
+  InputText,
+  IconField,
+  InputIcon,
   Toolbar
 } from "primevue";
 import Button from "primevue/button";
@@ -234,6 +237,7 @@ function handleEditButtonClick(record) {
 }
 
 function handleDeleteButtonClick(record) {
+  console.log('delete record')
   confirmDanger({
     header: `Delete Record?`,
     message: `Are you sure you want to delete this record?`,

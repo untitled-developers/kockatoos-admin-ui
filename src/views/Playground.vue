@@ -11,7 +11,13 @@
       <Button label="DIALOG" @click="handleOpenDialog"></Button>
     </div>
     <div>
-
+      <BaseTableToggleSelect :options="[
+                        {label: 'Active', value: 1, color: 'green'},
+                        {label: 'Blocked', value: 0, color: 'red'}
+                    ]" :color-mapping="{
+      0: 'red',
+      1: 'green'
+                    }" :value="1"/>
     </div>
   </div>
 
@@ -27,6 +33,7 @@ import {z} from "zod";
 import {ref} from "vue";
 import {InputText} from "primevue";
 import BaseInputContainer from "../components/BaseInputContainer.vue";
+import BaseTableToggleSelect from "../components/BaseTableToggleSelect.vue";
 
 const {confirmSuccess} = useConfirmDialog()
 const {
