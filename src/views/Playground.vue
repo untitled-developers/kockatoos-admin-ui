@@ -20,6 +20,8 @@
                     }" :value="1"/>
     </div>
   </div>
+  <BaseEditDialogNavigationButtons @next-record="test"
+                                   @previous-record="test" />
 
 </template>
 
@@ -29,36 +31,46 @@ import useAlerts from "../composables/useAlerts.js";
 import useConfirmDialog from "../composables/useConfirmDialog.js";
 import useDialog from "../composables/useDialog.js";
 import TestDialog from "../views/components/TestDialog.vue";
-import {z} from "zod";
+import * as zod from "zod";
 import {ref} from "vue";
 import {InputText} from "primevue";
 import BaseInputContainer from "../components/BaseInputContainer.vue";
 import BaseTableToggleSelect from "../components/BaseTableToggleSelect.vue";
+import useForm from "../composables/useForm.js";
+import BaseCrudTableActionsDropdown from "../components/BaseCrudTableActionsDropdown.vue";
+import BaseEditDialogNavigationButtons from "../components/BaseEditDialogNavigationButtons.vue";
+import useEditDialog from "../composables/useEditDialog.js";
 
 const {confirmSuccess} = useConfirmDialog()
 const {
   alertError
 } = useAlerts()
 const {openDialog} = useDialog()
+function test() {
+  console.log('test')
+  handleNextRecord()
+}
 
-const formData = ref({
+const {handleNextRecord, handlePreviousRecord} = useEditDialog({})
+const form = ref({
   name: '',
-  email: '',
-  nested: {
-    test: ''
-  }
+  username: '',
+  phone: '',
+  password: '',
+  role: ''
 })
-console.log('AHHHHHHHHHH')
-console.log(Object.keys(formData.value))
 
-const formSchema = z.object({
-  name: z.string().min(1).max(5),
-  email: z.string().min(1).max(5).email(),
-  nested: z.object({
-    test: z.string().min(1).max(5)
-  })
+const formSchema = zod.object({
+  username: zod.string().nonempty(),
+  password: zod.string().nonempty(),
+  role: zod.string().nonempty()
 })
+
 const didSubmit = ref(false)
+
+const {getErrors, hasErrors} = useForm(form, formSchema)
+
+getErrors('username')
 const showNameError = ref(false)
 
 function handleSubmit() {

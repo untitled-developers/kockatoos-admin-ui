@@ -13,7 +13,7 @@ export default function useValidateData() {
         if (!data) {
             throw new Error('Call to validateData must include data to validate')
         }
-        const result = scehma.safeParse(data)
+        const result = schema.safeParse(data)
         if (result.success) {
             return {
                 success: true

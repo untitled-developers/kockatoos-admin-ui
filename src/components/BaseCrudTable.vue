@@ -93,6 +93,7 @@
              filter-display="menu"
              paginator
              sort-mode="multiple"
+             :row-class="rowClassHandler"
              lazy
              striped-rows
              @sort="handleSortChange"
@@ -187,7 +188,11 @@ const props = defineProps({
   withDelete: {
     type: Boolean,
     default: true
-  }
+  },
+  rowIdentifier: {
+    type: String,
+    default: 'id'
+  },
 })
 const filters = defineModel('filters')
 const selectedRecords = defineModel('selectedRecord')
@@ -237,11 +242,10 @@ function handleEditButtonClick(record) {
 }
 
 function handleDeleteButtonClick(record) {
-  console.log('delete record')
   confirmDanger({
     header: `Delete Record?`,
     message: `Are you sure you want to delete this record?`,
-    onConfirm: () => {
+    onAccept: () => {
       deleteRecord(record)
     }
   })
@@ -249,12 +253,15 @@ function handleDeleteButtonClick(record) {
 
 async function deleteRecord(record) {
   try {
+    startTableLoading()
     await fetch.delete(`${props.endpoint}/${record.id}`)
     alertSuccess('Record Deleted Successfully')
     await fetchData()
   } catch (error) {
     console.log(error)
     alertError('Error Deleting Record')
+  } finally {
+    startTableLoading()
   }
 }
 
@@ -269,8 +276,8 @@ function openEditDialog(record) {
         }
         fetchData()
       },
-      'next-record': (record) => {
-        const currentRecordIndex = tableData.value.findIndex(row => row.id === record.id)
+      'next-record': (currentRecord) => {
+        const currentRecordIndex = tableData.value.findIndex(row => row.id === currentRecord.id)
         if (currentRecordIndex === -1) {
           return
         }
@@ -289,8 +296,8 @@ function openEditDialog(record) {
         refreshDialog(editDialogId.value)
 
       },
-      'previous-record': () => {
-        const currentRecordIndex = tableData.value.findIndex(row => row.id === record.id)
+      'previous-record': (currentRecord) => {
+        const currentRecordIndex = tableData.value.findIndex(row => row.id === currentRecord.id)
         if (currentRecordIndex === -1) {
           return
         }
@@ -429,6 +436,14 @@ async function fetchData() {
   isTableLoading.value = false
 }
 
+function startTableLoading() {
+  isTableLoading.value = true
+}
+
+function stopTableLoading() {
+  isTableLoading.value = false
+}
+
 /**
  * Fetch data without showing the loading spinner
  * @returns {Promise<void>}
@@ -439,7 +454,9 @@ async function silentFetchData() {
 
 defineExpose({
   fetchData,
-  silentFetchData
+  silentFetchData,
+  startRowLoading,
+  stopRowLoading
 })
 
 onMounted(() => {

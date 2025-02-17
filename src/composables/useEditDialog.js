@@ -10,14 +10,14 @@ export default function useEditDialog({props, emit}, modelName, endpoint) {
     } = useCrudApi(endpoint)
 
     function handleNextRecord() {
-        if (props.record) {
+        if (!props.record) {
             return
         }
         emit('next-record', props.record)
     }
 
     function handlePreviousRecord() {
-        if (props.record) {
+        if (!props.record) {
             return
         }
         emit('previous-record', props.record)
@@ -40,9 +40,32 @@ export default function useEditDialog({props, emit}, modelName, endpoint) {
 
     async function submitData(formData) {
         if (isEditingRecord()) {
-            return await update(formData)
+            return await update(props.record.id, formData)
         }
         return await create(formData)
+    }
+
+    function createFormPayload(data = {}, files = {}, fields = {}) {
+        const formData = new FormData()
+
+        if (Object.keys(data).length > 0) {
+            formData.append('data', JSON.stringify(data))
+        }
+
+        Object.entries(files).forEach(([key, file]) => {
+            if (file) {
+                const fileToUpload = file.file || file
+                formData.append(key, fileToUpload)
+            }
+        })
+
+        Object.entries(fields).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+                formData.append(key, value)
+            }
+        })
+
+        return formData
     }
 
     function populateForm(formRef, record) {
@@ -69,6 +92,7 @@ export default function useEditDialog({props, emit}, modelName, endpoint) {
         handleNextRecord,
         handlePreviousRecord,
         closeDialog,
+        createFormPayload,
         isEditingRecord,
         getDialogHeader,
         submitData,

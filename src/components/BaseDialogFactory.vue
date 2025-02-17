@@ -1,6 +1,7 @@
 <template>
   <component
       :id="dialog.id"
+      :key="dialog.key"
       v-for="dialog in dialogStore.dialogsList"
       :is="dialog.component"
       v-on="dialog.handlers"

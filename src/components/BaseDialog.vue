@@ -11,6 +11,11 @@
       :pt="{
         root: {
           class: fullScreen ? 'p-dialog-maximized' : ''
+        },
+        mask: {
+          style: {
+            animation: 'none !important'
+          }
         }
       }"
       :closable="false"
@@ -47,6 +52,7 @@
         </template>
         <template #end>
           <Button label="Close"
+                  class="mx-2"
                   v-if="withCloseButton"
                   severity="secondary"
                   @click="handleClose"/>
