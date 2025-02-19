@@ -99,7 +99,6 @@
              @sort="handleSortChange"
              :selection-mode="withSelection ? 'multiple' : undefined"
              v-model:selection="selectedRecords"
-             removable-sort
              paginator-position="bottom"
              :rows="paginationQuery.rows"
              :totalRecords="paginationQuery.totalRecords"
@@ -193,6 +192,12 @@ const props = defineProps({
     type: String,
     default: 'id'
   },
+  //Added to accommodate for pawcuddlz as the sorting queries are different
+  customSortMapper: {
+    type: Function,
+    default: () => {
+    }
+  }
 })
 const filters = defineModel('filters')
 const selectedRecords = defineModel('selectedRecord')
@@ -261,7 +266,7 @@ async function deleteRecord(record) {
     console.log(error)
     alertError('Error Deleting Record')
   } finally {
-    startTableLoading()
+    stopTableLoading()
   }
 }
 
@@ -350,6 +355,14 @@ function handleResetSort() {
 }
 
 function mapSortToQueryParams() {
+
+  if (typeof props.customSortMapper === 'function') {
+    const customMapping = props.customSortMapper(sortingQuery.value)
+    if (Object.keys(customMapping).length) {
+      return customMapping
+    }
+  }
+
   return sortingQuery.value.reduce((acc, sort, index) => {
     const direction = sort.order === 1 ? 'asc' : 'desc'
     return {
