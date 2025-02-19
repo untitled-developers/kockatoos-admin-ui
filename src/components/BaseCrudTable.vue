@@ -95,6 +95,7 @@
              sort-mode="multiple"
              :row-class="rowClassHandler"
              lazy
+             data-key="id"
              striped-rows
              @sort="handleSortChange"
              :selection-mode="withSelection ? 'multiple' : undefined"
