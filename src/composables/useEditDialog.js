@@ -76,7 +76,30 @@ export default function useEditDialog({props, emit}, modelName, endpoint) {
         const filteredData = {}
         Object.keys(formRef.value).forEach(key => {
             if (key in record) {
-                filteredData[key] = cloneDeep(record[key])
+                switch (true) {
+                    case record[key] === null:
+                        filteredData[key] = null;
+                        break;
+
+                    case Array.isArray(record[key]):
+                        filteredData[key] = cloneDeep(record[key]);
+                        break;
+
+                    case typeof record[key] === 'object':
+                        filteredData[key] = cloneDeep(record[key]);
+                        break;
+
+                    case typeof record[key] === 'string':
+                    case typeof record[key] === 'number':
+                    case typeof record[key] === 'boolean':
+                    case typeof record[key] === 'undefined':
+                        filteredData[key] = record[key];
+                        break;
+
+                    default:
+                        console.warn(`Unexpected type for key "${key}": ${typeof record[key]}`);
+                        break;
+                }
             }
         })
 

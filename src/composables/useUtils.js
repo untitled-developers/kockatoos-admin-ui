@@ -1,3 +1,5 @@
+import {isProxy, isRef, toRaw} from "vue";
+
 export default function useUtils() {
     const get = (obj, path, defValue) => {
 
@@ -26,7 +28,32 @@ export default function useUtils() {
     }
 
     // https://youmightnotneed.com/lodash#cloneDeep
-    const cloneDeep = object => structuredClone(object)
+    const cloneDeep = object => {
+        // added this since structuredClone doesn't support objects created with ref or proxies.
+        if (isRef(object)) {
+            object = toRaw(object.value)
+        } else if (isProxy(object) || object?.__v_raw) {
+            object = toRaw(object)
+        }
+
+        try {
+            return structuredClone(object)
+        } catch (error) {
+            if (Array.isArray(object)) {
+                return object.map(item => cloneDeep(item))
+            }
+
+            if (object && typeof object === 'object') {
+                return Object.keys(object).reduce((acc, key) => {
+                    acc[key] = cloneDeep(object[key])
+                    return acc
+                }, {})
+            }
+
+            return object
+        }
+    }
+
 
     return {
         get,
