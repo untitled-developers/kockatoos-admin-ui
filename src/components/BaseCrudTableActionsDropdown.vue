@@ -6,7 +6,7 @@
             aria-label="Actions"
             @click="toggle"/>
     <Popover ref="op">
-      <div class="flex flex-col gap-y-2">
+      <div class="flex w-[200px] flex-col gap-y-2">
         <slot></slot>
       </div>
     </Popover>

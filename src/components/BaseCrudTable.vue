@@ -88,6 +88,7 @@
     </template>
   </Toolbar>
   <DataTable size="large"
+             tableStyle="min-width: 50rem"
              scrollable
              :show-gridlines="false"
              filter-display="menu"
@@ -118,18 +119,18 @@
       <template #body="slotProps">
         <BaseCrudTableActionsDropdown>
           <slot name="record-actions" :record="slotProps.data"></slot>
-          <Button v-if="withEdit" label="Edit"
-                  @click="handleEditButtonClick(slotProps.data)"
-                  icon="pi pi-pen-to-square"
-                  text
-                  size="small"
-                  severity="info"/>
-          <Button v-if="withDelete" label="Delete"
-                  @click="handleDeleteButtonClick(slotProps.data)"
-                  icon="pi pi-trash"
-                  text
-                  size="small"
-                  severity="danger"/>
+
+          <BaseCrudTableActionsButton v-if="withEdit"
+                                      @click="handleEditButtonClick(slotProps.data)"
+                                      severity="info"
+                                      text="Edit"
+                                      icon="pi-pen-to-square"/>
+          <BaseCrudTableActionsButton v-if="withDelete"
+                                      @click="handleDeleteButtonClick(slotProps.data)"
+                                      severity="danger"
+                                      text="Delete"
+                                      icon="pi-trash"/>
+
         </BaseCrudTableActionsDropdown>
       </template>
     </Column>
@@ -153,6 +154,7 @@ import useDialog from "../composables/useDialog.js";
 import BaseCrudTableActionsDropdown from "./BaseCrudTableActionsDropdown.vue";
 import useAlerts from "../composables/useAlerts.js";
 import useConfirmDialog from "../composables/useConfirmDialog.js";
+import BaseCrudTableActionsButton from "./BaseCrudTableActionsButton.vue";
 
 
 const props = defineProps({
@@ -160,9 +162,19 @@ const props = defineProps({
     type: String,
     required: true
   },
+  defaultQuery: {
+    type: Object
+  },
   editDialog: {
     type: Object,
     required: true
+  },
+  /**
+   * Use this if you want to supply props to the edit dialog other than record.
+   * **/
+  editDialogProps: {
+    type: Object,
+    default: {}
   },
   defaultSort: {
     type: Object,
@@ -272,6 +284,14 @@ async function deleteRecord(record) {
 }
 
 function openEditDialog(record) {
+  const dialogProps = {
+    record: record ?? null
+  }
+  if (props.editDialogProps) {
+    Object.keys(props.editDialogProps).forEach(key => {
+      dialogProps[key] = props.editDialogProps[key]
+    })
+  }
   editDialogId.value = openDialog(props.editDialog, {
     handlers: {
       'submit': () => {
@@ -323,10 +343,9 @@ function openEditDialog(record) {
 
       }
     },
-    props: {
-      record: record ?? null
-    }
+    props: dialogProps
   })
+
 }
 
 function handleSortChange(event) {
@@ -421,9 +440,11 @@ function handleSearchQueryChange() {
 }
 
 async function getData() {
+  const defaultQuery = props.defaultQuery ? props.defaultQuery : {}
   try {
-    const fetchResponse = await fetch.get(props.endpoint, {
+    const fetchResponse = await fetch.get(`${props.endpoint}/`, {
       params: {
+        ...defaultQuery,
         page: paginationQuery.value.page,
         perPage: paginationQuery.value.rows,
         searchFor: searchQuery.value,
