@@ -87,8 +87,7 @@
       </IconField>
     </template>
   </Toolbar>
-  <DataTable size="large"
-             tableStyle="min-width: 50rem"
+  <DataTable class="border border-gray-300 py-2 rounded-md"
              scrollable
              :show-gridlines="false"
              filter-display="menu"

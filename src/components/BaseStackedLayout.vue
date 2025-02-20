@@ -1,5 +1,5 @@
 <template>
-  <div class="border-b border-[--p-primary-300] rounded-md pb-5 sm:pb-0 bg-white">
+  <div class="border-b shadow-md border-gray-300 pb-5 sm:pb-0 bg-white">
     <div class="flex items-center justify-between px-4 py-4">
       <slot name="title"></slot>
       <div>
@@ -17,7 +17,7 @@
                          custom>
               <a
                   v-ripple
-                  :class="['py-4 pl-0', isRouteActive(item.route.name) ? 'text-[--p-primary-700] bg-[--p-primary-50] font-medium transition-all ease-out duration-300 scale-110' : '']"
+                  :class="['py-4 pl-0', isRouteActive(item.route.name) ? 'border-b bg-[--p-primary-50] text-[--p-primary-800] font-semibold border-[--p-primary-400]' : '']"
                   :href="href"
                   v-bind="props.action"
                   @click="navigate">
@@ -62,6 +62,8 @@ const menuRef = ref({
   root: {
     style: {
       padding: '0px 16px',
+      borderRadius: 0,
+      border: 'none'
 
     }
   },

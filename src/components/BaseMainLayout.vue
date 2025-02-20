@@ -122,7 +122,7 @@ async function logout() {
   @apply border-none
 }
 .active-link span {
-  @apply bg-violet-100 font-extrabold border-violet-400
+  @apply bg-[--p-primary-50] text-[--p-primary-800] font-semibold border-[--p-primary-400]
 }
 
 </style>
