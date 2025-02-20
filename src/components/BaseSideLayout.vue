@@ -68,7 +68,7 @@
         class="flex-1 flex flex-col min-h-screen bg-gradient-to-br to-[--p-primary-50] from-gray-100 dark:from-gray-800 dark:to[--p-primary-50]">
       <header class="bg-white border-b border-[--p-primary-300] pl-3 pr-4 flex items-center">
         <Button class="block sm:hidden" @click="handleMobileMenuToggle" icon="pi pi-bars" text></Button>
-        <div>
+        <div class="font-medium">
           {{ route.name }}
         </div>
         <div class="ml-auto flex gap-x-2 py-1">
@@ -170,6 +170,7 @@ function handleDarkModeToggle() {
   font-weight: 600;
   transition: all 0.3s ease;
 }
+
 .active-link a {
   background: var(--p-primary-100);
   border-radius: 6px;
