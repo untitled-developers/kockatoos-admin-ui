@@ -1,19 +1,19 @@
 <template>
-  <Toolbar :pt="{
-  root: {
-    style: {
-      borderRadius: 0
-    }
-  }
-}">
-    <template #start>
-      <Button icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
-      <slot name="actions-start"></slot>
-    </template>
-    <template #end>
-      <slot name="actions-end"></slot>
-    </template>
-  </Toolbar>
+<!--  <Toolbar :pt="{-->
+<!--  root: {-->
+<!--    style: {-->
+<!--      borderRadius: 0-->
+<!--    }-->
+<!--  }-->
+<!--}">-->
+<!--    <template #start>-->
+<!--      <Button icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>-->
+<!--      <slot name="actions-start"></slot>-->
+<!--    </template>-->
+<!--    <template #end>-->
+<!--      <slot name="actions-end"></slot>-->
+<!--    </template>-->
+<!--  </Toolbar>-->
   <Toolbar :pt="{
       root: {
          style: {
@@ -24,6 +24,7 @@
   }
     }">
     <template #start>
+      <Button icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
       <!--      <Button-->
       <!--          label="Reset Sort"-->
       <!--          @click="handleResetSort"-->
