@@ -94,7 +94,7 @@
         </div>
       </div>
 
-      <main class="px-4 bg-gray-100">
+      <main>
         <slot name="main"></slot>
       </main>
     </div>
