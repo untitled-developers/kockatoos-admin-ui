@@ -1,6 +1,6 @@
 <template>
   <button :class="[
-    'text-left px-4 py-2 rounded-md w-full flex items-center gap-x-2',
+    'text-left px-4 py-2 rounded-sm w-full flex items-center gap-x-2',
     severityClasses[severity] || severityClasses.default
   ]">
     <i v-if="icon" :class="['pi size-5', icon]"></i>

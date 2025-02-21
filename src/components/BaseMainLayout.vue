@@ -3,7 +3,7 @@
   <div class="flex">
     <div>
       <nav v-if="!isCollapsed"
-           :class="['flex border-r  border-gray-300 w-64 shadow-md h-screen sticky', isDark ? 'bg-stone-700':'bg-white']">
+           :class="['flex w-64 shadow-md h-screen sticky', isDark ? 'bg-stone-700':'bg-white']">
         <div v-if="!isCollapsed" class="flex flex-col w-full h-full">
           <div class="flex w-full justify-center h-18 shrink-0  pl-4 py-2 pr-3 mb-4">
             <div>
@@ -69,7 +69,7 @@
       </nav>
     </div>
     <div class="flex-grow max-h-screen overflow-auto">
-      <div class="px-2 py-2 pl-4 flex bg-white  border-b border-gray-300 shadow-md  mb-4 items-center">
+      <div class="px-2 py-2 pl-4 flex bg-white shadow-md  mb-4 items-center">
         <Button aria-label="Collapse navbar" text @click="handleToggleNavbar" icon="pi pi-bars"></Button>
         <h2 class="text-lg font-bold">{{ route.meta?.title }}</h2>
         <div class="ml-auto flex items-center gap-x-2">
