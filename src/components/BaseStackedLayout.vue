@@ -17,16 +17,14 @@
                          custom>
               <a
                   v-ripple
-                  :class="['py-4 pl-0', isRouteActive(item.route.name) ? 'border-b bg-[--p-primary-50] text-[--p-primary-800] font-semibold border-[--p-primary-400]' : '']"
+                  :class="['py-4 px-4', isRouteActive(item.route.name) ? 'border-b bg-[--p-primary-50] text-[--p-primary-800] font-semibold border-[--p-primary-400]' : '']"
                   :href="href"
                   v-bind="props.action"
                   @click="navigate">
-                <span :class="item.icon"/>
                 <span>{{ item.label }}</span>
               </a>
             </router-link>
-            <a class="py-4" v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
-              <span :class="item.icon"/>
+            <a class="py-4 px-4" v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
               <span>{{ item.label }}</span>
               <span v-if="hasSubmenu" class="pi  pi-fw pi-angle-down"/>
             </a>
@@ -63,8 +61,14 @@ const menuRef = ref({
     style: {
       padding: '0px 16px',
       borderRadius: 0,
-      border: 'none'
+      border: 'none',
 
+    }
+  },
+  rootList:{
+    style: {
+      rowGap: 0,
+      columnGap: 0
     }
   },
   itemContent: {

@@ -14,8 +14,9 @@
             <div class="card flex justify-center nav-menu pl-2">
               <PanelMenu :model="navigationItems" multiple class="w-full md:w-80" :pt="{
                 root:{
-                  stype: {
-                    borderRadius: 0
+                  style: {
+                    borderRadius: 0,
+                    rowGap: 0,
                   }
                 },
                 itemContent: {
@@ -32,7 +33,9 @@
                   style: {
                     border: 'none',
                     borderRadius: '0',
-                    background: 'none'
+                    background: 'none',
+                    padding: 0
+
                   }
                 },
                 rootList: {
@@ -45,13 +48,13 @@
                 <template #item="{ item }">
                   <router-link v-if="item.route" v-slot="{ navigate }" :to="item.route" :active-class="isDark ? 'active-link-dark' : 'active-link'">
                     <span
-                        :class="['border-l border-gray-300 hover:border-gray-400 flex items-center cursor-pointer p-2 pl-4', isDark ? 'text-white': 'text-surface-700']"
+                        :class="['border-l border-gray-300 hover:border-gray-400 flex items-center cursor-pointer px-2 py-4 pl-4', isDark ? 'text-white': 'text-surface-700']"
                         @click="navigate">
                         <span class="font-medium">{{ item.label }}</span>
                     </span>
                   </router-link>
                   <div v-else
-                       :class="['flex items-center border-l border-gray-300 cursor-pointer p-2', isDark ? 'text-white': 'text-gray-600']">
+                       :class="['flex items-center border-l border-gray-300 cursor-pointer px-2 py-4', isDark ? 'text-white': 'text-gray-600']">
                     <span class="font-medium">{{ item.label }}</span>
                     <span v-if="item.items" class="pi pi-angle-down ml-auto"/>
                   </div>
