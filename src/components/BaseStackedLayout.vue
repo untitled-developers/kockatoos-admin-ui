@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-lg  pb-5 sm:pb-0 bg-white">
+  <div class="border-b shadow-md border-gray-300 pb-5 sm:pb-0 bg-white">
     <div>
       <slot name="content"></slot>
     </div>
