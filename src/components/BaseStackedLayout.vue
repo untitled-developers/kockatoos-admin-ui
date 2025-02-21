@@ -1,10 +1,7 @@
 <template>
   <div class="border-b shadow-md border-gray-300 pb-5 sm:pb-0 bg-white">
-    <div class="flex items-center justify-between px-4 py-4">
-      <slot name="title"></slot>
-      <div>
-        <slot name="action"></slot>
-      </div>
+    <div>
+      <slot name="content"></slot>
     </div>
 
     <div class="mt-3 sm:mt-4">
