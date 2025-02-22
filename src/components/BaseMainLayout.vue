@@ -48,7 +48,7 @@
                 <template #item="{ item }">
                   <router-link v-if="item.route" v-slot="{ navigate }" :to="item.route" :active-class="isDark ? 'active-link-dark' : 'active-link'">
                     <span
-                        :class="['border-l border-gray-300 hover:border-gray-400 flex items-center cursor-pointer px-2 py-4 pl-4', isDark ? 'text-white': 'text-surface-700']"
+                        :class="['border-l border-gray-300 hover:border-gray-400 flex items-center cursor-pointer px-2 py-4', isDark ? 'text-white': 'text-surface-700']"
                         @click="navigate">
                         <span class="font-medium">{{ item.label }}</span>
                     </span>

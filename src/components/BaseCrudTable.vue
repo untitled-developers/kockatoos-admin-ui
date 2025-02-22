@@ -123,13 +123,11 @@
           <BaseCrudTableActionsButton v-if="withEdit"
                                       @click="handleEditButtonClick(slotProps.data)"
                                       severity="info"
-                                      text="Edit"
-                                      icon="pi-pen-to-square"/>
+                                      text="Edit"/>
           <BaseCrudTableActionsButton v-if="withDelete"
                                       @click="handleDeleteButtonClick(slotProps.data)"
                                       severity="danger"
-                                      text="Delete"
-                                      icon="pi-trash"/>
+                                      text="Delete"/>
 
         </BaseCrudTableActionsDropdown>
       </template>
