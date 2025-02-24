@@ -1,8 +1,10 @@
 import useCrudApi from "./useCrudApi.js";
 import useUtils from "./useUtils.js";
+import useFreezeRay from "./useFreezeRay.js";
 
 export default function useEditDialog({props, emit}, modelName, endpoint) {
     const {cloneDeep} = useUtils()
+    const {freezeApp, unfreezeApp} = useFreezeRay()
 
     const {
         create,
@@ -110,11 +112,21 @@ export default function useEditDialog({props, emit}, modelName, endpoint) {
         Object.assign(formRef.value, filteredData)
     }
 
+    function freezeDialog() {
+        freezeApp()
+    }
+
+    function unfreezeDialog() {
+        unfreezeApp()
+    }
+
 
     return {
         handleNextRecord,
         handlePreviousRecord,
         closeDialog,
+        freezeDialog,
+        unfreezeDialog,
         createFormPayload,
         isEditingRecord,
         getDialogHeader,

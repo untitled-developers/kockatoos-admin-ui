@@ -95,24 +95,10 @@ const props = defineProps({
   withCloseButton: {
     type: Boolean,
     default: true
-  },
-  isFrozen: {
-    type: Boolean,
-    default: false
   }
 })
 
 const emit = defineEmits(['close',])
-
-const {freezeApp, unfreezeApp} = useFreezeRay()
-
-watch(() => props.isFrozen, (value) => {
-  if (value) {
-    freezeApp()
-  } else {
-    unfreezeApp()
-  }
-})
 
 function handleClose() {
   emit('close')
