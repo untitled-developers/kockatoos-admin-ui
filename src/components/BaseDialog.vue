@@ -10,7 +10,7 @@
       }"
       :pt="{
         root: {
-          class: fullScreen ? 'p-dialog-maximized' : ''
+          class: [fullScreen ? 'p-dialog-maximized' : '', isLoading ? 'loading-overlay' : ''],
         },
         mask: {
           style: {
@@ -90,9 +90,13 @@ const props = defineProps({
     type: String,
     default: '500px'
   },
-  withCloseButton:{
+  withCloseButton: {
     type: Boolean,
     default: true
+  },
+  isLoading: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -104,4 +108,56 @@ function handleClose() {
 
 </script>
 
-<style scoped></style>
+<style>
+.loading-overlay {
+  position: relative;
+}
+
+.loading-overlay::before {
+  content: "";
+  position: absolute;
+  border-radius: var(--p-dialog-border-radius);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.loading-overlay::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  margin-top: -25px;
+  margin-left: -25px;
+  border-radius: 50%;
+  border: 5px solid rgba(255, 255, 255, 0.7);
+  border-top-color: var(--p-primary-600);
+  z-index: 11;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards, spin 1s linear infinite 0.3s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+</style>
