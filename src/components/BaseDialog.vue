@@ -10,7 +10,7 @@
       }"
       :pt="{
         root: {
-          class: [fullScreen ? 'p-dialog-maximized' : '', isLoading ? 'loading-overlay' : ''],
+          class: [fullScreen ? 'p-dialog-maximized' : ''],
         },
         mask: {
           style: {
@@ -68,6 +68,8 @@
 import Dialog from "primevue/dialog";
 import {Toolbar} from "primevue";
 import Button from 'primevue/button'
+import useFreezeRay from "../composables/useFreezeRay.js";
+import {watch} from "vue";
 
 const props = defineProps({
   header: {
@@ -94,13 +96,23 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  isLoading: {
+  isFrozen: {
     type: Boolean,
     default: false
   }
 })
 
 const emit = defineEmits(['close',])
+
+const {freezeApp, unfreezeApp} = useFreezeRay()
+
+watch(() => props.isFrozen, (value) => {
+  if (value) {
+    freezeApp()
+  } else {
+    unfreezeApp()
+  }
+})
 
 function handleClose() {
   emit('close')
