@@ -13,8 +13,8 @@
     </Fluid>
 
     <template v-if="errors.length > 0 && showErrors">
-      <p v-for="error in errors" class="text-red-600">
-        {{ error }}
+      <p class="text-red-600">
+        {{ errors[0] }}
       </p>
     </template>
   </div>
