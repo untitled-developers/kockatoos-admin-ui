@@ -1,10 +1,9 @@
-<!-- LoaderOverlay.vue -->
 <template>
   <div
       :style="{ width, height }"
       class="relative"
   >
-    <div class="absolute inset-0 bg-gray-200/50 flex flex-col items-center justify-center">
+    <div :class="['absolute inset-0  flex flex-col items-center justify-center', background]">
       <div
           :class="['animate-spin rounded-full border-4 border-gray-300 border-t-[--p-primary-600]',
         {
@@ -28,7 +27,7 @@
 <script setup>
 
 //TODO this needs work
-defineProps({
+const props = defineProps({
   width: {
     type: String,
     default: '100%'
@@ -39,11 +38,17 @@ defineProps({
   },
   text: {
     type: String,
-    default: ''
-  }, size: {
+    default: 'Loading'
+  },
+  size: {
     type: String,
-    default: 'medium',
+    default: 'small',
     validator: (value) => ['small', 'medium', 'large'].includes(value)
+  },
+  background: {
+    type: String,
+    default: 'bg-white'
+
   }
 
 })
