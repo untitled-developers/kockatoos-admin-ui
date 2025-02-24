@@ -54,7 +54,7 @@
                     </span>
                   </router-link>
                   <div v-else
-                       :class="['flex items-center border-l border-gray-300 cursor-pointer px-2 py-4', isDark ? 'text-white': 'text-gray-600']">
+                       :class="['flex items-center  cursor-pointer px-2 py-4', isDark ? 'text-white': 'text-gray-600']">
                     <span class="font-medium">{{ item.label }}</span>
                     <span v-if="item.items" class="pi pi-angle-down ml-auto"/>
                   </div>
