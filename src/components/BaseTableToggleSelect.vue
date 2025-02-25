@@ -68,12 +68,12 @@ function handleValueChange(event) {
 
 function getPtOptions(optionValue) {
   if (optionValue === null || optionValue === undefined) {
-    return null
+    return {}
   }
 
   const colorKey = props.colorMapping[optionValue]
   if (!colorKey || !COLOR_STYLES[colorKey]) {
-    return null
+    return {}
   }
   if (!COLOR_STYLES[colorKey]) {
     throw new Error('Invalid color key, check COLOR_STYLES')

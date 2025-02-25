@@ -374,7 +374,7 @@ function handleResetSort() {
 
 function mapSortToQueryParams() {
 
-  if (typeof props.customSortMapper === 'function') {
+  if (props.customSortMapper && typeof props.customSortMapper === 'function') {
     const customMapping = props.customSortMapper(sortingQuery.value)
     if (Object.keys(customMapping).length) {
       return customMapping
