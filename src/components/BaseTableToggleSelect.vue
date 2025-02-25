@@ -3,7 +3,7 @@
           placeholder="Select"
           option-value="value"
           input-id="value"
-          @change="handleValueChange"
+          @update:model-value="handleValueChange"
           :loading="isLoading"
           v-model="currentValue"
           :pt="getPtOptions(currentValue)"
@@ -60,7 +60,10 @@ onMounted(() => {
 })
 
 function handleValueChange(event) {
-  emit('change', event.value)
+  if (event !== currentValue.value) {
+    emit('change', event.value)
+  }
+
 }
 
 function getPtOptions(optionValue) {
