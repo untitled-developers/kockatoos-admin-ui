@@ -1,5 +1,6 @@
 <template>
   <BaseDialog :header="header"
+              :full-height="fullHeight"
               :with-close-button="!isLoading"
               @close="emit('close')">
     <template #content>
@@ -37,6 +38,10 @@ const props = defineProps({
   header: {
     type: String,
     required: true
+  },
+  fullHeight: {
+    type: Boolean,
+    default: false
   },
   withNavigation: {
     type: Boolean,
