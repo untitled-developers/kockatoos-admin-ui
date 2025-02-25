@@ -22,8 +22,10 @@
 
 <script setup>
 import BaseDialog from "./BaseDialog.vue";
+import {Button} from "primevue";
 import BaseEditDialogNavigationButtons from "./BaseEditDialogNavigationButtons.vue";
 import {watch} from "vue";
+import useFreezeRay from "../composables/useFreezeRay.js";
 
 const props = defineProps({
   header: {
@@ -44,6 +46,10 @@ const props = defineProps({
   isSubmitting: {
     type: Boolean,
     default: false
+  },
+  isFrozen: {
+    type: Boolean,
+    default: false
   }
 })
 const emit = defineEmits([
@@ -52,10 +58,13 @@ const emit = defineEmits([
   'submit',
   'close'])
 
-watch(() => props.isSubmitting, (value) => {
-  console.log('Changed isSubmitting')
-  console.log(value)
-
+const {freezeApp, unfreezeApp} = useFreezeRay()
+watch(() => props.isFrozen, (value) => {
+  if (value) {
+    freezeApp()
+  } else {
+    unfreezeApp()
+  }
 })
 </script>
 
