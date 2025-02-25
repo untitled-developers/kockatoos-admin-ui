@@ -13,6 +13,7 @@
       <Button v-if="withSubmit"
               :loading="isSubmitting"
               label="Submit"
+              type="submit"
               @click="emit('submit')"
               :form="formId"></Button>
     </template>
