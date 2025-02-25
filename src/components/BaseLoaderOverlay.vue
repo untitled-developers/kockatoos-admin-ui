@@ -14,7 +14,7 @@
       ]"></div>
 
       <p v-if="text"
-         :class="['mt-4 text-gray-800',
+         :class="['mt-4 font-medium text-gray-500',
       {
             'text-sm': size === 'small',
             'text-base': size === 'medium',
@@ -38,7 +38,7 @@ const props = defineProps({
   },
   text: {
     type: String,
-    default: 'Loading'
+    default: 'LOADING'
   },
   size: {
     type: String,

@@ -28,6 +28,7 @@
         </h2>
         <div>
           <Button severity="secondary"
+                  v-if="withCloseButton"
                   icon="pi pi-times"
                   size="large"
                   rounded
