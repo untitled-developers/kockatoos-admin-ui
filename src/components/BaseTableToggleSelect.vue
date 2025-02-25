@@ -69,7 +69,9 @@ function getPtOptions(optionValue) {
   if (optionValue === null || optionValue === undefined) {
     return {}
   }
-
+  if (!props.colorMapping) {
+    return {}
+  }
   const colorKey = props.colorMapping[optionValue]
   if (!colorKey || !COLOR_STYLES[colorKey]) {
     return {}
