@@ -49,7 +49,6 @@ const props = defineProps({
   },
   colorMapping: {
     type: Object,
-    required: true,
   }
 })
 const emit = defineEmits(['change'])
