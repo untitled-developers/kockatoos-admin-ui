@@ -8,7 +8,7 @@ export default function useCrudTable(crudTableRef) {
         }
     }
 
-    function starRowLoading(record) {
+    function startRowLoading(record) {
         verifyCrudTableRef()
         crudTableRef.value.startRowLoading(record)
     }
@@ -26,7 +26,7 @@ export default function useCrudTable(crudTableRef) {
 
     return {
         fetchTableData,
-        starRowLoading,
+        startRowLoading,
         stopRowLoading
     }
 
