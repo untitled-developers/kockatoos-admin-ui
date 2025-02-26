@@ -1,5 +1,6 @@
 <template>
   <BaseDialog :header="header"
+              :width="width"
               :full-height="fullHeight"
               :with-close-button="!isLoading"
               @close="emit('close')">
@@ -65,6 +66,9 @@ const props = defineProps({
   isLoading: {
     type: Boolean,
     default: false
+  },
+  width: {
+    type: String
   },
   loaderHeight: {
     type: String,
