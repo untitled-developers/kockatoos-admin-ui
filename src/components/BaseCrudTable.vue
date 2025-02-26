@@ -174,6 +174,10 @@ const props = defineProps({
     type: Object,
     default: {}
   },
+  editDialogHandlers: {
+    type: Object,
+    default: {}
+  },
   withAdd: {
     type: Boolean,
     default: true
@@ -341,7 +345,8 @@ function openEditDialog(record) {
         })
         refreshDialog(editDialogId.value)
 
-      }
+      },
+      ...props.editDialogHandlers
     },
     props: dialogProps
   })
