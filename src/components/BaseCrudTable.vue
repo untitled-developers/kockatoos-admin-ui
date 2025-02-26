@@ -1,19 +1,19 @@
 <template>
-<!--  <Toolbar :pt="{-->
-<!--  root: {-->
-<!--    style: {-->
-<!--      borderRadius: 0-->
-<!--    }-->
-<!--  }-->
-<!--}">-->
-<!--    <template #start>-->
-<!--      <Button icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>-->
-<!--      <slot name="actions-start"></slot>-->
-<!--    </template>-->
-<!--    <template #end>-->
-<!--      <slot name="actions-end"></slot>-->
-<!--    </template>-->
-<!--  </Toolbar>-->
+  <!--  <Toolbar :pt="{-->
+  <!--  root: {-->
+  <!--    style: {-->
+  <!--      borderRadius: 0-->
+  <!--    }-->
+  <!--  }-->
+  <!--}">-->
+  <!--    <template #start>-->
+  <!--      <Button icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>-->
+  <!--      <slot name="actions-start"></slot>-->
+  <!--    </template>-->
+  <!--    <template #end>-->
+  <!--      <slot name="actions-end"></slot>-->
+  <!--    </template>-->
+  <!--  </Toolbar>-->
   <Toolbar :pt="{
       root: {
          style: {
@@ -24,7 +24,7 @@
   }
     }">
     <template #start>
-      <Button icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
+      <Button v-if="withAdd" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
       <!--      <Button-->
       <!--          label="Reset Sort"-->
       <!--          @click="handleResetSort"-->
@@ -174,6 +174,10 @@ const props = defineProps({
     type: Object,
     default: {}
   },
+  withAdd: {
+    type: Boolean,
+    default: true
+  },
   defaultSort: {
     type: Object,
     required: false,
@@ -205,9 +209,7 @@ const props = defineProps({
   },
   //Added to accommodate for pawcuddlz as the sorting queries are different
   customSortMapper: {
-    type: Function,
-    default: () => {
-    }
+    type: Function
   }
 })
 const filters = defineModel('filters')
