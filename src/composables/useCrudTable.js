@@ -2,7 +2,7 @@ export default function useCrudTable(crudTableRef) {
     async function fetchTableData(withLoading = true) {
         verifyCrudTableRef()
         if (withLoading) {
-            await crudTableRef.value.fetchTableData()
+            await crudTableRef.value.fetchData()
         } else {
             await crudTableRef.value.silentFetchData()
         }
