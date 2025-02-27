@@ -59,10 +59,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  isFrozen: {
-    type: Boolean,
-    default: false
-  },
   isLoading: {
     type: Boolean,
     default: false
@@ -81,14 +77,6 @@ const emit = defineEmits([
   'submit',
   'close'])
 
-const {freezeApp, unfreezeApp} = useFreezeRay()
-watch(() => props.isFrozen, (value) => {
-  if (value) {
-    freezeApp()
-  } else {
-    unfreezeApp()
-  }
-})
 </script>
 
 <style scoped>
