@@ -56,18 +56,13 @@ export default function useUtils() {
 
     /**
      * Converts a JavaScript timestamp to MySQL date format (YYYY-MM-DD)
-     * @param {number|Date} timestamp - JavaScript timestamp (milliseconds since epoch) or Date object
+     * @param {number|Date} timestamp - timestamp
      * @returns {string} Date in MySQL format (YYYY-MM-DD)
      */
     function getFormattedDate(timestamp) {
-        // Convert to Date object if timestamp is a number
         const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
-
-        // Get year, month, and day components
         const year = date.getFullYear();
-        // getMonth() is zero-based, so add 1 and pad with a leading zero if needed
         const month = String(date.getMonth() + 1).padStart(2, '0');
-        // pad the day with a leading zero if needed
         const day = String(date.getDate()).padStart(2, '0');
 
         // Return in MySQL date format: YYYY-MM-DD
@@ -77,6 +72,7 @@ export default function useUtils() {
     return {
         get,
         set,
-        cloneDeep
+        cloneDeep,
+        getFormattedDate
     }
 }
