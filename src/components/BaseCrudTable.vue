@@ -108,7 +108,7 @@
              :multi-sort-meta="sortingQuery"
              resizable-columns
              column-resize-mode="fit"
-             :rows-per-page-options="[5, 20, 50, 100]"
+             :rows-per-page-options="[10,  50, 100, 500]"
              :loading="isTableLoading"
              :value="tableData">
     <Column v-if="withSelection" selectionMode="multiple" headerStyle="width: 3rem"/>
@@ -234,7 +234,7 @@ const fetch = useFetch()
 const isTableLoading = ref(false)
 const tableData = ref([])
 const paginationQuery = ref({
-  rows: 5,
+  rows: 10,
   totalRecords: 0,
   page: 0
 })
