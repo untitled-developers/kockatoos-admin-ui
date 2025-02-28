@@ -11,7 +11,7 @@
       ></Button>
     </div>
   </div>
-  <div class="relative min-h-[100px]">
+  <div v-if="modelValue?.length > 0" class="relative min-h-[100px]">
     <div
         v-if="isLoading"
         class="absolute inset-0 bg-white/50 flex items-center justify-center z-10"
@@ -40,6 +40,11 @@
           </div>
         </div>
       </template>
+    </div>
+  </div>
+  <div v-else>
+    <div class="p-4 bg-white text-center">
+      <p class="text-gray-500 min-h-[100px] flex items-center justify-center">Your gallery is empty</p>
     </div>
   </div>
 </template>
