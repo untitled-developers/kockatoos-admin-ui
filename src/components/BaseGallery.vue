@@ -21,7 +21,7 @@
 
     <div
         ref="galleryRef"
-        class="flex flex-wrap gap-4 p-4 bg-white "
+        class="flex flex-wrap gap-4 p-4 bg-white"
     >
       <template v-for="(item, index) in modelValue" :key="getValueByPath(item, idPath)">
         <div
@@ -32,7 +32,7 @@
               class="w-48 h-48 relative bg-gray-100 rounded-lg overflow-hidden group transition-all duration-100"
               :class="[isSelected(item) ? 'selected-item' : '']"
           >
-            <img
+            <Image
                 :src="getValueByPath(item, urlPath)"
                 :alt="getValueByPath(item, namePath)"
                 class="w-full h-full object-cover"
@@ -41,24 +41,16 @@
         </div>
       </template>
     </div>
-
   </div>
 </template>
 
 <script setup>
-import {, ref, watch} from 'vue'
+import {ref, watch} from 'vue'
 import {useSortable} from '@vueuse/integrations/useSortable'
 import Button from "primevue/button";
+import {Image} from "primevue";
 
 const props = defineProps({
-  deleteEndpoint: {
-    required: true,
-    type: String
-  },
-  sortEndpoint: {
-    required: true,
-    type: String
-  },
   idPath: {
     type: String,
     default: 'id'
@@ -68,20 +60,37 @@ const props = defineProps({
     required: true
   },
   namePath: {
-    type: String
+    type: String,
+    default: ''
   },
   sizePath: {
-    type: String
+    type: String,
+    default: ''
+  },
+  isLoading: {
+    type: Boolean,
+    default: false
   }
 })
 
-const emit = defineEmits(['update:modelValue', 'selectionChange'])
+const emit = defineEmits([
+  'update:modelValue',
+  'selectionChange',
+  'deleteItems',
+  'sortItems'
+])
+
 const galleryRef = ref(null)
 const selectedItems = ref([])
-const isLoading = ref(false)
 const modelValue = defineModel()
 
+/**
+ * Get a value from an object using a path string
+ * Supports both dot notation and bracket notation
+ */
 function getValueByPath(item, path) {
+  if (!path) return '';
+
   try {
     const keys = path.replace(/\[(\w+)\]/g, '.$1').split('.');
 
@@ -98,13 +107,18 @@ function getValueByPath(item, path) {
   }
 }
 
+/**
+ * Check if an item is currently selected
+ */
 function isSelected(item) {
   return selectedItems.value.some(selectedItem =>
       getValueByPath(selectedItem, props.idPath) === getValueByPath(item, props.idPath)
   )
 }
 
-
+/**
+ * Toggle selection state of an item
+ */
 function toggleSelectItem(item) {
   if (isSelected(item)) {
     selectedItems.value = selectedItems.value.filter(
@@ -120,75 +134,92 @@ function toggleSelectItem(item) {
   })
 }
 
+/**
+ * Handle item sorting
+ */
+function handleSort(sortedList) {
+  // Map items with their new sort positions
+  const items = sortedList.map((item, index) => ({
+    id: getValueByPath(item, props.idPath),
+    sort_number: index
+  }));
 
-async function handleSort(sortedList) {
-  try {
-    isLoading.value = true;
-    sortedList.forEach((item, index) => {
-      item['sort_number'] = index
-    })
-    const items = sortedList.map((item, index) => ({
-      id: getValueByPath(item, props.idPath),
-      sort_number: index
-    }));
-
-    await axios.post(props.sortEndpoint, {items});
-
-  } catch (error) {
-    console.error('Error updating sort order:', error);
-  } finally {
-    isLoading.value = false;
-  }
+  // Emit event for parent to handle the API call
+  emit('sortItems', items);
 }
 
-async function handleDelete() {
-  try {
-    isLoading.value = true;
+/**
+ * Handle item deletion
+ */
+function handleDelete() {
+  const ids = selectedItems.value.map(item => getValueByPath(item, props.idPath));
+  const itemsToDelete = selectedItems.value;
 
-    const ids = selectedItems.value.map(item => getValueByPath(item, props.idPath));
+  // Emit delete event for parent to handle the API call
+  // Pass a confirmation callback to update UI only after success
+  emit('deleteItems', {
+    ids,
+    items: itemsToDelete,
+    onSuccess: () => {
+      // Only update the model after successful deletion
+      const updatedItems = modelValue.value.filter(item =>
+          !ids.includes(getValueByPath(item, props.idPath))
+      );
 
-    await axios.delete(props.deleteEndpoint, {
-      data: {ids}
-    });
+      // Update the model value
+      emit('update:modelValue', updatedItems);
 
-    modelValue.value = modelValue.value.filter(item =>
-        !ids.includes(getValueByPath(item, props.idPath))
-    );
-    selectedItems.value = [];
-  } catch (error) {
-    console.error('Error deleting items:', error);
-  } finally {
-    isLoading.value = false;
-  }
+      // Clear selection
+      selectedItems.value = [];
+    },
+    onError: (error) => {
+      // Parent can handle any UI feedback for errors
+      console.error('Delete operation failed:', error);
+    }
+  });
 }
 
-function toggleLoading() {
-  isLoading.value = !isLoading.value
+/**
+ * Clear selection
+ */
+function clearSelection() {
+  selectedItems.value = [];
 }
 
-watch(() => props.modelValue, () => {
-  selectedItems.value = []
-})
+// Watch for changes to modelValue and reset selection
+watch(modelValue, () => {
+  selectedItems.value = [];
+});
 
-useSortable(galleryRef, modelValue.value, {
+// Initialize sortable functionality
+useSortable(galleryRef, modelValue, {
   animation: 150,
   onUpdate: (event) => {
-    const temp = modelValue.value[event.oldIndex]
-    modelValue.value[event.oldIndex] = modelValue.value[event.newIndex]
-    modelValue.value[event.newIndex] = temp
-    handleSort(modelValue.value)
-  }
-})
+    // Create a shallow copy of the array to maintain reactivity
+    const newArray = [...modelValue.value];
 
+    // Swap items based on the indices
+    const temp = newArray[event.oldIndex];
+    newArray[event.oldIndex] = newArray[event.newIndex];
+    newArray[event.newIndex] = temp;
+
+    // Update model value with the new order
+    emit('update:modelValue', newArray);
+
+    // Handle sort processing
+    handleSort(newArray);
+  }
+});
+
+// Expose component methods and state
 defineExpose({
   selectedItems,
-  toggleLoading,
-  clearSelection: () => {
-    selectedItems.value = []
-  }
-})
+  clearSelection
+});
 </script>
-<style>
 
-
+<style scoped>
+.selected-item {
+  outline: 2px solid var(--p-primary-600);
+}
 </style>
