@@ -185,7 +185,7 @@ async function processFiles(newFiles) {
     if (validation.valid) {
       // Emit event to parent component for handling the upload
       emit('upload-file', {
-        fileObj,
+        file: fileObj,
         index: files.value.length - 1,
         onSuccess: () => updateFileStatus(fileObj.id, STATUS.SUCCESS),
         onError: (errorMessage) => updateFileStatus(fileObj.id, STATUS.ERROR, errorMessage)
