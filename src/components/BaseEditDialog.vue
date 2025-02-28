@@ -2,6 +2,7 @@
   <BaseDialog :header="header"
               :width="width"
               :full-height="fullHeight"
+              :is-blurred="isSubmitting"
               :with-close-button="!isLoading"
               @close="emit('close')">
     <template #content>
@@ -77,6 +78,18 @@ const emit = defineEmits([
   'submit',
   'close'])
 
+const {
+  freezeApp,
+  unfreezeApp
+} = useFreezeRay()
+
+watch(() => props.isSubmitting, (isSubmitting) => {
+  if (isSubmitting) {
+    freezeApp()
+  } else {
+    unfreezeApp()
+  }
+})
 </script>
 
 <style scoped>
