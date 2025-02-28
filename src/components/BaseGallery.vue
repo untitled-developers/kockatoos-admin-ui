@@ -23,7 +23,7 @@
         ref="galleryRef"
         class="flex flex-wrap gap-4 p-4 bg-white"
     >
-      <template v-for="(item, index) in modelValue" :key="getValueByPath(item, idPath)">
+      <template v-for="(item, index) in modelValue" :key="get(item, idPath)">
         <div
             class="cursor-move touch-none"
             @click="toggleSelectItem(item)"
@@ -33,8 +33,8 @@
               :class="[isSelected(item) ? 'selected-item' : '']"
           >
             <Image
-                :src="getValueByPath(item, urlPath)"
-                :alt="getValueByPath(item, namePath)"
+                :src="get(item, urlPath)"
+                :alt="get(item, namePath)"
                 class="w-full h-full object-cover"
             />
           </div>
@@ -54,6 +54,7 @@ import {ref, watch} from 'vue'
 import {useSortable} from '@vueuse/integrations/useSortable'
 import Button from "primevue/button";
 import {Image} from "primevue";
+import useUtils from "../composables/useUtils.js";
 
 const props = defineProps({
   idPath: {
@@ -77,7 +78,7 @@ const props = defineProps({
     default: false
   }
 })
-
+const {get} = useUtils()
 const emit = defineEmits([
   'update:modelValue',
   'selectionChange',
@@ -90,34 +91,11 @@ const selectedItems = ref([])
 const modelValue = defineModel()
 
 /**
- * Get a value from an object using a path string
- * Supports both dot notation and bracket notation
- */
-function getValueByPath(item, path) {
-  if (!path) return '';
-
-  try {
-    const keys = path.replace(/\[(\w+)\]/g, '.$1').split('.');
-
-    return keys.reduce((current, key) => {
-      if (current === undefined || current === null) {
-        throw new Error(`Invalid path: ${path}`);
-      }
-      return current[key];
-    }, item);
-
-  } catch (error) {
-    console.error(`Error accessing path "${path}":`, error.message);
-    return undefined;
-  }
-}
-
-/**
  * Check if an item is currently selected
  */
 function isSelected(item) {
   return selectedItems.value.some(selectedItem =>
-      getValueByPath(selectedItem, props.idPath) === getValueByPath(item, props.idPath)
+      get(selectedItem, props.idPath) === get(item, props.idPath)
   )
 }
 
@@ -127,7 +105,7 @@ function isSelected(item) {
 function toggleSelectItem(item) {
   if (isSelected(item)) {
     selectedItems.value = selectedItems.value.filter(
-        selectedItem => getValueByPath(selectedItem, props.idPath) !== getValueByPath(item, props.idPath)
+        selectedItem => get(selectedItem, props.idPath) !== get(item, props.idPath)
     )
   } else {
     selectedItems.value = [...selectedItems.value, item]
@@ -145,7 +123,7 @@ function toggleSelectItem(item) {
 function handleSort(sortedList) {
   // Map items with their new sort positions
   const items = sortedList.map((item, index) => ({
-    id: getValueByPath(item, props.idPath),
+    id: get(item, props.idPath),
     sort_number: index
   }));
 
@@ -157,7 +135,7 @@ function handleSort(sortedList) {
  * Handle item deletion
  */
 function handleDelete() {
-  const ids = selectedItems.value.map(item => getValueByPath(item, props.idPath));
+  const ids = selectedItems.value.map(item => get(item, props.idPath));
   const itemsToDelete = selectedItems.value;
 
   // Emit delete event for parent to handle the API call
@@ -168,7 +146,7 @@ function handleDelete() {
     onSuccess: () => {
       // Only update the model after successful deletion
       const updatedItems = modelValue.value.filter(item =>
-          !ids.includes(getValueByPath(item, props.idPath))
+          !ids.includes(get(item, props.idPath))
       );
 
       // Update the model value
