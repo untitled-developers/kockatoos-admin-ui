@@ -123,7 +123,7 @@
           <BaseCrudTableActionsButton v-if="withEdit"
                                       @click="handleEditButtonClick(slotProps.data)"
                                       severity="info"
-                                      :text="editButtonConfig?.label ?? 'EDIT'"/>
+                                      :text="editButtonConfig?.label ?? 'Edit'"/>
           <BaseCrudTableActionsButton v-if="withDelete"
                                       @click="handleDeleteButtonClick(slotProps.data)"
                                       severity="danger"
