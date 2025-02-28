@@ -36,7 +36,14 @@
         </div>
       </div>
     </template>
-    <slot name="content"></slot>
+    <div class="relative">
+      <div :class="{ 'blur-sm': isBlurred }" class="transition-all duration-300">
+        <slot name="content"></slot>
+      </div>
+      <div v-if="isBlurred"
+           class="absolute inset-0 flex items-center justify-center bg-gray-200/30  backdrop-blur-lg rounded z-10">
+      </div>
+    </div>
     <template #footer>
       <Toolbar class="w-full" :pt="{
         root: {
@@ -96,6 +103,10 @@ const props = defineProps({
   withCloseButton: {
     type: Boolean,
     default: true
+  },
+  isBlurred: {
+    type: Boolean,
+    default: false
   }
 })
 
