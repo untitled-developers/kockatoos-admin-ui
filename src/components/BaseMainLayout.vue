@@ -22,7 +22,8 @@
                 itemContent: {
                   style: {
                     borderRadius: 0
-                  }
+                  },
+                  class: ['menu-sub-item']
                 },
                 headerContent:{
                   style: {
@@ -45,17 +46,26 @@
                 }
 
               }">
-                <template #item="{ item }">
-                  <router-link v-if="item.route" v-slot="{ navigate }" :to="item.route" :active-class="isDark ? 'active-link-dark' : 'active-link'">
+                <template #item="{ item , root, hasSubmenu }">
+                  <router-link v-if="item.route" v-slot="{ navigate }" :to="item.route"
+                               :active-class="isDark ? 'active-link-dark' : 'active-link'">
                     <span
-                        :class="['border-l border-gray-300 hover:border-gray-400 flex items-center cursor-pointer px-2 py-4', isDark ? 'text-white': 'text-surface-700']"
+                        :class="[
+                       'border-l border-gray-300 hover:border-gray-400 flex items-center cursor-pointer px-2 py-4',
+                        isDark ? 'text-white': 'text-surface-700',
+                        !root ? 'pl-6' : ''
+                  ]"
                         @click="navigate">
                         <span class="font-medium">{{ item.label }}</span>
                     </span>
                   </router-link>
                   <div v-else
-                       :class="['flex items-center  cursor-pointer px-2 py-4', isDark ? 'text-white': 'text-gray-600']">
-                    <span class="font-medium">{{ item.label }}</span>
+                       :class="[
+  'flex items-center cursor-pointer px-2 py-4',
+  isDark ? 'text-white': 'text-gray-600',
+  !root ? 'pl-6' : ''
+]">
+                    <span class="font-medium">{{ item.label }} </span>
                     <span v-if="item.items" class="pi pi-angle-down ml-auto"/>
                   </div>
                 </template>
@@ -162,6 +172,10 @@ async function logout() {
 
 .active-link-dark span {
   @apply bg-stone-800 text-[--p-primary-100] font-semibold
+}
+
+:deep(.p-submenu-list .menu-sub-item) {
+  @apply pl-6
 }
 
 </style>
