@@ -123,7 +123,7 @@
           <BaseCrudTableActionsButton v-if="withEdit"
                                       @click="handleEditButtonClick(slotProps.data)"
                                       severity="info"
-                                      text="Edit"/>
+                                      :text="editButtonConfig?.label ?? 'EDIT'"/>
           <BaseCrudTableActionsButton v-if="withDelete"
                                       @click="handleDeleteButtonClick(slotProps.data)"
                                       severity="danger"
@@ -214,7 +214,11 @@ const props = defineProps({
   //Added to accommodate for pawcuddlz as the sorting queries are different
   customSortMapper: {
     type: Function
-  }
+  },
+  editButtonConfig: {
+    type: Object,
+    default: {}
+  },
 })
 const filters = defineModel('filters')
 const selectedRecords = defineModel('selectedRecord')
