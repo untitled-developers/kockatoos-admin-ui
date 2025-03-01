@@ -127,7 +127,7 @@ export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
         unfreezeApp()
     }
 
-    function startDialogSaveLoading({message} = {}) {
+    function startDialogSubmitLoading({message} = {}) {
         loading.value = {
             active: true,
             message: message ?? 'Saving your changes',
@@ -166,7 +166,7 @@ export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
         submitData,
         populateForm,
         startDialogContentLoading,
-        startDialogSaveLoading,
+        startDialogSubmitLoading,
         stopDialogLoading,
         loading,
     }
