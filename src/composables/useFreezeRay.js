@@ -1,13 +1,16 @@
+import { onUnmounted, onBeforeUnmount } from 'vue';
 import useAlerts from "./useAlerts.js";
 
 export default function useFreezeRay() {
     const overlayId = 'transparent-overlay';
-    const {alertInfo} = useAlerts();
+    const { alertInfo } = useAlerts();
     // Added this flag because on first click the user click event is triggered which is causing the alert to immediately display
     let ignoreFirstClick = true;
+    let isActive = false;
 
     function freezeApp() {
         if (document.getElementById(overlayId)) return;
+        isActive = true;
 
         const overlay = document.createElement('div');
         overlay.id = overlayId;
@@ -47,6 +50,7 @@ export default function useFreezeRay() {
 
         // Reset the flag
         ignoreFirstClick = true;
+        isActive = false;
     }
 
     function preventKeydown(event) {
@@ -60,6 +64,13 @@ export default function useFreezeRay() {
         }
         alertInfo('Please wait while we process your request...');
     }
+
+    // Clean up event listeners when component is unmounted
+    onBeforeUnmount(() => {
+        if (isActive) {
+            unfreezeApp();
+        }
+    });
 
     return {
         freezeApp,
