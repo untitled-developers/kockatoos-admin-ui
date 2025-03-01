@@ -1,11 +1,18 @@
 import useCrudApi from "./useCrudApi.js";
 import useUtils from "./useUtils.js";
 import useFreezeRay from "./useFreezeRay.js";
+import {ref} from "vue";
 
-export default function useEditDialog({props, emit}, modelName, endpoint) {
+export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
     const {cloneDeep} = useUtils()
     const {freezeApp, unfreezeApp} = useFreezeRay()
-
+    const loading = ref({
+        active: false,
+        message: '',
+        height: '',
+        mode: '',
+        freezeApp: false
+    })
     const {
         create,
         update
@@ -120,6 +127,32 @@ export default function useEditDialog({props, emit}, modelName, endpoint) {
         unfreezeApp()
     }
 
+    function startDialogSaveLoading({message} = {}) {
+        loading.value = {
+            active: true,
+            message: message ?? 'Saving your changes',
+            height: 'auto',
+            mode: 'overlay',
+            freezeApp: true
+        }
+    }
+
+    function startDialogContentLoading({message, height} = {}) {
+        loading.value = {
+            active: true,
+            message: message ?? 'Loading',
+            height: height ?? '500px',
+            mode: 'replace',
+            freezeApp: false
+        }
+
+    }
+
+
+    function stopDialogLoading() {
+        loading.value.active = false
+        loading.value.freezeApp = false
+    }
 
     return {
         handleNextRecord,
@@ -131,7 +164,11 @@ export default function useEditDialog({props, emit}, modelName, endpoint) {
         isEditingRecord,
         getDialogHeader,
         submitData,
-        populateForm
+        populateForm,
+        startDialogContentLoading,
+        startDialogSaveLoading,
+        stopDialogLoading,
+        loading,
     }
 
 }
