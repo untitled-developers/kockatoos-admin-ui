@@ -320,6 +320,7 @@ function openEditDialog(record) {
               'record': tableData.value.find(row => row.id === dialogProps.record.id)
             }
           })
+          refreshDialog(editDialogId.value)
         }
       },
       'next-record': (currentRecord) => {
