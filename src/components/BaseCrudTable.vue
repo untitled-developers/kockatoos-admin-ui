@@ -317,7 +317,7 @@ function openEditDialog(record) {
           updateDialogProps(editDialogId.value, (oldProps) => {
             return {
               ...oldProps,
-              'record': tableData.value.find(row => row.id === dialogProps.record.id)
+              'record': tableData.value.find(row => row.id === oldProps.record.id)
             }
           })
           refreshDialog(editDialogId.value)
