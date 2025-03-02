@@ -127,27 +127,46 @@ export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
         unfreezeApp()
     }
 
-    function startDialogSubmitLoading({message} = {}) {
+    /**
+     * Start loading with predefined templates and customizable options
+     * @param {Object} options - Loading options
+     * @param {string} [options.template='default'] - Template type: 'blocking', or 'overlay'
+     * @param {string} [options.message] - Custom loading message
+     * @param {string} [options.height] - Custom height (only relevant for overlay template)
+     * @param {Object} [options.customOptions] - Any additional loading options to override defaults
+     */
+    function startDialogLoading (options = {} ){
+        const {
+            template = 'blocking',
+            message,
+            height,
+            customOptions = {}
+        } = options;
+
+        const templates = {
+            // For blocking operations (form submissions, API calls, etc.)
+            blocking: {
+                active: true,
+                message: message ?? 'Processing request',
+                height: 'auto',
+                mode: 'overlay',
+                freezeApp: true
+            },
+            // For content loading within a dialog
+            embedded: {
+                active: true,
+                message: message ?? 'Loading content',
+                height: height ?? '500px',
+                mode: 'replace',
+                freezeApp: false
+            }
+        };
+        const baseConfig = templates[template]
         loading.value = {
-            active: true,
-            message: message ?? 'Saving your changes',
-            height: 'auto',
-            mode: 'overlay',
-            freezeApp: true
-        }
+            ...baseConfig,
+            ...customOptions
+        };
     }
-
-    function startDialogContentLoading({message, height} = {}) {
-        loading.value = {
-            active: true,
-            message: message ?? 'Loading',
-            height: height ?? '500px',
-            mode: 'replace',
-            freezeApp: false
-        }
-
-    }
-
 
     function stopDialogLoading() {
         loading.value.active = false
@@ -165,8 +184,7 @@ export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
         getDialogHeader,
         submitData,
         populateForm,
-        startDialogContentLoading,
-        startDialogSubmitLoading,
+        startDialogLoading,
         stopDialogLoading,
         loading,
     }
