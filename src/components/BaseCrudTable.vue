@@ -203,6 +203,10 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  dialogCloseOnEdit: {
+    type: Boolean,
+    default: false
+  },
   withDelete: {
     type: Boolean,
     default: true
@@ -302,13 +306,21 @@ function openEditDialog(record) {
   }
   editDialogId.value = openDialog(props.editDialog, {
     handlers: {
-      'submit': () => {
+      'submit': async () => {
         if (record) {
           alertSuccess('Record Updated Successfully')
         } else {
           alertSuccess('Record Created Successfully')
         }
-        fetchData()
+        await fetchData()
+        if (dialogProps.record && !props.dialogCloseOnEdit) {
+          updateDialogProps(editDialogId.value, (oldProps) => {
+            return {
+              ...oldProps,
+              'record': tableData.value.find(row => row.id === dialogProps.record.id)
+            }
+          })
+        }
       },
       'next-record': (currentRecord) => {
         const currentRecordIndex = tableData.value.findIndex(row => row.id === currentRecord.id)
