@@ -56,6 +56,7 @@
               type="submit"
               @click="emit('submit')"
               :form="formId"></Button>
+      <slot name="footer-end"></slot>
     </template>
   </BaseDialog>
 </template>
