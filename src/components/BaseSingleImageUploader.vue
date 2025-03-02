@@ -25,10 +25,14 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 
 const props = defineProps({
   image: {
+    type: String,
+    default: ''
+  },
+  defaultImageUrl: {
     type: String,
     default: ''
   }
@@ -50,6 +54,12 @@ function handleInputChange() {
   }
   reader.readAsDataURL(newFile)
 }
+
+onMounted(() => {
+  if (props.defaultImageUrl && !props.image) {
+    setImageFromUrl(props.defaultImageUrl)
+  }
+})
 
 /**
  *
