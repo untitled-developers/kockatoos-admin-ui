@@ -46,6 +46,10 @@ const props = defineProps({
     type: Array,
     required: true
   },
+  showNavigation: {
+    type: Boolean,
+    default: true
+  }
 })
 const route = useRoute()
 
@@ -62,7 +66,7 @@ const menuRef = ref({
 
     }
   },
-  rootList:{
+  rootList: {
     style: {
       rowGap: 0,
       columnGap: 0
