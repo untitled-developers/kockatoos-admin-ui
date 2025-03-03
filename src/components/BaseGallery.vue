@@ -61,7 +61,7 @@
 import {ref, watch} from 'vue'
 import {useSortable} from '@vueuse/integrations/useSortable'
 import Button from "primevue/button";
-import {Image} from "primevue";
+import {Image, Toolbar} from "primevue";
 import useUtils from "../composables/useUtils.js";
 
 const props = defineProps({
