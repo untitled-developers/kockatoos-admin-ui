@@ -6,7 +6,7 @@
 
     <div class="mt-3 sm:mt-4">
       <div>
-        <Menubar :model="navigationItems" :pt="menuRef">
+        <Menubar :class="[showNavigation ? 'invisible' : '']" :model="navigationItems" :pt="menuRef">
           <template #item="{ item, props, hasSubmenu }">
             <router-link v-if="item.route"
                          v-slot="{ href, navigate }"
