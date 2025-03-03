@@ -3,7 +3,7 @@
   <div class="flex">
     <div>
       <nav v-if="!isCollapsed"
-           :class="['flex border-r  border-gray-300 w-64 shadow-md h-screen sticky', isDark ? 'bg-stone-700':'bg-white']">
+           :class="['flex border-r  border-gray-300 w-64 shadow-md overflow-y-auto  h-screen sticky', isDark ? 'bg-stone-700':'bg-white']">
         <div v-if="!isCollapsed" class="flex flex-col w-full h-full">
           <div class="flex w-full justify-center h-18 shrink-0  pl-4 py-2 pr-3 mb-4">
             <div>
