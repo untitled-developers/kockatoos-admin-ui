@@ -1,5 +1,21 @@
 <template>
-
+  <BaseChart :options="{
+  title: {
+    text: 'ECharts Getting Started Example'
+  },
+  tooltip: {},
+  xAxis: {
+    data: ['shirt', 'cardigan', 'chiffon', 'pants', 'heels', 'socks']
+  },
+  yAxis: {},
+  series: [
+    {
+      name: 'sales',
+      type: 'bar',
+      data: [5, 20, 36, 10, 10, 20]
+    }
+  ]
+}"></BaseChart>
   <BaseStackedLayout :navigation-items="[
       {
         label: 'Playground',
@@ -33,6 +49,8 @@
       <div>
         <Button label="DIALOG" @click="handleOpenDialog"></Button>
       </div>
+      <BaseSingleImageUploader
+          default-image-url="https://s3.eu-west-3.amazonaws.com/pawcuddlze-prd/public/branches/72907f4a-d427-11ef-adb5-0e144b09082d.webp"></BaseSingleImageUploader>
       <div>
         <BaseTableToggleSelect @change="handleToggle" :options="[
                         {label: 'Active', value: 1, color: 'green'},
@@ -52,8 +70,11 @@
       <BaseMultiImageUploader @upload-file="handleUploadFile"></BaseMultiImageUploader>
     </div>
 
-    <BaseGallery :is-loading="isGalleryLoading" @delete-items="handleDeleteImage" url-path=""
-                 v-model="images"></BaseGallery>
+    <BaseGallery :is-loading="isGalleryLoading"
+                 @delete-items="handleDeleteImage"
+                 url-path=""
+                 v-model="blobs"></BaseGallery>
+
 
   </BaseStackedLayout>
 
@@ -82,6 +103,7 @@ import useGlobalLoader from "../composables/useGlobalLoader.js";
 import useFreezeRay from "../composables/useFreezeRay.js";
 import BaseMultiImageUploader from "../components/BaseMultiImageUploader.vue";
 import BaseGallery from "../components/BaseGallery.vue";
+import BaseChart from "../components/BaseChart.vue";
 
 const imageUploader = ref(null)
 const {confirmSuccess} = useConfirmDialog()
@@ -152,6 +174,50 @@ function handleSubmit() {
   didSubmit.value = true
 }
 
+const blobs = ref([
+  {
+    "id": 21,
+    "shop_id": 11,
+    "blob_id": 528,
+    "created_at": "2025-02-28T14:35:06.000000Z",
+    "updated_at": "2025-02-28T14:35:06.000000Z",
+    "sort_number": 1,
+    "blob": {
+      "id": 528,
+      "url": "\/storage\/shops\/346b5c2c-f5e1-11ef-a0d1-a0294270554f.webp",
+      "type": "file",
+      "size": 51415,
+      "ext": "tmp",
+      "name": "346b5c2c-f5e1-11ef-a0d1-a0294270554f.webp",
+      "directory": "shops",
+      "sort_number": 0,
+      "created_at": "2025-02-28 14:35:06",
+      "updated_at": "2025-02-28 14:35:06",
+      "deleted_at": null
+    }
+  },
+  {
+    "id": 22,
+    "shop_id": 11,
+    "blob_id": 529,
+    "created_at": "2025-02-28T14:35:07.000000Z",
+    "updated_at": "2025-02-28T14:35:07.000000Z",
+    "sort_number": 2,
+    "blob": {
+      "id": 529,
+      "url": "\/storage\/shops\/3508a1c6-f5e1-11ef-9cf9-a0294270554f.webp",
+      "type": "file",
+      "size": 179843,
+      "ext": "tmp",
+      "name": "3508a1c6-f5e1-11ef-9cf9-a0294270554f.webp",
+      "directory": "shops",
+      "sort_number": 0,
+      "created_at": "2025-02-28 14:35:07",
+      "updated_at": "2025-02-28 14:35:07",
+      "deleted_at": null
+    }
+  }
+])
 const images = ref([
   {
     id: 1,

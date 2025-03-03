@@ -1,6 +1,6 @@
 <template>
 
-  <BaseEditDialog :is-submitting="isLoading" header="TEST">
+  <BaseEditDialog :loading="loading" header="TEST" @submit="isLoadingFn">
     <template #content>
       <button @click="isLoadingFn">test</button>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a libero sagittis, interdum turpis eu, rutrum
@@ -29,6 +29,26 @@
       enim ipsum imperdiet justo, sit amet semper ante justo vitae ante. Phasellus ut nunc sit amet turpis tincidunt
       aliquam. Vivamus sed diam et tellus blandit hendrerit et a quam. Morbi vehicula nulla neque, eget feugiat tortor
       imperdiet sollicitudin. Etiam a ante imperdiet, laoreet arcu ac, porta augue. Aenean eu scelerisque leo.
+
+      Sed ut augue sit amet dui pellentesque lacinia quis id eros. Donec ullamcorper, nisi eu lacinia placerat, velit
+      magna rhoncus felis, non consectetur ligula felis malesuada justo. Sed nec justo velit. Pellentesque mattis sit
+      amet elit et imperdiet. Aenean nec ornare sapien, sit amet faucibus mi. Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit. Pellentesque ut gravida tortor, vel dignissim felis.
+
+      Praesent placerat lobortis velit et faucibus. Morbi congue auctor sem. Fusce mollis, velit nec molestie convallis,
+      enim ipsum imperdiet justo, sit amet semper ante justo vitae ante. Phasellus ut nunc sit amet turpis tincidunt
+      aliquam. Vivamus sed diam et tellus blandit hendrerit et a quam. Morbi vehicula nulla neque, eget feugiat tortor
+      imperdiet sollicitudin. Etiam a ante imperdiet, laoreet arcu ac, porta augue. Aenean eu scelerisque leo.
+
+      Sed ut augue sit amet dui pellentesque lacinia quis id eros. Donec ullamcorper, nisi eu lacinia placerat, velit
+      magna rhoncus felis, non consectetur ligula felis malesuada justo. Sed nec justo velit. Pellentesque mattis sit
+      amet elit et imperdiet. Aenean nec ornare sapien, sit amet faucibus mi. Lorem ipsum dolor sit amet, consectetur
+      adipiscing elit. Pellentesque ut gravida tortor, vel dignissim felis.
+
+      Praesent placerat lobortis velit et faucibus. Morbi congue auctor sem. Fusce mollis, velit nec molestie convallis,
+      enim ipsum imperdiet justo, sit amet semper ante justo vitae ante. Phasellus ut nunc sit amet turpis tincidunt
+      aliquam. Vivamus sed diam et tellus blandit hendrerit et a quam. Morbi vehicula nulla neque, eget feugiat tortor
+      imperdiet sollicitudin. Etiam a ante imperdiet, laoreet arcu ac, porta augue. Aenean eu scelerisque leo.
     </template>
   </BaseEditDialog>
 </template>
@@ -41,14 +61,16 @@ import BaseLoaderOverlay from "../../components/BaseLoaderOverlay.vue";
 import useGlobalLoader from "../../composables/useGlobalLoader.js";
 import useFreezeRay from "../../composables/useFreezeRay.js";
 import BaseEditDialog from "../../components/BaseEditDialog.vue";
+import useEditDialog from "../../composables/useEditDialog.js";
 
 const isLoading = ref(false)
 const {freezeApp, unfreezeApp} = useFreezeRay()
+const {loading, startDialogLoading, stopDialogLoading} = useEditDialog()
 
 function isLoadingFn() {
-  isLoading.value = true
+  startDialogLoading()
   setTimeout(() => {
-    isLoading.value = false
+    stopDialogLoading()
   }, 4000)
 }
 </script>

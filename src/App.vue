@@ -92,6 +92,75 @@ const items = ref([
       }
     ]
   },
+  {
+    label: 'Dropdown test2',
+    items: [
+      {
+        label: 'Test Page',
+        route: {
+          name: 'test-page'
+        }
+      },
+      {
+        label: 'Playground',
+        route: {
+          name: 'playground'
+        },
+      },
+      {
+        label: 'Test Page',
+        route: {
+          name: 'test-page'
+        }
+      }
+    ]
+  },
+  {
+    label: 'Dropdown test2',
+    items: [
+      {
+        label: 'Test Page',
+        route: {
+          name: 'test-page'
+        }
+      },
+      {
+        label: 'Playground',
+        route: {
+          name: 'playground'
+        },
+      },
+      {
+        label: 'Test Page',
+        route: {
+          name: 'test-page'
+        }
+      }
+    ]
+  },
+  {
+    label: 'Dropdown test2',
+    items: [
+      {
+        label: 'Test Page',
+        route: {
+          name: 'test-page'
+        }
+      },
+      {
+        label: 'Playground',
+        route: {
+          name: 'playground'
+        },
+      },
+      {
+        label: 'Test Page',
+        route: {
+          name: 'test-page'
+        }
+      }
+    ]
+  },
 ]);
 </script>
 <style scoped>
