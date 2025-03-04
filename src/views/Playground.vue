@@ -174,88 +174,93 @@ function handleSubmit() {
   didSubmit.value = true
 }
 
-const blobs = ref([
-  {
-    "id": 21,
-    "shop_id": 11,
-    "blob_id": 528,
-    "created_at": "2025-02-28T14:35:06.000000Z",
-    "updated_at": "2025-02-28T14:35:06.000000Z",
-    "sort_number": 1,
-    "blob": {
-      "id": 528,
-      "url": "\/storage\/shops\/346b5c2c-f5e1-11ef-a0d1-a0294270554f.webp",
-      "type": "file",
-      "size": 51415,
-      "ext": "tmp",
-      "name": "346b5c2c-f5e1-11ef-a0d1-a0294270554f.webp",
-      "directory": "shops",
-      "sort_number": 0,
-      "created_at": "2025-02-28 14:35:06",
-      "updated_at": "2025-02-28 14:35:06",
-      "deleted_at": null
+// const blobs = ref([
+//   {
+//     "id": 21,
+//     "shop_id": 11,
+//     "blob_id": 528,
+//     "created_at": "2025-02-28T14:35:06.000000Z",
+//     "updated_at": "2025-02-28T14:35:06.000000Z",
+//     "sort_number": 1,
+//     "blob": {
+//       "id": 528,
+//       "url": "\/storage\/shops\/346b5c2c-f5e1-11ef-a0d1-a0294270554f.webp",
+//       "type": "file",
+//       "size": 51415,
+//       "ext": "tmp",
+//       "name": "346b5c2c-f5e1-11ef-a0d1-a0294270554f.webp",
+//       "directory": "shops",
+//       "sort_number": 0,
+//       "created_at": "2025-02-28 14:35:06",
+//       "updated_at": "2025-02-28 14:35:06",
+//       "deleted_at": null
+//     }
+//   },
+//   {
+//     "id": 22,
+//     "shop_id": 11,
+//     "blob_id": 529,
+//     "created_at": "2025-02-28T14:35:07.000000Z",
+//     "updated_at": "2025-02-28T14:35:07.000000Z",
+//     "sort_number": 2,
+//     "blob": {
+//       "id": 529,
+//       "url": "\/storage\/shops\/3508a1c6-f5e1-11ef-9cf9-a0294270554f.webp",
+//       "type": "file",
+//       "size": 179843,
+//       "ext": "tmp",
+//       "name": "3508a1c6-f5e1-11ef-9cf9-a0294270554f.webp",
+//       "directory": "shops",
+//       "sort_number": 0,
+//       "created_at": "2025-02-28 14:35:07",
+//       "updated_at": "2025-02-28 14:35:07",
+//       "deleted_at": null
+//     }
+//   }
+// ])
+const blobs = ref([]);
+
+setTimeout(() => {
+  blobs.value = [
+
+    {
+      id: 1,
+      imageUrl: 'https://images.unsplash.com/photo-1682687982141-0143020ed57a',
+      title: 'Mountain Landscape',
+      size: '1.2MB'
+    },
+    {
+      id: 2,
+      imageUrl: 'https://images.unsplash.com/photo-1682695794947-17061df4ccfc',
+      title: 'Beach Sunset',
+      size: '2.4MB'
+    },
+    {
+      id: 3,
+      imageUrl: 'https://images.unsplash.com/photo-1682687218147-9806132dc697',
+      title: 'City Skyline',
+      size: '1.8MB'
+    },
+    {
+      id: 4,
+      imageUrl: 'https://images.unsplash.com/photo-1682685797741-f0213d24418c',
+      title: 'Forest Trail',
+      size: '3.1MB'
+    },
+    {
+      id: 5,
+      imageUrl: 'https://images.unsplash.com/photo-1682686581498-5e85c7228119',
+      title: 'Desert Dunes',
+      size: '2.2MB'
+    },
+    {
+      id: 6,
+      imageUrl: 'https://images.unsplash.com/photo-1682686578842-00ba49b0a71a',
+      title: 'Snow Cabin',
+      size: '1.5MB'
     }
-  },
-  {
-    "id": 22,
-    "shop_id": 11,
-    "blob_id": 529,
-    "created_at": "2025-02-28T14:35:07.000000Z",
-    "updated_at": "2025-02-28T14:35:07.000000Z",
-    "sort_number": 2,
-    "blob": {
-      "id": 529,
-      "url": "\/storage\/shops\/3508a1c6-f5e1-11ef-9cf9-a0294270554f.webp",
-      "type": "file",
-      "size": 179843,
-      "ext": "tmp",
-      "name": "3508a1c6-f5e1-11ef-9cf9-a0294270554f.webp",
-      "directory": "shops",
-      "sort_number": 0,
-      "created_at": "2025-02-28 14:35:07",
-      "updated_at": "2025-02-28 14:35:07",
-      "deleted_at": null
-    }
-  }
-])
-const images = ref([
-  {
-    id: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1682687982141-0143020ed57a',
-    title: 'Mountain Landscape',
-    size: '1.2MB'
-  },
-  {
-    id: 2,
-    imageUrl: 'https://images.unsplash.com/photo-1682695794947-17061df4ccfc',
-    title: 'Beach Sunset',
-    size: '2.4MB'
-  },
-  {
-    id: 3,
-    imageUrl: 'https://images.unsplash.com/photo-1682687218147-9806132dc697',
-    title: 'City Skyline',
-    size: '1.8MB'
-  },
-  {
-    id: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1682685797741-f0213d24418c',
-    title: 'Forest Trail',
-    size: '3.1MB'
-  },
-  {
-    id: 5,
-    imageUrl: 'https://images.unsplash.com/photo-1682686581498-5e85c7228119',
-    title: 'Desert Dunes',
-    size: '2.2MB'
-  },
-  {
-    id: 6,
-    imageUrl: 'https://images.unsplash.com/photo-1682686578842-00ba49b0a71a',
-    title: 'Snow Cabin',
-    size: '1.5MB'
-  }
-]);
+  ]
+}, 2000)
 
 function handleNameBlur() {
   showNameError.value = true
