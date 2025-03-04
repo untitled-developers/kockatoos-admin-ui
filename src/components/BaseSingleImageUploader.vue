@@ -5,11 +5,11 @@
     <div class="flex justify-center bg-gray-50 py-3  w-full">
       <img @click="handleImagePlaceholderClick"
            v-if="imagePreviewUrl"
-           class="size-72 object-scale-down"
+           class="size-72 object-scale-down cursor-pointer"
            :src="imagePreviewUrl">
       <img @click="handleImagePlaceholderClick"
            v-else-if="image"
-           class="size-72 object-scale-down"
+           class="size-72 object-scale-down cursor-pointer"
            :src="image">
       <div v-else class="flex items-center justify-center bg-gray-200 shadow-md size-72 cursor-pointer"
            @click="handleImagePlaceholderClick">
