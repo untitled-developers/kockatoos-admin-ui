@@ -1,8 +1,14 @@
 <template>
   <div class="flex flex-col gap-2 w-full">
-    <label class="font-medium">
-      {{ props.label }}
-    </label>
+    <div class="flex items-center">
+      <label class="font-medium">
+        {{ props.label }}
+      </label>
+      <div>
+        <slot name="label-right"></slot>
+      </div>
+    </div>
+
     <Fluid>
       <div>
         <slot></slot>
