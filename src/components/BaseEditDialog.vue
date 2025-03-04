@@ -52,7 +52,7 @@
               severity="secondary"
               @click="emit('close')"/>
       <Button v-if="withSubmit"
-              label="Submit"
+              :label="isEditing ? 'Save' : 'Submit'"
               type="submit"
               @click="emit('submit')"
               :form="formId"></Button>
@@ -122,6 +122,10 @@ const props = defineProps({
   withCloseButton: {
     type: Boolean,
     default: true
+  },
+  isEditing: {
+    type: Boolean,
+    default: false
   }
 })
 
