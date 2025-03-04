@@ -18,8 +18,8 @@ const props = defineProps({
   defaultLocation: {
     type: Object,
     default: () => ({
-      lat: 33.888630,
-      lng: 35.495480,
+      latitude: 33.888630,
+      longitude: 35.495480,
     }),
   }
 });
@@ -31,8 +31,8 @@ const marker = ref(null);
 
 const initMap = () => {
   const center = {
-    lat: props.latitude || 33.888630,
-    lng: props.longitude || 35.495480,
+    lat: props.latitude || props.defaultLocation.latitude,
+    lng: props.longitude || props.defaultLocation.longitude,
   };
 
   map.value = new google.maps.Map(mapContainer.value, {
