@@ -307,11 +307,6 @@ function openEditDialog(record) {
   editDialogId.value = openDialog(props.editDialog, {
     handlers: {
       'submit': async () => {
-        if (record) {
-          alertSuccess('Record Updated Successfully')
-        } else {
-          alertSuccess('Record Created Successfully')
-        }
         await fetchData()
         if (dialogProps.record && !props.dialogCloseOnEdit) {
           updateDialogProps(editDialogId.value, (oldProps) => {
