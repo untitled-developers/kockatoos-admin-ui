@@ -9,17 +9,20 @@
   }
     }">
     <template #start>
-      <Button
-          v-if="selectedItems.length > 0"
-          label="Delete"
-          severity="danger"
-          icon="pi pi-trash"
-          @click="handleDelete"
-      ></Button>
-      <slot name="actions"></slot>
+      <div class="flex items-center gap-x-2">
+        <slot name="actions"></slot>
+        <Button
+            v-if="selectedItems.length > 0"
+            label="Delete"
+            severity="danger"
+            icon="pi pi-trash"
+            @click="handleDelete"
+        ></Button>
+      </div>
+
     </template>
   </Toolbar>
-  <div v-if="modelValue?.length > 0" class="relative min-h-[100px] border border-gray-300 bg-white">
+  <div v-if="modelValue" class="relative min-h-[100px] border border-gray-300 bg-white">
     <div
         v-if="isLoading"
         class="absolute inset-0 bg-white/50 flex items-center justify-center z-10"
