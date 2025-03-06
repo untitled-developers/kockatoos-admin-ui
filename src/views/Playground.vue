@@ -1,4 +1,10 @@
 <template>
+  <BaseInputContainer label="Per Person">
+    <template #label>
+      <Checkbox class="ml-2"></Checkbox>
+    </template>
+    <InputText v-model="form.name"/>
+  </BaseInputContainer>
   <BaseChart :options="{
   title: {
     text: 'ECharts Getting Started Example'
@@ -64,7 +70,7 @@
     <BaseEditDialogNavigationButtons @next-record="test"
                                      @previous-record="test"/>
 
-    <BaseLoaderOverlay width="200px" height="200px"></BaseLoaderOverlay>
+    <BaseLoaderOverlay width="200px" size="large"></BaseLoaderOverlay>
 
     <div class="bg-white">
       <BaseMultiImageUploader @upload-file="handleUploadFile"></BaseMultiImageUploader>
@@ -81,7 +87,7 @@
 </template>
 
 <script setup>
-import {Button} from "primevue";
+import {Button, Checkbox} from "primevue";
 import useAlerts from "../composables/useAlerts.js";
 import useConfirmDialog from "../composables/useConfirmDialog.js";
 import useDialog from "../composables/useDialog.js";

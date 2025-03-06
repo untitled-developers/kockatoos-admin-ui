@@ -14,6 +14,9 @@ const router = createRouter({
             path: '/playground',
             name: 'playground',
             component: () => import('../views/Playground.vue'),
+            meta: {
+                title: 'Payground'
+            }
         },
         {
             path: '/test-page',
