@@ -95,11 +95,40 @@ export default function useUtils() {
 
     }
 
+    /**
+     * Formats a number or string containing a number as a currency string
+     * @param {number|string} value - The number or string to format
+     * @param {string} [currency='USD'] - Currency code (e.g., 'USD', 'EUR', 'GBP')
+     * @param {number} [decimals=2] - Number of decimal places to display
+     * @param {string} [locale='en-US'] - The locale to use for formatting
+     * @returns {string} - Formatted currency string with symbol
+     */
+    function formatCurrencyValue(value, currency = 'USD', decimals = 2, locale = 'en-US') {
+        // Convert to number if it's not already
+        const numValue = typeof value === 'number' ? value : Number(value);
+
+        // Check if conversion was successful
+        if (isNaN(numValue)) {
+            return 'Invalid number';
+        }
+
+        // Use Intl.NumberFormat with currency style
+        const formatter = new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency: currency,
+            minimumFractionDigits: decimals,
+            maximumFractionDigits: decimals
+        });
+
+        return formatter.format(numValue);
+    }
+
     return {
         get,
         set,
         cloneDeep,
         getFormattedDate,
-        getTimeAgo
+        getTimeAgo,
+        formatCurrencyValue
     }
 }
