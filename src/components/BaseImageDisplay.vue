@@ -14,13 +14,13 @@ const props = defineProps({
   /**
    * Controls the size of the image.
    * @values small, medium, large
-   * @default medium
+   * @default small
    * @description Use predefined values: 'small', 'medium', 'large',
    * or provide a custom Tailwind class for more control (e.g. 'size-32', 'w-24 h-16')
    */
   size: {
     type: String,
-    default: "medium"
+    default: "small"
   }
 });
 
