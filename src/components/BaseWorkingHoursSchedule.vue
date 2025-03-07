@@ -54,7 +54,7 @@ onMounted(() => {
                 day_name: 'Monday',
                 opening: '00:00',
                 closing: '23:59',
-                is_open: true
+                is_open: false
             },
             {
                 day_name: 'Tuesday',
