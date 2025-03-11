@@ -27,7 +27,7 @@ export default function useCrudTable(crudTableRef) {
     /**
      *  Update the record data in the tableData
      * @param record
-     * @param newRecordData - The new data to update the record with or a function that takes the record and returns the new data
+     * @param newRecordData - The new data to update the record with
      * @returns {void}
      */
     function updateRecordData(record, newRecordData) {
