@@ -164,8 +164,7 @@ const props = defineProps({
     type: Object
   },
   editDialog: {
-    type: Object,
-    required: true
+    type: Object
   },
   /**
    * Use this if you want to supply props to the edit dialog other than record.
