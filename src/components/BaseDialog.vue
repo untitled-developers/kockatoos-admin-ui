@@ -5,7 +5,8 @@
       block-scroll
       :visible="true"
       :style="{
-        width: width,
+        maxWidth: width,
+        width: '100%',
         height: fullHeight ? '100%' : 'auto',
       }"
       :pt="{
