@@ -509,11 +509,27 @@ async function silentFetchData() {
   await getData()
 }
 
+
+/**
+ *  Update the oldRecordData data in the tableData
+ * @param oldRecordData
+ * @param newRecordData - The new data to update the oldRecordData with or a function that takes the oldRecordData and returns the new data
+ * @returns {void}
+ */
+function updateRecordData(oldRecordData, newRecordData) {
+  const recordIndex = tableData.value.findIndex(record => record.id === oldRecordData.id)
+  if (recordIndex !== -1) {
+    tableData.value[recordIndex] = newRecordData
+    typeof newRecordData === 'function' ? newRecordData(oldRecordData) : newRecordData
+  }
+}
+
 defineExpose({
   fetchData,
   silentFetchData,
   startRowLoading,
-  stopRowLoading
+  stopRowLoading,
+  updateRecordData
 })
 
 onMounted(() => {
