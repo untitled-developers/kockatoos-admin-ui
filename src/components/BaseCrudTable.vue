@@ -25,6 +25,7 @@
     }">
     <template #start>
       <Button v-if="withAdd" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
+      <slot name="controls-start"></slot>
       <!--      <Button-->
       <!--          label="Reset Sort"-->
       <!--          @click="handleResetSort"-->
