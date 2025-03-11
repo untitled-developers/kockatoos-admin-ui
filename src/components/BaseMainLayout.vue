@@ -52,6 +52,10 @@
                         <span class="font-medium">{{ item.label }}</span>
                     </span>
                 </router-link>
+                <div v-else-if="item.type === 'heading'"
+                     class=" font-semibold text-gray-400 bg-white pt-6 pb-2 pl-1 cursor-default">
+                  {{ item.label }}
+                </div>
                 <div v-else
                      :class="[
   'flex items-center cursor-pointer px-2 py-4',
@@ -119,7 +123,7 @@
                                :active-class="isDark ? 'active-link-dark' : 'active-link'">
                     <span
                         :class="[
-                       'border-l border-gray-300 hover:border-gray-400 flex items-center cursor-pointer px-2 py-4',
+                       'border-l border-gray-300 hover:border-gray-400 flex items-center cursor-pointer px-2 py-3',
                         isDark ? 'text-white': 'text-surface-700',
                         !root ? 'pl-6' : ''
                   ]"
@@ -127,9 +131,13 @@
                         <span class="font-medium">{{ item.label }}</span>
                     </span>
                   </router-link>
+                  <div v-else-if="item.type === 'heading'"
+                       class=" font-semibold text-gray-400 bg-white pt-6 pb-2 pl-1 cursor-default">
+                    {{ item.label }}
+                  </div>
                   <div v-else
                        :class="[
-  'flex items-center cursor-pointer px-2 py-4',
+  'flex items-center cursor-pointer px-2 py-3',
   isDark ? 'text-white': 'text-gray-600',
   !root ? 'pl-6' : ''
 ]">
