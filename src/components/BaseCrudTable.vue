@@ -99,6 +99,7 @@
              lazy
              data-key="id"
              striped-rows
+             @row-click="handleRowClick"
              @sort="handleSortChange"
              :selection-mode="withSelection ? 'multiple' : undefined"
              v-model:selection="selectedRecords"
@@ -368,6 +369,10 @@ function openEditDialog(record) {
     props: dialogProps
   })
 
+}
+
+function handleRowClick(record) {
+  emits('row-click', record)
 }
 
 function handleSortChange(event) {
