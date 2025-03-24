@@ -101,7 +101,7 @@
              striped-rows
              @row-click="handleRowClick"
              @sort="handleSortChange"
-             :selection-mode="withSelection ? 'multiple' : undefined"
+             :selection-mode="clickableRows ? 'single' : null"
              v-model:selection="selectedRecords"
              paginator-position="bottom"
              :rows="paginationQuery.rows"
@@ -190,6 +190,10 @@ const props = defineProps({
       field: 'id',
       order: -1 // -1 for DESC, 1 for ASC
     })
+  },
+  clickableRows: {
+    type: Boolean,
+    default: false
   },
   withSelection: {
     type: Boolean,
