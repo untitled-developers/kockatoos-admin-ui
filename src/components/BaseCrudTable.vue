@@ -24,7 +24,7 @@
   }
     }">
     <template #start>
-      <Button v-if="withAdd" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
+      <Button v-if="withAdd && !informational" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
       <slot name="controls-start"></slot>
       <!--      <Button-->
       <!--          label="Reset Sort"-->
@@ -117,7 +117,7 @@
     <Column header=""
             aria-label="Actions"
             class="w-12"
-            v-if="withRecordActions">
+            v-if="withRecordActions && !informational">
       <template #body="slotProps">
         <BaseCrudTableActionsDropdown>
           <slot name="record-actions" :record="slotProps.data"></slot>
@@ -228,6 +228,10 @@ const props = defineProps({
     type: Object,
     default: {}
   },
+  informational: {
+    type: Boolean,
+    default: false
+  }
 })
 const filters = defineModel('filters')
 const selectedRecords = defineModel('selectedRecord')
