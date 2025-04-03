@@ -1,22 +1,6 @@
-@layer tailwind-base, primevue, tailwind-utilities;
-
-@layer tailwind-base {
-    @tailwind base;
-}
-
-@layer tailwind-utilities {
-    @tailwind components;
-    @tailwind utilities;
-}
+@import "tailwindcss";
+@import "tailwindcss-primeui";
 
 html {
     font-size: 14px;
-}
-
-:root {
-    --sidebar-dark-bg: #3f5088;
-    --sidebar-dark-nav-bg: rgba(155, 178, 255, 0.18);
-    --sidebar-dark-nav-hover-bg: rgba(155, 178, 255, 0.2);
-    --sidebar-dark-nav-active-bg: rgba(155, 178, 255, 0.2);
-    --sidebar-dark-nav-active-color: white;
 }

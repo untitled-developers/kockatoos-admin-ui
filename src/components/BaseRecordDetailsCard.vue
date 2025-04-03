@@ -3,12 +3,12 @@
     <div class="relative size-24 rounded-full">
       <img :src="profileImage" class="object-cover rounded-full h-full w-full">
       <div
-          class="absolute rounded-full inset-0 bg-gradient-to-b from-transparent to-teal-400/20 w-full h-full">
+          class="absolute rounded-full inset-0 bg-linear-to-b from-transparent to-teal-400/20 w-full h-full">
       </div>
     </div>
 
     <div class="flex flex-col">
-      <h3 class="text-2xl font-medium text-[--p-primary-600]">{{ title }}</h3>
+      <h3 class="text-2xl font-medium text-(--p-primary-600)">{{ title }}</h3>
       <div>
         <slot name="subtitle"></slot>
       </div>

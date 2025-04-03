@@ -9,6 +9,11 @@ import router from './router'
 import {definePreset} from "@primevue/themes";
 import {ConfirmationService, ToastService} from "primevue";
 
+// dont copy the stuff related to axios
+import axios from 'axios';
+window.axios = axios;
+window.axios.defaults.headers.accept = 'application/json';
+
 
 const customPreset = definePreset(Aura, {
     semantic: {
@@ -36,7 +41,7 @@ app.use(PrimeVue, {
             darkModeSelector: '.dark',
             cssLayer: {
                 name: 'primevue',
-                order: 'tailwind-base, primevue, tailwind-utilities'
+                order: 'theme, base, primevue'
             }
         }
     }

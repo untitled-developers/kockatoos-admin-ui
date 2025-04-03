@@ -14,7 +14,7 @@
                          custom>
               <a
                   v-ripple
-                  :class="['py-4 px-4', isRouteActive(item.route.name) ? 'border-b bg-[--p-primary-50] text-[--p-primary-800] font-semibold border-[--p-primary-400]' : '']"
+                  :class="['py-4 px-4', isRouteActive(item.route.name) ? 'border-b bg-(--p-primary-50) text-(--p-primary-800) font-semibold border-(--p-primary-400)' : '']"
                   :href="href"
                   v-bind="props.action"
                   @click="navigate">
