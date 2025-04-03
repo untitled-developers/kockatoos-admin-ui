@@ -5,7 +5,7 @@
   >
     <div :class="['absolute inset-0  flex flex-col items-center justify-center', background]">
       <div
-          :class="['animate-spin rounded-full border-4 border-gray-300 border-t-[--p-primary-600]',
+          :class="['animate-spin rounded-full border-4 border-gray-300 border-t-(--p-primary-600)',
         {
             'h-6 w-6': size === 'small',
             'h-8 w-8': size === 'medium',
