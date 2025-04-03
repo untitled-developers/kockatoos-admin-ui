@@ -194,7 +194,7 @@
         </div>
       </div>
 
-      <main class="p-2">
+      <main>
         <slot name="main"></slot>
       </main>
     </div>

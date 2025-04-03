@@ -2,7 +2,7 @@
   <BaseApp>
     <BaseMainLayout :navigation-items="items">
       <template #logo>
-        <img src="https://cdn2.thecatapi.com/images/MTczNzcxNA.jpg" class="h-18 w-auto">
+        <img src="https://cdn2.thecatapi.com/images/MTczNzcxNA.jpg" class="h-32 w-auto">
       </template>
       <template #main>
         <router-view></router-view>
@@ -28,6 +28,10 @@ const items = ref([
     route: {
       name: 'test-page'
     }
+  },
+  {
+    label: 'Management',
+    type: 'heading'
   },
   // {
   //   label: 'Dropdown test',
@@ -91,6 +95,10 @@ const items = ref([
         }
       }
     ]
+  },
+  {
+    label: 'Management',
+    type: 'heading'
   },
   {
     label: 'Dropdown test2',
