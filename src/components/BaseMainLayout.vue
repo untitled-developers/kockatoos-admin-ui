@@ -277,7 +277,6 @@ async function logout() {
 .slide-leave-to {
   transform: translateX(-100%);
   width: 0;
-  opacity: 0;
 }
 
 </style>
