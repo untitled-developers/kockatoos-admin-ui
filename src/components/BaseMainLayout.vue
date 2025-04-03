@@ -74,17 +74,18 @@
   </div>
   <div class="flex">
     <div>
-      <nav v-if="!isCollapsed"
-           :class="['border-r  border-gray-300 w-64 md:flex hidden shadow-md overflow-y-auto  h-screen sticky', isDark ? 'bg-stone-700':'bg-white']">
-        <div v-if="!isCollapsed" class="flex flex-col w-full h-full">
-          <div class="flex w-full justify-center h-18 shrink-0  pl-4 py-2 pr-3 mb-4">
-            <div>
-              <slot name="logo"></slot>
+      <Transition name="slide">
+        <nav v-if="!isCollapsed"
+             :class="[' shadow-sm  w-64 md:flex hidden  overflow-y-auto  h-screen sticky', isDark ? 'bg-stone-700':'bg-white']">
+          <div class="flex flex-col w-full h-full">
+            <div class="flex w-full justify-center shrink-0  pl-4 py-2 pr-3 mb-4">
+              <div>
+                <slot name="logo"></slot>
+              </div>
             </div>
-          </div>
-          <div>
-            <div class="card flex justify-center nav-menu pl-2">
-              <PanelMenu :model="navigationItems" multiple class="w-full md:w-80" :pt="{
+            <div>
+              <div class="card flex justify-center nav-menu pl-2">
+                <PanelMenu :model="navigationItems" multiple class="w-full md:w-80" :pt="{
                 root:{
                   style: {
                     borderRadius: 0,
@@ -118,9 +119,9 @@
                 }
 
               }">
-                <template #item="{ item , root, hasSubmenu }">
-                  <router-link v-if="item.route" v-slot="{ navigate }" :to="item.route"
-                               :active-class="isDark ? 'active-link-dark' : 'active-link'">
+                  <template #item="{ item , root, hasSubmenu }">
+                    <router-link v-if="item.route" v-slot="{ navigate }" :to="item.route"
+                                 :active-class="isDark ? 'active-link-dark' : 'active-link'">
                     <span
                         :class="[
                        'border-l border-gray-300 hover:border-gray-400 flex items-center cursor-pointer px-2 py-3',
@@ -130,37 +131,41 @@
                         @click="navigate">
                         <span class="font-medium">{{ item.label }}</span>
                     </span>
-                  </router-link>
-                  <div v-else-if="item.type === 'heading'"
-                       class=" font-semibold text-gray-400 bg-white pt-6 pb-2 pl-1 cursor-default">
-                    {{ item.label }}
-                  </div>
-                  <div v-else
-                       :class="[
+                    </router-link>
+                    <div v-else-if="item.type === 'heading'"
+                         class=" font-semibold text-gray-400 bg-white pt-6 pb-2 pl-1 cursor-default">
+                      {{ item.label }}
+                    </div>
+                    <div v-else
+                         :class="[
   'flex items-center cursor-pointer px-2 py-3',
   isDark ? 'text-white': 'text-gray-600',
   !root ? 'pl-6' : ''
 ]">
-                    <span class="font-medium">{{ item.label }} </span>
-                    <span v-if="item.items" class="pi pi-angle-down ml-auto"/>
-                  </div>
-                </template>
-              </PanelMenu>
+                      <span class="font-medium">{{ item.label }} </span>
+                      <span v-if="item.items" class="pi pi-angle-down ml-auto"/>
+                    </div>
+                  </template>
+                </PanelMenu>
+              </div>
+            </div>
+            <div class="mt-auto text-right p-5">
+
             </div>
           </div>
-          <div class="mt-auto text-right p-5">
+        </nav>
+      </Transition>
 
-          </div>
-        </div>
-      </nav>
     </div>
-    <div class="flex-grow max-h-screen overflow-auto">
-      <div class="px-2 py-2 pl-4 flex bg-white  border-b border-gray-300 shadow-md  mb-4 items-center">
+    <div
+        :class="['flex-grow max-h-screen overflow-auto'
+         ]">
+      <div class="px-2 py-2 pl-4 flex bg-white  shadow-sm items-center">
         <Button class="md:block hidden" aria-label="Collapse navbar" text @click="handleToggleNavbar"
                 icon="pi pi-bars"></Button>
         <button type="button"
                 @click="mobileDrawer = true"
-                class="flex items-center md:hidden rounded  bg-[--p-primary-500] px-2 py-2 mr-2 text-xs font-semibold text-white shadow-sm hover:bg-[--p-primary-400] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[--p-primary-500]">
+                class="flex items-center md:hidden rounded-xs  bg-(--p-primary-500) px-2 py-2 mr-2 text-xs font-semibold text-white shadow-xs hover:bg-(--p-primary-400) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--p-primary-500)">
           <i class="pi pi-bars"></i>
         </button>
         <h2 class="text-lg font-bol text-gray-700">{{ route.meta?.title }}</h2>
@@ -245,20 +250,34 @@ async function logout() {
 </script>
 
 <style scoped>
+@reference "tailwindcss/theme.css";
+
 .nav-menu .p-panelmenu-panel {
   @apply border-none
 }
 
 .active-link span {
-  @apply bg-[--p-primary-50] text-[--p-primary-800] font-semibold border-[--p-primary-400]
+  @apply bg-(--p-primary-50) text-(--p-primary-800) font-semibold border-(--p-primary-400)
 }
 
 .active-link-dark span {
-  @apply bg-stone-800 text-[--p-primary-100] font-semibold
+  @apply bg-stone-800 text-(--p-primary-100) font-semibold
 }
 
 :deep(.p-submenu-list .menu-sub-item) {
   @apply pl-6
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: width 0.3s ease, transform 0.3s ease;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  transform: translateX(-100%);
+  width: 0;
+  opacity: 0;
 }
 
 </style>
