@@ -174,13 +174,11 @@
                   icon="pi pi-bell"
                   rounded
                   severity="info"
-                  size="large"
                   aria-label="User Menu"/>
           <div class="card flex justify-content-center justify-end">
             <Button type="button"
                     icon="pi pi-user"
                     rounded
-                    size="large"
                     aria-label="User Menu"
                     @click="toggle"/>
             <Popover ref="userDropdown">
