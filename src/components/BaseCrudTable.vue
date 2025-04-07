@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-sm">
+  <div class="shadow-sm rounded-sm">
     <Toolbar :pt="{
       root: {
          style: {
