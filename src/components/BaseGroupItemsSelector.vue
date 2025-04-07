@@ -7,7 +7,7 @@
         <template #option="{option}">
           <div class="flex items-center gap-x-2">
             {{ option[groupListConfig.optionLabel] }}
-            <div class="bg-[--p-primary-600] text-white flex items-center justify-center size-8 rounded-md font-medium">
+            <div class="bg-(--p-primary-600) text-white flex items-center justify-center size-8 rounded-md font-medium">
               {{
                 getNumberOfSelectedItemsByGroup(option)
               }}
@@ -16,14 +16,14 @@
         </template>
       </Select>
     </BaseInputContainer>
-    <div class="rounded-lg bg-white shadow my-2">
+    <div class="rounded-lg bg-white shadow-xs my-2">
       <div class="p-6">
         <div class="flex items-center justify-between mb-4">
           <div v-if="selectedGroup">
             <h2 class="text-xl font-medium text-gray-900">
               {{ selectedGroup[groupListConfig.optionLabel] }}
             </h2>
-            <p class="text-[--p-primary-600]">{{ filteredSelectedItems.length }} items selected</p>
+            <p class="text-(--p-primary-600)">{{ filteredSelectedItems.length }} items selected</p>
           </div>
           <div v-else class="text-gray-600">
             Select A Group to add options
@@ -46,7 +46,7 @@
           :key="item.id"
           @click="handleSelectItem(item)"
           class="list-item">
-        <div class="p-2 px-6 bg-white shadow rounded-md flex items-center hover:bg-[--p-primary-50] cursor-pointer">
+        <div class="p-2 px-6 bg-white shadow-xs rounded-md flex items-center hover:bg-(--p-primary-50) cursor-pointer">
           {{ item[groupItemsLabel] }}
         </div>
       </li>
