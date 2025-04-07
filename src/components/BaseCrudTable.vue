@@ -26,7 +26,7 @@
     <template #start>
       <div class="flex gap-x-2">
         <Button v-if="withAdd && !informational" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
-        <Button v-if="withClearFilters"
+        <Button v-if="withClearFilters && filters"
                 label="Clear Filters"
                 :badge="getActiveFiltersCount() ?? null"
                 icon="pi pi-filter-slash"

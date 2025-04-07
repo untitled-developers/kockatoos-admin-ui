@@ -1,7 +1,7 @@
 <template>
   <div>
     {{ filters }}
-    <BaseCrudTable endpoint="http://localhost:3000" v-model:filters="filters" informational clickable-rows>
+    <BaseCrudTable endpoint="http://localhost:3000" informational clickable-rows>
       <template #columns="{isFilterActive}">
         <BaseCrudTableColumn key="qweqweqwe1" field="id" header="ID"></BaseCrudTableColumn>
         <!--        <Column field="id" header="ID" :sortable="true"/>-->
@@ -10,44 +10,44 @@
                 :show-filter-operator="false"
                 :show-filter-match-modes="false"
                 field="user_name">
-          <template #filtericon>
-            <BaseCrudTableFilterButton :is-active="isFilterActive('user_name')"></BaseCrudTableFilterButton>
-          </template>
-          <template #filter="{filterModel}">
-            <BaseCrudTableColumnFilter
-                v-model:filter-value="filterModel.value"
-                type="select"
-                :config="{
-                                          optionLabel: 'name',
-                                          optionValue: 'value',
-                                          tags: true,
-                                          tagsMapping: {
-                                              'test': { severity: 'info'},
-                                              'test2': {severity: 'danger'}
-                                          },
-                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]
-                                       }"/>
-          </template>
+<!--          <template #filtericon>-->
+<!--            <BaseCrudTableFilterButton :is-active="isFilterActive('user_name')"></BaseCrudTableFilterButton>-->
+<!--          </template>-->
+<!--          <template #filter="{filterModel}">-->
+<!--            <BaseCrudTableColumnFilter-->
+<!--                v-model:filter-value="filterModel.value"-->
+<!--                type="select"-->
+<!--                :config="{-->
+<!--                                          optionLabel: 'name',-->
+<!--                                          optionValue: 'value',-->
+<!--                                          tags: true,-->
+<!--                                          tagsMapping: {-->
+<!--                                              'test': { severity: 'info'},-->
+<!--                                              'test2': {severity: 'danger'}-->
+<!--                                          },-->
+<!--                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]-->
+<!--                                       }"/>-->
+<!--          </template>-->
         </Column>
         <Column field="user_phone"
                 :show-filter-operator="false"
                 :show-filter-match-modes="false"
                 :sortable="true"
                 header="Phone">
-          <template #filter="{filterModel}">
-            <BaseCrudTableColumnFilter
-                v-model:filter-value="filterModel.value"
-                type="select"
-                :config="{        optionLabel: 'name',
-                                          optionValue: 'value',
-                                          tags: true,
-                                          tagsMapping: {
-                                              'test': { severity: 'info'},
-                                              'test2': {severity: 'danger'}
-                                          },
-                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]
-                                       }"/>
-          </template>
+<!--          <template #filter="{filterModel}">-->
+<!--            <BaseCrudTableColumnFilter-->
+<!--                v-model:filter-value="filterModel.value"-->
+<!--                type="select"-->
+<!--                :config="{        optionLabel: 'name',-->
+<!--                                          optionValue: 'value',-->
+<!--                                          tags: true,-->
+<!--                                          tagsMapping: {-->
+<!--                                              'test': { severity: 'info'},-->
+<!--                                              'test2': {severity: 'danger'}-->
+<!--                                          },-->
+<!--                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]-->
+<!--                                       }"/>-->
+<!--          </template>-->
         </Column>
         <Column field="promo_code" :sortable="true" header="Promo Code"/>
       </template>
