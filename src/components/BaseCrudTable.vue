@@ -24,57 +24,23 @@
   }
     }">
     <template #start>
-      <Button v-if="withAdd && !informational" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
-      <slot name="controls-start"></slot>
-      <!--      <Button-->
-      <!--          label="Reset Sort"-->
-      <!--          @click="handleResetSort"-->
-      <!--          icon="pi pi-sort-alt-slash"-->
-      <!--          severity="secondary"-->
-      <!--          class="mr-2">-->
-      <!--      </Button>-->
-      <!--      <div class="flex flex-wrap items-center" v-if="filters?.length">-->
-      <!--        <Button label="Clear Filters" @click="handleClearFilters" icon="pi pi-filter-slash"-->
-      <!--                severity="secondary"></Button>-->
-      <!--        <FloatLabel v-for="filter in filters" :key="filter.field" variant="on" class="mx-2 my-2">-->
-      <!--          <InputText-->
-      <!--              v-if="filter.type === 'text'"-->
-      <!--              :id="filter.field"-->
-      <!--              v-model="filter.value"-->
-      <!--              autocomplete="off"-->
-      <!--              @change="handleFilterChange"-->
-      <!--          />-->
-      <!--          <Select-->
-      <!--              v-else-if="filter.type === 'dropdown'"-->
-      <!--              :id="filter.field"-->
-      <!--              v-model="filter.value"-->
-      <!--              :options="filter.options"-->
-      <!--              @change="handleFilterChange"-->
-      <!--              show-clear-->
-      <!--              optionLabel="label"-->
-      <!--              optionValue="value"-->
-      <!--          />-->
-      <!--          <MultiSelect-->
-      <!--              v-else-if="filter.type === 'multiselect'"-->
-      <!--              :id="filter.field"-->
-      <!--              v-model="filter.value"-->
-      <!--              :options="filter.options"-->
-      <!--              @change="handleFilterChange"-->
-      <!--              optionLabel="label"-->
-      <!--              show-clear-->
-      <!--              optionValue="value"-->
-      <!--              display="chip"-->
-      <!--          />-->
-      <!--          <DatePicker-->
-      <!--              v-else-if="filter.type === 'date'"-->
-      <!--              :id="filter.field"-->
-      <!--              v-model="filter.value"-->
-      <!--              @update:modelValue="handleFilterChange"-->
-      <!--              dateFormat="dd/mm/yy"-->
-      <!--          />-->
-      <!--          <label :for="filter.field">{{ filter.label }}</label>-->
-      <!--        </FloatLabel>-->
-      <!--      </div>-->
+      <div class="flex gap-x-2">
+        <Button v-if="withAdd && !informational" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
+        <Button v-if="withClearFilters"
+                label="Clear Filters"
+                :badge="getActiveFiltersCount() ?? null"
+                icon="pi pi-filter-slash"
+                severity="secondary"
+                @click="handleClearFilters" :pt="{
+                        pcBadge: {
+                            style: {
+                                backgroundColor: 'var(--p-primary-color)',
+                                color: 'white'
+                            }
+                        }
+                    }"></Button>
+        <slot name="controls-start"></slot>
+      </div>
     </template>
     <template #center>
       <slot name="controls-center"></slot>
@@ -102,6 +68,7 @@
              @row-click="handleRowClick"
              @sort="handleSortChange"
              :selection-mode="clickableRows ? 'single' : null"
+             v-model:filters="filters"
              v-model:selection="selectedRecords"
              paginator-position="bottom"
              :rows="paginationQuery.rows"
@@ -134,7 +101,7 @@
         </BaseCrudTableActionsDropdown>
       </template>
     </Column>
-    <slot name="columns"></slot>
+    <slot name="columns" :isFilterActive="isFilterActive"></slot>
   </DataTable>
 </template>
 
@@ -148,7 +115,7 @@ import {
   Toolbar
 } from "primevue";
 import Button from "primevue/button";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import useFetch from "../composables/useFetch.js";
 import useDialog from "../composables/useDialog.js";
 import BaseCrudTableActionsDropdown from "./BaseCrudTableActionsDropdown.vue";
@@ -190,6 +157,10 @@ const props = defineProps({
       field: 'id',
       order: -1 // -1 for DESC, 1 for ASC
     })
+  },
+  withClearFilters: {
+    type: Boolean,
+    default: true
   },
   clickableRows: {
     type: Boolean,
@@ -397,8 +368,8 @@ function handleSortChange(event) {
 
 function handleClearFilters() {
   if (filters.value) {
-    filters.value.forEach(filter => {
-      filter.value = null
+    Object.keys(filters.value).forEach(filterKey => {
+      filters.value[filterKey].value = null
     })
     fetchData()
   }
@@ -437,28 +408,10 @@ function handlePageChange(event) {
   fetchData()
 }
 
-function createFilterQuery(filters) {
-  const queryParams = {}
-
-  filters
-      .filter(filter => filter.value !== null && filter.value !== undefined)
-      .forEach(filter => {
-        let formattedValue = filter.value
-        if (filter.type === 'date' && filter.value instanceof Date) {
-          formattedValue = filter.value.toISOString()
-        } else if (filter.type === 'multiselect' && Array.isArray(filter.value)) {
-          formattedValue = filter.value.join(',')
-        }
-        queryParams[`filter.${filter.field}`] = `${filter.operator}:${formattedValue}`
-      })
-
-  return queryParams
-}
-
 function rowClassHandler(rowData) {
   const filteredRow = loadingRows.value.find(row => row[props.rowIdentifier] === rowData[props.rowIdentifier])
   if (filteredRow) {
-    return 'relative after:backdrop-blur-sm after:bg-white/10  after:content-[""] after:absolute after:w-full after:top-0 after:left-0 after:h-full after:z-10'
+    return 'relative after:backdrop-blur-xs after:bg-white/10  after:content-[""] after:absolute after:w-full after:top-0 after:left-0 after:h-full after:z-10'
   }
 }
 
@@ -474,6 +427,38 @@ function handleSearchQueryChange() {
   fetchData()
 }
 
+function getRequestParams(filters) {
+  const params = {};
+
+  if (filters) {
+    let filterIndex = 0;
+
+    for (const [field, filterConfig] of Object.entries(filters)) {
+      // Skip filters with null/empty values
+      if (filterConfig.value === null || filterConfig.value === undefined ||
+          filterConfig.value === '') {
+        continue;
+      }
+
+
+      params[`filterByFields[${filterIndex}][field]`] = field;
+
+      params[`filterByFields[${filterIndex}][operator]`] = '=';
+
+      params[`filterByFields[${filterIndex}][value]`] = filterConfig.value;
+
+      filterIndex++;
+    }
+  }
+
+  return params;
+}
+
+// watcher for the filters that triggers getData, watcher should be deep
+watch(filters, () => {
+  fetchData()
+}, {deep: true})
+
 async function getData() {
   const defaultQuery = props.defaultQuery ? props.defaultQuery : {}
   try {
@@ -484,6 +469,7 @@ async function getData() {
         perPage: paginationQuery.value.rows,
         searchFor: searchQuery.value,
         ...mapSortToQueryParams(),
+        ...getRequestParams(filters.value)
         // ...filters.value?.length && createFilterQuery(filters.value)
       }
     })
@@ -504,6 +490,22 @@ async function fetchData() {
   isTableLoading.value = true
   await getData()
   isTableLoading.value = false
+}
+
+function getActiveFiltersCount() {
+  return Object.keys(filters.value).reduce((count, fieldName) => {
+    return isFilterActive(fieldName) ? count + 1 : count;
+  }, 0);
+}
+
+function isFilterActive(fieldName) {
+  const filter = filters.value[fieldName];
+
+  if (!filter) return false;
+
+  return filter.value !== null &&
+      filter.value !== undefined &&
+      filter.value !== '';
 }
 
 function startTableLoading() {
