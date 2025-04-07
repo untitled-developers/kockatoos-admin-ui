@@ -1,20 +1,6 @@
 <template>
-  <!--  <Toolbar :pt="{-->
-  <!--  root: {-->
-  <!--    style: {-->
-  <!--      borderRadius: 0-->
-  <!--    }-->
-  <!--  }-->
-  <!--}">-->
-  <!--    <template #start>-->
-  <!--      <Button icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>-->
-  <!--      <slot name="actions-start"></slot>-->
-  <!--    </template>-->
-  <!--    <template #end>-->
-  <!--      <slot name="actions-end"></slot>-->
-  <!--    </template>-->
-  <!--  </Toolbar>-->
-  <Toolbar :pt="{
+  <div class="shadow-sm">
+    <Toolbar :pt="{
       root: {
          style: {
             borderRadius: 0,
@@ -23,15 +9,15 @@
     }
   }
     }">
-    <template #start>
-      <div class="flex gap-x-2">
-        <Button v-if="withAdd && !informational" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
-        <Button v-if="withClearFilters && filters"
-                label="Clear Filters"
-                :badge="getActiveFiltersCount() ?? null"
-                icon="pi pi-filter-slash"
-                severity="secondary"
-                @click="handleClearFilters" :pt="{
+      <template #start>
+        <div class="flex gap-x-2">
+          <Button v-if="withAdd && !informational" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
+          <Button v-if="withClearFilters && filters"
+                  label="Clear Filters"
+                  :badge="getActiveFiltersCount() ?? null"
+                  icon="pi pi-filter-slash"
+                  severity="secondary"
+                  @click="handleClearFilters" :pt="{
                         pcBadge: {
                             style: {
                                 backgroundColor: 'var(--p-primary-color)',
@@ -39,70 +25,72 @@
                             }
                         }
                     }"></Button>
-        <slot name="controls-start"></slot>
-      </div>
-    </template>
-    <template #center>
-      <slot name="controls-center"></slot>
-    </template>
-    <template #end>
-      <slot name="controls-end"></slot>
-      <IconField>
-        <InputIcon class="pi pi-search"/>
-        <InputText @change="handleSearchQueryChange"
-                   v-model="searchQuery"
-                   placeholder="Search"/>
-      </IconField>
-    </template>
-  </Toolbar>
-  <DataTable class="border border-gray-300 bg-white"
-             scrollable
-             :show-gridlines="false"
-             filter-display="menu"
-             paginator
-             sort-mode="multiple"
-             :row-class="rowClassHandler"
-             lazy
-             data-key="id"
-             striped-rows
-             @row-click="handleRowClick"
-             @sort="handleSortChange"
-             :selection-mode="clickableRows ? 'single' : null"
-             v-model:filters="filters"
-             v-model:selection="selectedRecords"
-             paginator-position="bottom"
-             :rows="paginationQuery.rows"
-             :totalRecords="paginationQuery.totalRecords"
-             @page="handlePageChange"
-             :multi-sort-meta="sortingQuery"
-             resizable-columns
-             column-resize-mode="fit"
-             :rows-per-page-options="[10,  50, 100, 500]"
-             :loading="isTableLoading"
-             :value="tableData">
-    <Column v-if="withSelection" selectionMode="multiple" headerStyle="width: 3rem"/>
-    <Column header=""
-            aria-label="Actions"
-            class="w-12"
-            v-if="withRecordActions && !informational">
-      <template #body="slotProps">
-        <BaseCrudTableActionsDropdown>
-          <slot name="record-actions" :record="slotProps.data"></slot>
-
-          <BaseCrudTableActionsButton v-if="withEdit"
-                                      @click="handleEditButtonClick(slotProps.data)"
-                                      severity="info"
-                                      :text="editButtonConfig?.label ?? 'Edit'"/>
-          <BaseCrudTableActionsButton v-if="withDelete"
-                                      @click="handleDeleteButtonClick(slotProps.data)"
-                                      severity="danger"
-                                      text="Delete"/>
-
-        </BaseCrudTableActionsDropdown>
+          <slot name="controls-start"></slot>
+        </div>
       </template>
-    </Column>
-    <slot name="columns" :isFilterActive="isFilterActive"></slot>
-  </DataTable>
+      <template #center>
+        <slot name="controls-center"></slot>
+      </template>
+      <template #end>
+        <slot name="controls-end"></slot>
+        <IconField>
+          <InputIcon class="pi pi-search"/>
+          <InputText @change="handleSearchQueryChange"
+                     v-model="searchQuery"
+                     placeholder="Search"/>
+        </IconField>
+      </template>
+    </Toolbar>
+    <DataTable class="border border-gray-300 bg-white"
+               scrollable
+               :show-gridlines="false"
+               filter-display="menu"
+               paginator
+               sort-mode="multiple"
+               :row-class="rowClassHandler"
+               lazy
+               data-key="id"
+               striped-rows
+               @row-click="handleRowClick"
+               @sort="handleSortChange"
+               :selection-mode="clickableRows ? 'single' : null"
+               v-model:filters="filters"
+               v-model:selection="selectedRecords"
+               paginator-position="bottom"
+               :rows="paginationQuery.rows"
+               :totalRecords="paginationQuery.totalRecords"
+               @page="handlePageChange"
+               :multi-sort-meta="sortingQuery"
+               resizable-columns
+               column-resize-mode="fit"
+               :rows-per-page-options="[10,  50, 100, 500]"
+               :loading="isTableLoading"
+               :value="tableData">
+      <Column v-if="withSelection" selectionMode="multiple" headerStyle="width: 3rem"/>
+      <Column header=""
+              aria-label="Actions"
+              class="w-12"
+              v-if="withRecordActions && !informational">
+        <template #body="slotProps">
+          <BaseCrudTableActionsDropdown>
+            <slot name="record-actions" :record="slotProps.data"></slot>
+
+            <BaseCrudTableActionsButton v-if="withEdit"
+                                        @click="handleEditButtonClick(slotProps.data)"
+                                        severity="info"
+                                        :text="editButtonConfig?.label ?? 'Edit'"/>
+            <BaseCrudTableActionsButton v-if="withDelete"
+                                        @click="handleDeleteButtonClick(slotProps.data)"
+                                        severity="danger"
+                                        text="Delete"/>
+
+          </BaseCrudTableActionsDropdown>
+        </template>
+      </Column>
+      <slot name="columns" :isFilterActive="isFilterActive"></slot>
+    </DataTable>
+  </div>
+
 </template>
 
 <script setup>
