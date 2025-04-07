@@ -1,33 +1,63 @@
 <template>
   <div>
+    {{ filters }}
     <BaseCrudTable endpoint="http://localhost:3000" v-model:filters="filters" informational clickable-rows>
-      <template #columns>
-        <Column field="id" header="ID" :sortable="true"/>
+      <template #columns="{isFilterActive}">
+        <BaseCrudTableColumn key="qweqweqwe1" field="id" header="ID"></BaseCrudTableColumn>
+        <!--        <Column field="id" header="ID" :sortable="true"/>-->
         <Column header="User Name"
+                filter-field="user_name"
                 :show-filter-operator="false"
                 :show-filter-match-modes="false"
                 field="user_name">
+          <template #filtericon>
+            <BaseCrudTableFilterButton :is-active="isFilterActive('user_name')"></BaseCrudTableFilterButton>
+          </template>
           <template #filter="{filterModel}">
-            <BaseCrudTableColumnFilter v-model:filter-value="filterModel.value"
-                                       type="select"
-                                       :config="{
+            <BaseCrudTableColumnFilter
+                v-model:filter-value="filterModel.value"
+                type="select"
+                :config="{
                                           optionLabel: 'name',
                                           optionValue: 'value',
                                           tags: true,
-                                          options: [{name:'test', value: 'test', severity: 'info'}, { name: 'test2', value: 'test2', severity: 'danger'}]
+                                          tagsMapping: {
+                                              'test': { severity: 'info'},
+                                              'test2': {severity: 'danger'}
+                                          },
+                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]
                                        }"/>
           </template>
         </Column>
-        <Column field="user_phone" :sortable="true" header="Phone"/>
+        <Column field="user_phone"
+                :show-filter-operator="false"
+                :show-filter-match-modes="false"
+                :sortable="true"
+                header="Phone">
+          <template #filter="{filterModel}">
+            <BaseCrudTableColumnFilter
+                v-model:filter-value="filterModel.value"
+                type="select"
+                :config="{        optionLabel: 'name',
+                                          optionValue: 'value',
+                                          tags: true,
+                                          tagsMapping: {
+                                              'test': { severity: 'info'},
+                                              'test2': {severity: 'danger'}
+                                          },
+                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]
+                                       }"/>
+          </template>
+        </Column>
         <Column field="promo_code" :sortable="true" header="Promo Code"/>
       </template>
     </BaseCrudTable>
   </div>
   <div>
     <BaseGroupItemsSelector :groups="groupingList"
-                              v-model:selected-items="selectedItemsList"
-                              :groups-items="groupItemsList"
-                              items-group-key="option_group_id"></BaseGroupItemsSelector>
+                            v-model:selected-items="selectedItemsList"
+                            :groups-items="groupItemsList"
+                            items-group-key="option_group_id"></BaseGroupItemsSelector>
   </div>
 </template>
 
@@ -39,6 +69,8 @@ import useUtils from "../composables/useUtils.js";
 import BaseCrudTable from "../components/BaseCrudTable.vue";
 import {useRoute, useRouter} from "vue-router";
 import BaseCrudTableColumnFilter from "../components/BaseCrudTableColumnFilter.vue";
+import BaseCrudTableColumn from "../components/BaseCrudTableColumn.vue";
+import BaseCrudTableFilterButton from "../components/BaseCrudTableFilterButton.vue";
 
 const groupingList = ref([
   {
@@ -1618,6 +1650,9 @@ const route = useRoute()
 const router = useRouter()
 const filters = ref({
   user_name: {
+    value: ''
+  },
+  user_phone: {
     value: ''
   }
 })
