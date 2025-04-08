@@ -1,11 +1,16 @@
 import useCrudApi from "./useCrudApi.js";
 import useUtils from "./useUtils.js";
 import useFreezeRay from "./useFreezeRay.js";
+import * as zod from "zod";
 import {ref} from "vue";
+import useFetch from "@/composables/useFetch.js";
+import useAlerts from "@/composables/useAlerts.js";
 
 export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
     const {cloneDeep} = useUtils()
     const {freezeApp, unfreezeApp} = useFreezeRay()
+    const {alertError} = useAlerts()
+    const fetch = useFetch()
     const loading = ref({
         active: false,
         message: '',
@@ -127,6 +132,38 @@ export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
         unfreezeApp()
     }
 
+    async function fetchLanguages(apiEndpoint = 'api/languages') {
+        try {
+            const response = await fetch.get(apiEndpoint);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching languages:', error);
+            alertError('Error fetching languages');
+        }
+    }
+
+    function createFormSchema(baseSchema, config = {
+        languages: [],
+        languageSchema: {}
+    }) {
+        const newSchema = baseSchema
+        if (baseSchema.shape['password']) {
+            if (props.record) {
+                newSchema.omit({password: true})
+            }
+        }
+        if (config.languages.length > 0) {
+            config.languages.forEach(language => {
+                if (!newSchema.shape[language]) {
+                    newSchema.extend({
+                        [language]: zod.object(config.languageSchema)
+                    })
+                }
+            })
+        }
+        return newSchema
+    }
+
     /**
      * Start loading with predefined templates and customizable options
      * @param {Object} options - Loading options
@@ -135,7 +172,7 @@ export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
      * @param {string} [options.height] - Custom height (only relevant for overlay template)
      * @param {Object} [options.customOptions] - Any additional loading options to override defaults
      */
-    function startDialogLoading (options = {} ){
+    function startDialogLoading(options = {}) {
         const {
             template = 'blocking',
             message,
@@ -177,6 +214,7 @@ export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
         handleNextRecord,
         handlePreviousRecord,
         closeDialog,
+        createFormSchema,
         freezeDialog,
         unfreezeDialog,
         createFormPayload,
