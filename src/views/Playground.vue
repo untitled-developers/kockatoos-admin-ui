@@ -10,44 +10,44 @@
                 :show-filter-operator="false"
                 :show-filter-match-modes="false"
                 field="user_name">
-<!--          <template #filtericon>-->
-<!--            <BaseCrudTableFilterButton :is-active="isFilterActive('user_name')"></BaseCrudTableFilterButton>-->
-<!--          </template>-->
-<!--          <template #filter="{filterModel}">-->
-<!--            <BaseCrudTableColumnFilter-->
-<!--                v-model:filter-value="filterModel.value"-->
-<!--                type="select"-->
-<!--                :config="{-->
-<!--                                          optionLabel: 'name',-->
-<!--                                          optionValue: 'value',-->
-<!--                                          tags: true,-->
-<!--                                          tagsMapping: {-->
-<!--                                              'test': { severity: 'info'},-->
-<!--                                              'test2': {severity: 'danger'}-->
-<!--                                          },-->
-<!--                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]-->
-<!--                                       }"/>-->
-<!--          </template>-->
+          <!--          <template #filtericon>-->
+          <!--            <BaseCrudTableFilterButton :is-active="isFilterActive('user_name')"></BaseCrudTableFilterButton>-->
+          <!--          </template>-->
+          <!--          <template #filter="{filterModel}">-->
+          <!--            <BaseCrudTableColumnFilter-->
+          <!--                v-model:filter-value="filterModel.value"-->
+          <!--                type="select"-->
+          <!--                :config="{-->
+          <!--                                          optionLabel: 'name',-->
+          <!--                                          optionValue: 'value',-->
+          <!--                                          tags: true,-->
+          <!--                                          tagsMapping: {-->
+          <!--                                              'test': { severity: 'info'},-->
+          <!--                                              'test2': {severity: 'danger'}-->
+          <!--                                          },-->
+          <!--                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]-->
+          <!--                                       }"/>-->
+          <!--          </template>-->
         </Column>
         <Column field="user_phone"
                 :show-filter-operator="false"
                 :show-filter-match-modes="false"
                 :sortable="true"
                 header="Phone">
-<!--          <template #filter="{filterModel}">-->
-<!--            <BaseCrudTableColumnFilter-->
-<!--                v-model:filter-value="filterModel.value"-->
-<!--                type="select"-->
-<!--                :config="{        optionLabel: 'name',-->
-<!--                                          optionValue: 'value',-->
-<!--                                          tags: true,-->
-<!--                                          tagsMapping: {-->
-<!--                                              'test': { severity: 'info'},-->
-<!--                                              'test2': {severity: 'danger'}-->
-<!--                                          },-->
-<!--                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]-->
-<!--                                       }"/>-->
-<!--          </template>-->
+          <!--          <template #filter="{filterModel}">-->
+          <!--            <BaseCrudTableColumnFilter-->
+          <!--                v-model:filter-value="filterModel.value"-->
+          <!--                type="select"-->
+          <!--                :config="{        optionLabel: 'name',-->
+          <!--                                          optionValue: 'value',-->
+          <!--                                          tags: true,-->
+          <!--                                          tagsMapping: {-->
+          <!--                                              'test': { severity: 'info'},-->
+          <!--                                              'test2': {severity: 'danger'}-->
+          <!--                                          },-->
+          <!--                                          options: [{name:'test', value: 'test'}, { name: 'test2', value: 'test2'}]-->
+          <!--                                       }"/>-->
+          <!--          </template>-->
         </Column>
         <Column field="promo_code" :sortable="true" header="Promo Code"/>
       </template>
@@ -62,8 +62,9 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {Column} from "primevue";
+import * as zod from "zod"
 import BaseGroupItemsSelector from "../components/BaseGroupItemsSelector.vue";
 import useUtils from "../composables/useUtils.js";
 import BaseCrudTable from "../components/BaseCrudTable.vue";
@@ -71,6 +72,8 @@ import {useRoute, useRouter} from "vue-router";
 import BaseCrudTableColumnFilter from "../components/BaseCrudTableColumnFilter.vue";
 import BaseCrudTableColumn from "../components/BaseCrudTableColumn.vue";
 import BaseCrudTableFilterButton from "../components/BaseCrudTableFilterButton.vue";
+import useEditDialog from "../composables/useEditDialog.js";
+
 
 const groupingList = ref([
   {
@@ -1656,7 +1659,34 @@ const filters = ref({
     value: ''
   }
 })
-const {formatCurrencyValue} = useUtils()
+const props = defineProps({
+  record: {
+    default: () => {
+      return {
+        id: 0
+      }
+    }
+  }
+})
+const {createFormSchema} = useEditDialog({props})
+let formSchema = null
+
+onMounted(() => {
+  formSchema = createFormSchema(zod.object({
+    username: zod.string().nonempty('Username is required'),
+    password: zod.string().nonempty('Password is required').min(6, 'Password must be at least 6 characters'),
+    role_id: zod.number()
+  }), {
+    languages: ['en', 'fr'],
+    languageSchema: zod.object({
+      name: zod.string().nonempty('Name is required'),
+      description: zod.string().nonempty('Description is required')
+    })
+  })
+  console.log('AHHH')
+  console.log(formSchema.shape)
+  console.log(formSchema.shape.en.shape)
+})
 </script>
 
 <style scoped>
