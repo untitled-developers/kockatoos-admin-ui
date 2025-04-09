@@ -3,8 +3,8 @@ import useUtils from "./useUtils.js";
 import useFreezeRay from "./useFreezeRay.js";
 import * as zod from "zod";
 import {ref} from "vue";
-import useFetch from "@/composables/useFetch.js";
-import useAlerts from "@/composables/useAlerts.js";
+import useFetch from "./useFetch.js";
+import useAlerts from "./useAlerts.js";
 
 export default function useEditDialog({props, emit} = {}, modelName, endpoint) {
     const {cloneDeep} = useUtils()
