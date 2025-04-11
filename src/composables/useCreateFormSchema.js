@@ -20,7 +20,6 @@ export default function useCreateFormSchema({props}) {
                     [language]: config.languageSchema
                 })
             })
-            console.log('languageSchemaObject', languageSchemaObject.shape)
             newSchema = newSchema.extend({
                 languages: languageSchemaObject
             })
