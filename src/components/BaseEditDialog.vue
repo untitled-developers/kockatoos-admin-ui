@@ -69,6 +69,7 @@ import useFreezeRay from "../composables/useFreezeRay.js";
 import useForm from "../composables/useForm.js";
 import useCrudApi from "../composables/useCrudApi.js";
 import useAlerts from "../composables/useAlerts.js";
+import * as zod from 'zod';
 import useUtils from "../composables/useUtils.js";
 
 //---------------------------------------------------
@@ -140,7 +141,7 @@ const emit = defineEmits([
 // Models
 //---------------------------------------------------
 const form = defineModel('form')
-const formSchema = defineModel('formSchema')
+const formSchema = defineModel('formSchema', {default: () => zod.object({})})
 
 //---------------------------------------------------
 // Composables
@@ -389,7 +390,7 @@ function stopDialogLoading() {
 //---------------------------------------------------
 // Watch for loading state changes that need to freeze the app
 watch(() => loading, (newLoading) => {
-  if (newLoading.active && newLoading.freezeApp) {
+  if (newLoading.value.active && newLoading.value.freezeApp) {
     freezeApp({
       useBlur: true,
       text: newLoading.message
