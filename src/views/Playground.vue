@@ -73,7 +73,6 @@ import {useRoute, useRouter} from "vue-router";
 import BaseCrudTableColumnFilter from "../components/BaseCrudTableColumnFilter.vue";
 import BaseCrudTableColumn from "../components/BaseCrudTableColumn.vue";
 import BaseCrudTableFilterButton from "../components/BaseCrudTableFilterButton.vue";
-import useEditDialog from "../composables/useEditDialog.js";
 import {useDialogStore} from "../stores/DialogStore.js";
 import TestDialog from "./components/TestDialog.vue";
 
@@ -1691,9 +1690,6 @@ onMounted(() => {
       description: zod.string().nonempty('Description is required')
     })
   })
-  console.log('AHHH')
-  console.log(formSchema.shape)
-  console.log(formSchema.shape.en.shape)
 })
 </script>
 

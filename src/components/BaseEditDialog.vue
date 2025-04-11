@@ -41,7 +41,7 @@
       </div>
     </template>
     <template #footer-start>
-      <BaseEditDialogNavigationButtons v-if="withNavigation && !isEditingRecord"
+      <BaseEditDialogNavigationButtons v-if="withNavigation && isEditingRecord"
                                        @previous-record="handlePreviousRecord"
                                        @next-record="handleNextRecord"/>
     </template>
@@ -197,7 +197,7 @@ const dialogHeader = computed(() => {
     return props.header
   }
   if (props.recordType) {
-    if (isEditingRecord) {
+    if (isEditingRecord.value) {
       return `Edit ${props.recordType} #${props.record?.id}`
     } else {
       return `Create ${props.recordType}`
