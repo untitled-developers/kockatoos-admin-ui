@@ -11,7 +11,7 @@
            v-else-if="image"
            class="size-72 object-scale-down cursor-pointer"
            :src="image">
-      <div v-else class="flex items-center justify-center bg-gray-200 shadow-md size-72 cursor-pointer"
+      <div v-else class="flex items-center justify-center bg-gray-200 shadow-sm size-72 cursor-pointer"
            @click="handleImagePlaceholderClick">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
              stroke="currentColor"
