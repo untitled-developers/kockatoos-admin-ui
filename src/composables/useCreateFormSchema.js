@@ -1,4 +1,4 @@
-export default function useCreateFormSchema() {
+export default function useCreateFormSchema({props}) {
     function createFormSchema(baseSchema, config = {
         languages: [],
         languageSchema: {}
