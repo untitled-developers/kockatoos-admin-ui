@@ -296,7 +296,7 @@ async function populateForm(formRef, record) {
   let mappedRecord = record
 
   if (props.recordMapper && typeof props.recordMapper === 'function') {
-    mappedRecord = await props.recordMapper(record)
+    mappedRecord = await props.recordMapper(record, startDialogLoading, stopDialogLoading)
   }
 
   const filteredData = {}
@@ -406,6 +406,11 @@ onMounted(async () => {
   if (isEditingRecord.value) {
     await populateForm(form, props.record)
   }
+})
+
+defineExpose({
+  startDialogLoading,
+  stopDialogLoading
 })
 </script>
 
