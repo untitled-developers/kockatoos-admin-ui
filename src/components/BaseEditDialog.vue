@@ -198,7 +198,7 @@ const dialogHeader = computed(() => {
   }
   if (props.recordType) {
     if (isEditingRecord) {
-      return `Edit ${props.recordType} #${props.record.id}`
+      return `Edit ${props.recordType} #${props.record?.id}`
     } else {
       return `Create ${props.recordType}`
     }
