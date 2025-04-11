@@ -8,7 +8,12 @@ export const useLanguagesStore = defineStore('languages', () => {
 
     async function fetchLanguages(apiEndpoint = 'api/languages') {
         try {
-            const response = await fetch.get(apiEndpoint)
+            const response = await fetch.get(apiEndpoint, {
+                params: {
+                    sortBy: 'id',
+                    sortAs: 'asc',
+                }
+            })
             languages.value = response.data.data
         } catch (err) {
             console.error('Error fetching languages:', err)
