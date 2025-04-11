@@ -75,8 +75,10 @@ import BaseCrudTableColumn from "../components/BaseCrudTableColumn.vue";
 import BaseCrudTableFilterButton from "../components/BaseCrudTableFilterButton.vue";
 import {useDialogStore} from "../stores/DialogStore.js";
 import TestDialog from "./components/TestDialog.vue";
+import {useLanguagesStore} from "@/stores/LanguagesStore.js";
 
 const dialogStore = useDialogStore()
+const languagesStore = useLanguagesStore()
 
 function handleTest() {
   dialogStore.openDialog(TestDialog)
