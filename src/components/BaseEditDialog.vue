@@ -20,7 +20,7 @@
       <div v-else class="relative overflow-hidden">
         <div :class="{ 'filter blur-xs': isLoading && loading.mode === 'overlay' }">
           <slot name="content"
-                :getError="getErrors"
+                :getErrors="getErrors"
                 :handleSubmit="handleSubmitRecord"
                 :didSubmit="didSubmit"></slot>
         </div>
