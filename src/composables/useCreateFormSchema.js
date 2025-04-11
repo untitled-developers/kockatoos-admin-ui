@@ -14,12 +14,13 @@ export default function useCreateFormSchema({props}) {
 
         // Handle languages
         if (config.languages.length > 0) {
-            const languageSchemaObject = zod.object({})
+            let languageSchemaObject = zod.object({})
             config.languages.forEach(language => {
-                languageSchemaObject.extend({
+                languageSchemaObject = languageSchemaObject.extend({
                     [language]: config.languageSchema
                 })
             })
+            console.log('languageSchemaObject', languageSchemaObject.shape)
             newSchema = newSchema.extend({
                 languages: languageSchemaObject
             })

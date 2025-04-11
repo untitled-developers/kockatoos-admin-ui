@@ -67,15 +67,13 @@ import {onMounted, ref} from "vue";
 import {Column, Button} from "primevue";
 import * as zod from "zod"
 import BaseGroupItemsSelector from "../components/BaseGroupItemsSelector.vue";
-import useUtils from "../composables/useUtils.js";
 import BaseCrudTable from "../components/BaseCrudTable.vue";
 import {useRoute, useRouter} from "vue-router";
-import BaseCrudTableColumnFilter from "../components/BaseCrudTableColumnFilter.vue";
 import BaseCrudTableColumn from "../components/BaseCrudTableColumn.vue";
-import BaseCrudTableFilterButton from "../components/BaseCrudTableFilterButton.vue";
 import {useDialogStore} from "../stores/DialogStore.js";
 import TestDialog from "./components/TestDialog.vue";
-import {useLanguagesStore} from "@/stores/LanguagesStore.js";
+import {useLanguagesStore} from "../stores/LanguagesStore.js";
+import useCreateFormSchema from "../composables/useCreateFormSchema.js";
 
 const dialogStore = useDialogStore()
 const languagesStore = useLanguagesStore()
@@ -1677,22 +1675,23 @@ const props = defineProps({
     }
   }
 })
-const {createFormSchema} = useEditDialog({props})
-let formSchema = null
+const {createFormSchema} = useCreateFormSchema({props})
 
-onMounted(() => {
-  formSchema = createFormSchema(zod.object({
-    username: zod.string().nonempty('Username is required'),
-    password: zod.string().nonempty('Password is required').min(6, 'Password must be at least 6 characters'),
-    role_id: zod.number()
-  }), {
-    languages: ['en', 'fr'],
-    languageSchema: zod.object({
-      name: zod.string().nonempty('Name is required'),
-      description: zod.string().nonempty('Description is required')
-    })
+const formSchema = createFormSchema(zod.object({
+  banner: zod.string().nonempty('Banner is required'),
+  profile: zod.string().nonempty('Profile is required'),
+  link: zod.string().nonempty('Link is required'),
+  year: zod.string().nonempty('Year is required'),
+}), {
+  languages: ['en', 'fr'],
+  languageSchema: zod.object({
+    title: zod.string().nonempty('Title is required'),
+    description: zod.string().nonempty('Description is required')
   })
 })
+console.log(formSchema.shape)
+console.log(formSchema.shape.languages.shape)
+console.log(formSchema.shape.languages.shape.en.shape)
 </script>
 
 <style scoped>
