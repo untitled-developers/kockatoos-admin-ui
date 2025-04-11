@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import useFetch from "../composables/useFetch.js";
 import {ref} from "vue";
 
-export const languagesStore = defineStore('languages', () => {
+export const useLanguagesStore = defineStore('languages', () => {
     const languages = ref([])
     const fetch = useFetch()
 
