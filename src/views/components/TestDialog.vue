@@ -54,25 +54,8 @@
 </template>
 
 <script setup>
-
-import BaseDialog from "../../components/BaseDialog.vue";
-import {ref} from "vue";
-import BaseLoaderOverlay from "../../components/BaseLoaderOverlay.vue";
-import useGlobalLoader from "../../composables/useGlobalLoader.js";
-import useFreezeRay from "../../composables/useFreezeRay.js";
 import BaseEditDialog from "../../components/BaseEditDialog.vue";
-import useEditDialog from "../../composables/useEditDialog.js";
 
-const isLoading = ref(false)
-const {freezeApp, unfreezeApp} = useFreezeRay()
-const {loading, startDialogLoading, stopDialogLoading} = useEditDialog()
-
-function isLoadingFn() {
-  startDialogLoading()
-  setTimeout(() => {
-    stopDialogLoading()
-  }, 4000)
-}
 </script>
 
 <style scoped>

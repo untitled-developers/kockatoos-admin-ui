@@ -1,12 +1,11 @@
 <template>
-  <BaseDialog :header="header"
+  <BaseDialog :header="dialogHeader"
               :width="width"
               :full-screen="fullScreen"
               :position="position"
               :full-height="fullHeight"
-              @close="emit('close')">
+              @close="closeDialog">
     <template #content>
-      <!-- Loading Mode: Replace content entirely with loader -->
       <div v-if="isLoading && loading.mode === 'replace'"
            :style="{height: loading.height}"
            class="flex flex-col items-center justify-center">
@@ -18,11 +17,12 @@
         </div>
       </div>
 
-      <!-- Content Area with potential overlay -->
       <div v-else class="relative overflow-hidden">
-        <!-- Regular Content -->
         <div :class="{ 'filter blur-xs': isLoading && loading.mode === 'overlay' }">
-          <slot name="content"></slot>
+          <slot name="content"
+                :getError="getErrors"
+                :handleSubmit="handleSubmitRecord"
+                :didSubmit="didSubmit"></slot>
         </div>
 
         <!-- Loading Mode: Overlay on top of content -->
@@ -42,8 +42,8 @@
     </template>
     <template #footer-start>
       <BaseEditDialogNavigationButtons v-if="withNavigation"
-                                       @previous-record="emit('previous-record')"
-                                       @next-record="emit('next-record')"/>
+                                       @previous-record="handlePreviousRecord"
+                                       @next-record="handleNextRecord"/>
     </template>
     <template #footer-end>
       <Button label="Close"
@@ -52,9 +52,8 @@
               severity="secondary"
               @click="emit('close')"/>
       <Button v-if="withSubmit"
-              :label="isEditing ? 'Save' : 'Submit'"
+              :label="isEditingRecord ? 'Save' : 'Submit'"
               type="submit"
-              @click="emit('submit')"
               :form="formId"></Button>
       <slot name="footer-end"></slot>
     </template>
@@ -65,13 +64,38 @@
 import BaseDialog from "./BaseDialog.vue";
 import {Button} from "primevue";
 import BaseEditDialogNavigationButtons from "./BaseEditDialogNavigationButtons.vue";
-import {watch, computed} from "vue";
+import {watch, computed, ref, onMounted} from "vue";
 import useFreezeRay from "../composables/useFreezeRay.js";
+import useForm from "../composables/useForm.js";
+import useCrudApi from "../composables/useCrudApi.js";
+import useAlerts from "../composables/useAlerts.js";
+import useUtils from "../composables/useUtils.js";
 
+//---------------------------------------------------
+// Props and Emits
+//---------------------------------------------------
 const props = defineProps({
+  record: {
+    type: Object
+  },
   header: {
+    type: String
+  },
+  recordType: {
+    type: String,
+    default: ''
+  },
+  endpoint: {
     type: String,
     required: true
+  },
+  requestBodyMapper: {
+    type: Function,
+    default: null
+  },
+  recordMapper: {
+    type: Function,
+    default: null
   },
   fullHeight: {
     type: Boolean,
@@ -96,36 +120,12 @@ const props = defineProps({
   formId: {
     type: String
   },
-  /**
-   * Controls the loading/saving state of the component
-   * @type {Object} Configuration object for loading state
-   * @property {Boolean} active - Whether the loading state is active
-   * @property {String} message - Message to display during loading
-   * @property {String} height - Height for the loading container when in replace mode
-   * @property {String} mode - How the loader should appear: "overlay" (on top of content with blur), "replace" (instead of content), or "freeze" (global app overlay)
-   * @property {Boolean} freezeApp - Whether to freeze the entire app (for saving/submitting)
-   * @default { active: false, message: 'Loading...', height: 'auto', mode: 'overlay', freezeApp: false }
-   */
-  loading: {
-    type: Object,
-    default: () => ({
-      active: false,
-      message: 'Loading...',
-      height: 'auto',
-      mode: 'overlay', // 'overlay', 'replace', or 'freeze'
-      freezeApp: false
-    })
-  },
   width: {
     type: String
   },
   withCloseButton: {
     type: Boolean,
     default: true
-  },
-  isEditing: {
-    type: Boolean,
-    default: false
   }
 })
 
@@ -136,17 +136,259 @@ const emit = defineEmits([
   'close'
 ])
 
-// Computed properties
-const isLoading = computed(() => props.loading.active);
-const isSubmitting = computed(() => props.loading.active && props.loading.freezeApp);
+//---------------------------------------------------
+// Models
+//---------------------------------------------------
+const form = defineModel('form')
+const formSchema = defineModel('formSchema')
+
+//---------------------------------------------------
+// Composables
+//---------------------------------------------------
+const {
+  getErrors,
+  hasErrors
+} = useForm(form, formSchema)
+
+const {
+  alertError
+} = useAlerts()
 
 const {
   freezeApp,
   unfreezeApp
 } = useFreezeRay();
 
+const {
+  create,
+  update
+} = useCrudApi(props.endpoint)
+
+const {
+  cloneDeep
+} = useUtils()
+
+//---------------------------------------------------
+// Refs
+//---------------------------------------------------
+const didSubmit = ref(false)
+
+const loading = ref({
+  active: false,
+  message: '',
+  height: '',
+  mode: '',
+  freezeApp: false
+})
+
+//---------------------------------------------------
+// Computed Properties
+//---------------------------------------------------
+const isEditingRecord = computed(() => {
+  return !!props.record
+})
+
+const isLoading = computed(() => {
+  return loading.value.active
+});
+
+const dialogHeader = computed(() => {
+  if (props.header) {
+    return props.header
+  }
+  if (props.recordType && isEditingRecord.value) {
+    if (isEditingRecord) {
+      return `Edit ${props.recordType} #${props.record.id}`
+    } else {
+      return `Create ${props.recordType}`
+    }
+  }
+  return ``
+})
+
+//---------------------------------------------------
+// Navigation Methods
+//---------------------------------------------------
+function handleNextRecord() {
+  if (!props.record) {
+    return
+  }
+  emit('next-record', props.record)
+}
+
+function handlePreviousRecord() {
+  if (!props.record) {
+    return
+  }
+  emit('previous-record', props.record)
+}
+
+function closeDialog() {
+  emit('close')
+}
+
+//---------------------------------------------------
+// Form Handling Methods
+//---------------------------------------------------
+async function handleSubmitRecord() {
+  if (hasErrors()) {
+    didSubmit.value = true
+    return
+  }
+  const formPayload = createFormPayload(form.value)
+  try {
+    startDialogLoading()
+    await submitData(formPayload)
+    emit('submit')
+    if (!isEditingRecord.value) {
+      closeDialog()
+    }
+  } catch (error) {
+    alertError('Error submitting form')
+    console.log(error)
+  } finally {
+    stopDialogLoading()
+  }
+}
+
+async function submitData(formData) {
+  if (isEditingRecord.value) {
+    return await update(props.record.id, formData)
+  }
+  return await create(formData)
+}
+
+function createFormPayload(data = {}) {
+  let mappedData = data
+
+  let didMapData = false
+  if (props.requestBodyMapper && typeof props.requestBodyMapper === 'function') {
+    mappedData = props.requestBodyMapper(data)
+    didMapData = true
+  }
+
+  const formData = new FormData()
+
+  if (!didMapData) {
+    if (Object.keys(data).length > 0) {
+      formData.append('data', JSON.stringify(data))
+    }
+
+    return formData
+  }
+  Object.keys(mappedData).forEach(mappedDataKey => {
+    if (mappedDataKey === 'data') {
+      formData.append('data', JSON.stringify(data))
+    } else {
+      formData.append(mappedDataKey, mappedData[mappedDataKey])
+    }
+  })
+
+  return formData
+
+
+}
+
+async function populateForm(formRef, record) {
+  if (!formRef?.value || !record) {
+    return
+  }
+  let mappedRecord = record
+
+  if (props.recordMapper && typeof props.recordMapper === 'function') {
+    mappedRecord = await props.recordMapper(record)
+  }
+
+  const filteredData = {}
+  Object.keys(formRef.value).forEach(key => {
+    if (key in mappedRecord) {
+      switch (true) {
+        case mappedRecord[key] === null:
+          filteredData[key] = null;
+          break;
+
+        case Array.isArray(mappedRecord[key]):
+          filteredData[key] = cloneDeep(mappedRecord[key]);
+          break;
+
+        case typeof mappedRecord[key] === 'object':
+          filteredData[key] = cloneDeep(mappedRecord[key]);
+          break;
+
+        case typeof mappedRecord[key] === 'string':
+        case typeof mappedRecord[key] === 'number':
+        case typeof mappedRecord[key] === 'boolean':
+        case typeof mappedRecord[key] === 'undefined':
+          filteredData[key] = mappedRecord[key];
+          break;
+
+        default:
+          console.warn(`Unexpected type for key "${key}": ${typeof mappedRecord[key]}`);
+          break;
+      }
+    }
+  })
+
+  if (mappedRecord?.id) {
+    filteredData.id = mappedRecord.id
+  }
+  Object.assign(formRef.value, filteredData)
+}
+
+//---------------------------------------------------
+// Loading State Management
+//---------------------------------------------------
+/**
+ * Start loading with predefined templates and customizable options
+ * @param {Object} options - Loading options
+ * @param {string} [options.template='default'] - Template type: 'blocking', or 'overlay'
+ * @param {string} [options.message] - Custom loading message
+ * @param {string} [options.height] - Custom height (only relevant for overlay template)
+ * @param {Object} [options.customOptions] - Any additional loading options to override defaults
+ */
+function startDialogLoading(options = {}) {
+  const {
+    template = 'blocking',
+    message,
+    height,
+    customOptions = {}
+  } = options;
+
+  const templates = {
+    // For blocking operations (form submissions, API calls, etc.)
+    blocking: {
+      active: true,
+      message: message ?? 'Processing request',
+      height: 'auto',
+      mode: 'overlay',
+      freezeApp: true
+    },
+    // For content loading within a dialog
+    embedded: {
+      active: true,
+      message: message ?? 'Loading content',
+      height: height ?? '500px',
+      mode: 'replace',
+      freezeApp: false
+    }
+  };
+  const baseConfig = templates[template]
+  loading.value = {
+    ...baseConfig,
+    ...customOptions
+  };
+}
+
+function stopDialogLoading() {
+  loading.value.active = false
+  loading.value.freezeApp = false
+}
+
+//---------------------------------------------------
+// Watchers
+//---------------------------------------------------
 // Watch for loading state changes that need to freeze the app
-watch(() => props.loading, (newLoading) => {
+watch(() => loading, (newLoading) => {
   if (newLoading.active && newLoading.freezeApp) {
     freezeApp({
       useBlur: true,
@@ -156,6 +398,15 @@ watch(() => props.loading, (newLoading) => {
     unfreezeApp();
   }
 }, {immediate: true, deep: true});
+
+//---------------------------------------------------
+// Lifecycle Hooks
+//---------------------------------------------------
+onMounted(async () => {
+  if (isEditingRecord.value) {
+    await populateForm(form, props.record)
+  }
+})
 </script>
 
 <style scoped>

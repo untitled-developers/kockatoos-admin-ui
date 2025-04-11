@@ -1,4 +1,5 @@
 <template>
+  <Button label="TEST" @click="handleTest"></Button>
   <div>
     {{ filters }}
     <BaseCrudTable endpoint="http://localhost:3000" informational clickable-rows>
@@ -63,7 +64,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import {Column} from "primevue";
+import {Column, Button} from "primevue";
 import * as zod from "zod"
 import BaseGroupItemsSelector from "../components/BaseGroupItemsSelector.vue";
 import useUtils from "../composables/useUtils.js";
@@ -73,7 +74,14 @@ import BaseCrudTableColumnFilter from "../components/BaseCrudTableColumnFilter.v
 import BaseCrudTableColumn from "../components/BaseCrudTableColumn.vue";
 import BaseCrudTableFilterButton from "../components/BaseCrudTableFilterButton.vue";
 import useEditDialog from "../composables/useEditDialog.js";
+import {useDialogStore} from "../stores/DialogStore.js";
+import TestDialog from "./components/TestDialog.vue";
 
+const dialogStore = useDialogStore()
+
+function handleTest() {
+  dialogStore.openDialog(TestDialog)
+}
 
 const groupingList = ref([
   {

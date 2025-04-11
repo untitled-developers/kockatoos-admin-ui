@@ -1,0 +1,20 @@
+import {defineStore} from "pinia";
+import useFetch from "../composables/useFetch.js";
+import {ref} from "vue";
+
+export const languagesStore = defineStore('languages', () => {
+    const languages = ref([])
+    const fetch = useFetch()
+
+    async function fetchLanguages(apiEndpoint = 'api/languages') {
+        try {
+            const response = await fetch.get(apiEndpoint)
+            languages.value = response.data
+        } catch (err) {
+            console.error('Error fetching languages:', err)
+        }
+    }
+
+
+    return {languages, fetchLanguages}
+})
