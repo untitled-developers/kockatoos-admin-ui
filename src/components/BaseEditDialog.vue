@@ -148,7 +148,7 @@ const formSchema = defineModel('formSchema')
 const {
   getErrors,
   hasErrors
-} = useForm(form, formSchema)
+} = useForm(form, formSchema.value)
 
 const {
   alertError
