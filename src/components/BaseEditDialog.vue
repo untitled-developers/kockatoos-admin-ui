@@ -17,27 +17,27 @@
         </div>
       </div>
 
-      <div v-else class="relative overflow-hidden">
-        <div :class="{ 'filter blur-xs': isLoading && loading.mode === 'overlay' }">
+      <transition name="fade-scale">
+        <div v-if="isLoading && loading.mode === 'overlay'"
+             class="absolute inset-0 z-10 flex flex-col bg-gray-100/60 backdrop-blur-xs items-center justify-center rounded-xl">
+          <div class="flex flex-col items-center justify-center gap-y-2">
+            <div class="animate-spin rounded-full border-4 border-gray-300 border-t-(--p-primary-600) size-8"></div>
+            <div v-if="loading.message"
+                 class="font-medium text-(--p-primary-600) text-xl animate-fade-in-up">
+              {{ loading.message }}
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <div v-if="!isLoading || loading.mode !== 'replace'" class="relative overflow-hidden">
+        <div>
           <slot name="content"
                 :getErrors="getErrors"
                 :handleSubmit="handleSubmitRecord"
                 :didSubmit="didSubmit"></slot>
         </div>
 
-        <!-- Loading Mode: Overlay on top of content -->
-        <transition name="fade-scale">
-          <div v-if="isLoading && loading.mode === 'overlay'"
-               class="absolute inset-0 z-10 flex flex-col bg-gray-100/60 backdrop-blur-xs items-center justify-center">
-            <div class="flex flex-col items-center justify-center gap-y-2">
-              <div class="animate-spin rounded-full border-4 border-gray-300 border-t-(--p-primary-600) size-8"></div>
-              <div v-if="loading.message"
-                   class="font-medium text-(--p-primary-600) text-xl animate-fade-in-up">
-                {{ loading.message }}
-              </div>
-            </div>
-          </div>
-        </transition>
       </div>
     </template>
     <template #footer-start>
