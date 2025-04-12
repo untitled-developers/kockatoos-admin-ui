@@ -3,7 +3,8 @@ import * as zod from 'zod'
 export default function useCreateFormSchema({props}) {
     function createFormSchema(baseSchema, config = {
         languages: [],
-        languageSchema: {}
+        languageSchema: {},
+        requiredLanguages: []
     }) {
         let newSchema = baseSchema
 
@@ -16,9 +17,11 @@ export default function useCreateFormSchema({props}) {
         if (config.languages.length > 0) {
             let languageSchemaObject = zod.object({})
             config.languages.forEach(language => {
-                languageSchemaObject = languageSchemaObject.extend({
-                    [language]: config.languageSchema
-                })
+                if (config.requiredLanguages.includes(language)) {
+                    languageSchemaObject = languageSchemaObject.extend({
+                        [language]: config.languageSchema
+                    })
+                }
             })
             newSchema = newSchema.extend({
                 languages: languageSchemaObject
