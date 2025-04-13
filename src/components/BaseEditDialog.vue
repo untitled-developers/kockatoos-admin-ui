@@ -279,7 +279,7 @@ function createFormPayload(data = {}) {
   }
   Object.keys(mappedData).forEach(mappedDataKey => {
     if (mappedDataKey === 'data') {
-      formData.append('data', JSON.stringify(data))
+      formData.append('data', JSON.stringify(mappedData.data))
     } else {
       formData.append(mappedDataKey, mappedData[mappedDataKey])
     }
