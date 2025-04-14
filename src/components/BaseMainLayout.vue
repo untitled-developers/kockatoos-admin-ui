@@ -165,12 +165,13 @@
                 icon="pi pi-bars"></Button>
         <button type="button"
                 @click="mobileDrawer = true"
-                class="flex items-center cursor-pointer md:hidden rounded-xs  bg-(--p-primary-500) px-2 py-2 mr-2 text-xs font-semibold text-white shadow-xs hover:bg-(--p-primary-400) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--p-primary-500)">
+                class="flex items-center cursor-pointer md:hidden rounded-sm  bg-(--p-primary-500) px-2 py-2 mr-2 text-xs font-semibold text-white shadow-xs hover:bg-(--p-primary-400) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--p-primary-500)">
           <i class="pi pi-bars"></i>
         </button>
         <h2 class="text-lg font-bol text-gray-700">{{ route.meta?.title }}</h2>
         <div class="ml-auto flex items-center gap-x-2">
           <Button type="button"
+                  v-if="withNotifications"
                   icon="pi pi-bell"
                   rounded
                   severity="info"
@@ -216,6 +217,10 @@ const props = defineProps({
    * Wont be using this for now. Will be implemented later
    */
   isDark: {
+    type: Boolean,
+    default: false
+  },
+  withNotifications: {
     type: Boolean,
     default: false
   }
