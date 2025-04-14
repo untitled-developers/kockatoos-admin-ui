@@ -87,8 +87,7 @@ const props = defineProps({
     default: ''
   },
   endpoint: {
-    type: String,
-    required: true
+    type: String
   },
   requestBodyMapper: {
     type: Function,
