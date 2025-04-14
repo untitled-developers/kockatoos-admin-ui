@@ -240,9 +240,7 @@ async function handleSubmitRecord() {
     startDialogLoading()
     await submitData(formPayload)
     emit('submit')
-    if (!isEditingRecord.value) {
-      closeDialog()
-    }
+    closeDialog()
   } catch (error) {
     alertError('Error submitting form')
     console.log(error)

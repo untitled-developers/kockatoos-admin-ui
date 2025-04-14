@@ -1,5 +1,6 @@
 <template>
   <Button label="TEST" @click="handleTest"></Button>
+
   <div>
     {{ filters }}
     <BaseCrudTable endpoint="http://localhost:3000" informational clickable-rows>
@@ -1684,6 +1685,7 @@ const formSchema = createFormSchema(zod.object({
   year: zod.string().nonempty('Year is required'),
 }), {
   languages: ['en', 'fr'],
+  requiredLanguages: ['en'],
   languageSchema: zod.object({
     title: zod.string().nonempty('Title is required'),
     description: zod.string().nonempty('Description is required')

@@ -1,6 +1,6 @@
 <template>
 
-  <BaseEditDialog :loading="loading" header="TEST" @submit="isLoadingFn">
+  <BaseEditDialog ref="test" :loading="loading" header="TEST" @submit="isLoadingFn">
     <template #content>
       <button @click="isLoadingFn">test</button>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a libero sagittis, interdum turpis eu, rutrum
@@ -55,7 +55,15 @@
 
 <script setup>
 import BaseEditDialog from "../../components/BaseEditDialog.vue";
+import {onMounted, ref} from "vue";
+import useEditDialog from "../../composables/useEditDialog.js";
 
+const test = ref(null)
+
+const {startDialogLoading} = useEditDialog(test)
+onMounted(() => {
+  startDialogLoading()
+})
 </script>
 
 <style scoped>
