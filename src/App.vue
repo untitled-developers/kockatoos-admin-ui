@@ -1,6 +1,9 @@
 <template>
   <BaseApp>
     <BaseMainLayout :navigation-items="items">
+      <template #right-top>
+        qweqwe
+      </template>
       <template #logo>
         <img src="https://cdn2.thecatapi.com/images/MTczNzcxNA.jpg" class="h-32 w-auto">
       </template>

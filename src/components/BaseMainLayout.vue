@@ -170,6 +170,7 @@
         </button>
         <h2 class="text-lg font-bol text-gray-700">{{ route.meta?.title }}</h2>
         <div class="ml-auto flex items-center gap-x-2">
+          <slot name="right-top"></slot>
           <Button type="button"
                   v-if="withNotifications"
                   icon="pi pi-bell"
