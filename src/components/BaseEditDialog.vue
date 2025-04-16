@@ -288,13 +288,14 @@ function createFormPayload(data = {}) {
 }
 
 async function populateForm(formRef, record) {
-  if (!formRef?.value || !record) {
+  if (!formRef?.value) {
     return
   }
-  let mappedRecord = record
+
+  let mappedRecord = record || {...formRef.value}
 
   if (props.recordMapper && typeof props.recordMapper === 'function') {
-    mappedRecord = await props.recordMapper(record, startDialogLoading, stopDialogLoading)
+    mappedRecord = await props.recordMapper(mappedRecord)
   }
 
   const filteredData = {}
@@ -401,9 +402,7 @@ watch(() => loading, (newLoading) => {
 // Lifecycle Hooks
 //---------------------------------------------------
 onMounted(async () => {
-  if (isEditingRecord.value) {
-    await populateForm(form, props.record)
-  }
+  await populateForm(form, props.record)
 })
 
 defineExpose({
