@@ -34,6 +34,7 @@ export default function useForm(formRef, formSchema) {
     }
 
     function hasErrors() {
+        if (import.meta.env.DEV) console.log('Errors:', errors.value)
         return errors.value && !errors.value.success
     }
 
