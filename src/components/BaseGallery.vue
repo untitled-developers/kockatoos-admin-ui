@@ -1,4 +1,5 @@
 <template>
+<div class="shadow-sm">
   <Toolbar :pt="{
       root: {
          style: {
@@ -58,6 +59,7 @@
       <p class="text-gray-500 min-h-[100px] flex items-center justify-center">Your gallery is empty</p>
     </div>
   </div>
+</div>
 </template>
 
 <script setup>
