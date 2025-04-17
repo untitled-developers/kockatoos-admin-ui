@@ -190,7 +190,11 @@ const props = defineProps({
   informational: {
     type: Boolean,
     default: false
-  }
+  },
+  deleteQueryParams: {
+    type: Object,
+    default: {}
+  },
 })
 const filters = defineModel('filters')
 const selectedRecords = defineModel('selectedRecord')
@@ -252,7 +256,11 @@ function handleDeleteButtonClick(record) {
 async function deleteRecord(record) {
   try {
     startTableLoading()
-    await fetch.delete(`${props.endpoint}/${record.id}`)
+    await fetch.delete(`${props.endpoint}/${record.id}`, {
+      params: {
+        ...props.deleteQueryParams
+      }
+    })
     alertSuccess('Record Deleted Successfully')
     await fetchData()
   } catch (error) {
