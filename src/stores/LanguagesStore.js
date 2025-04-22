@@ -5,7 +5,6 @@ import {ref} from "vue";
 export const useLanguagesStore = defineStore('languages', () => {
     const languages = ref([])
     const fetch = useFetch()
-    const didLoadLanguages = ref(false)
 
     async function fetchLanguages(apiEndpoint = 'api/languages') {
         try {
@@ -17,12 +16,11 @@ export const useLanguagesStore = defineStore('languages', () => {
             })
 
             languages.value = response.data.data
-            didLoadLanguages.value = true
         } catch (err) {
             console.error('Error fetching languages:', err)
         }
     }
 
 
-    return {languages, didLoadLanguages, fetchLanguages}
+    return {languages, fetchLanguages}
 })
