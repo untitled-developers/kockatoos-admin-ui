@@ -2,6 +2,8 @@
   <Button label="TEST" @click="handleTest"></Button>
 
   <div>
+    <div v-html="test"></div>
+    <BaseRichEditor v-model="test"></BaseRichEditor>
     {{ filters }}
     <BaseCrudTable endpoint="http://localhost:3000" informational clickable-rows>
       <template #columns="{isFilterActive}">
@@ -75,9 +77,11 @@ import {useDialogStore} from "../stores/DialogStore.js";
 import TestDialog from "./components/TestDialog.vue";
 import {useLanguagesStore} from "../stores/LanguagesStore.js";
 import useCreateFormSchema from "../composables/useCreateFormSchema.js";
+import BaseRichEditor from "../components/BaseRichEditor.vue";
 
 const dialogStore = useDialogStore()
 const languagesStore = useLanguagesStore()
+const test = ref('')
 
 function handleTest() {
   dialogStore.openDialog(TestDialog)
