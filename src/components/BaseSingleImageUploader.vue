@@ -6,15 +6,15 @@
       <img @click="handleImagePlaceholderClick"
            v-if="imagePreviewUrl"
            class="cursor-pointer"
-           :class="[`object-${objectFit}`, `aspect-[${aspectRatio}]`, `h-${size}`]"
+           :class="[`object-${objectFit}`, `aspect-[${aspectRatio}]`, `h-[${size}]`]"
            :src="imagePreviewUrl">
       <img @click="handleImagePlaceholderClick"
            v-else-if="image"
            class="cursor-pointer"
-           :class="[`object-${objectFit}`, `aspect-[${aspectRatio}]`, `h-${size}`]"
+           :class="[`object-${objectFit}`, `aspect-[${aspectRatio}]`, `h-[${size}]`]"
            :src="image">
       <div v-else class="flex items-center justify-center bg-gray-200 shadow-sm cursor-pointer"
-           :class="[`object-${objectFit}`, `aspect-[${aspectRatio}]`, `h-${size}`]"
+           :class="[`object-${objectFit}`, `aspect-[${aspectRatio}]`, `h-[${size}]`]"
            @click="handleImagePlaceholderClick">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
              stroke="currentColor"
@@ -45,7 +45,7 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: '72'
+    default: '252px'
   },
   objectFit: {
     type: String,
