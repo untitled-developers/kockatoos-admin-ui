@@ -21,6 +21,10 @@ export const useLanguagesStore = defineStore('languages', () => {
         }
     }
 
+    function setLanguages(list) {
+        languages.value = list
+    }
 
-    return {languages, fetchLanguages}
+
+    return {languages, setLanguages, fetchLanguages}
 })
