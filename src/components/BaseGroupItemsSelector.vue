@@ -57,7 +57,7 @@
   </div>
   <ul>
     <li v-for="selectedItem in filteredSelectedItems">
-      <slot name="selected-item" :selected-item="selectedItem"></slot>
+      <slot name="selected-item" :item="selectedItem"></slot>
     </li>
   </ul>
 </template>
