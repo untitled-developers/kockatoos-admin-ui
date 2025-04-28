@@ -16,7 +16,7 @@
         </template>
       </Select>
     </BaseInputContainer>
-    <div class="rounded-lg bg-white shadow-xs my-2">
+    <div class="rounded-lg bg-white my-2">
       <div class="p-6">
         <div class="flex items-center justify-between mb-4">
           <div v-if="selectedGroup">
@@ -38,15 +38,18 @@
           </Fluid>
 
         </div>
+        <div class="py-1 text-gray-600">
+          {{filteredItemsList.length}} available items
+        </div>
       </div>
     </div>
     <TransitionGroup tag="ul" name="list" role="list" class="flex flex-col bg-gray-50 gap-y-3 overflow-y-auto"
-                     style="max-height: 400px; height: 400px">
+                     style="max-height: 400px; height: 350px">
       <li v-for="item in filteredItemsList"
           :key="item.id"
           @click="handleSelectItem(item)"
           class="list-item">
-        <div class="p-2 px-6 bg-white shadow-xs rounded-md flex items-center hover:bg-(--p-primary-50) cursor-pointer">
+        <div class="p-2 px-6 bg-white s rounded-md flex items-center hover:bg-(--p-primary-50) cursor-pointer">
           {{ item[groupItemsLabel] }}
         </div>
       </li>
@@ -141,12 +144,12 @@ function getNumberOfSelectedItemsByGroup(group) {
 
 .list-enter-from {
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateX(10px);
 }
 
 .list-leave-to {
   opacity: 0;
-  transform: translateY(-15px);
+  transform: translateX(-15px);
 }
 
 .list-move {
