@@ -61,7 +61,11 @@
     <BaseGroupItemsSelector :groups="groupingList"
                             v-model:selected-items="selectedItemsList"
                             :groups-items="groupItemsList"
-                            items-group-key="option_group_id"></BaseGroupItemsSelector>
+                            items-group-key="option_group_id">
+      <template #selected-item="{selectedItem}">
+        {{ selectedItem }}
+      </template>
+    </BaseGroupItemsSelector>
   </div>
 </template>
 
