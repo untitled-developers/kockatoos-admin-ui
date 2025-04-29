@@ -17,16 +17,16 @@
       </Select>
     </BaseInputContainer>
     <div class="rounded-lg bg-white my-2">
-      <div class="p-6">
+      <div class="py-6 px-2">
         <div class="flex items-center justify-between mb-4">
           <div v-if="selectedGroup">
             <h2 class="text-xl font-medium text-gray-900">
               {{ selectedGroup[groupListConfig.optionLabel] }}
             </h2>
-            <p class="text-(--p-primary-600)">{{ filteredSelectedItems.length }} items selected</p>
+            <p class="text-(--p-primary-600) font-medium">{{ filteredSelectedItems.length }} items selected</p>
           </div>
           <div v-else class="text-gray-600">
-            Select A Group to add options
+            Select A Group to add items
           </div>
         </div>
         <div class="mt-4" v-if="selectedGroup">
@@ -38,8 +38,8 @@
           </Fluid>
 
         </div>
-        <div class="py-1 text-gray-600">
-          {{filteredItemsList.length}} available items
+        <div class="py-2 text-gray-600">
+          {{ filteredItemsList.length }} available items
         </div>
       </div>
     </div>
@@ -109,7 +109,7 @@ const filteredItemsList = computed(() => {
     const isInSelectedGroup = get(item, props.itemsGroupKey) === selectedGroup.value?.id
     const isNotSelected = !selectedItems.value.some(selectedOption => selectedOption.id === item.id)
     const matchesSearch = searchQuery.value === '' ||
-      item[props.groupItemsLabel]?.toLowerCase().includes(searchQuery.value.toLowerCase())
+        item[props.groupItemsLabel]?.toLowerCase().includes(searchQuery.value.toLowerCase())
     return isInSelectedGroup && isNotSelected && matchesSearch
   })
 })
@@ -149,7 +149,7 @@ function getNumberOfSelectedItemsByGroup(group) {
 
 .list-leave-to {
   opacity: 0;
-  transform: translateX(-15px);
+  transform: translateX(15px);
 }
 
 .list-move {
