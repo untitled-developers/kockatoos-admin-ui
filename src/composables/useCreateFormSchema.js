@@ -14,7 +14,7 @@ export default function useCreateFormSchema({props}) {
         }
 
         // Handle languages
-        if (config.languages.length > 0) {
+        if (config.languages && config.languages.length > 0) {
             let languageSchemaObject = zod.object({})
             config.languages.forEach(language => {
                 if (config.requiredLanguages.includes(language)) {
