@@ -38,12 +38,12 @@
           </Fluid>
 
         </div>
-        <div class="py-2 text-gray-600">
+        <div class="mt-2 text-gray-600">
           {{ filteredItemsList.length }} available items
         </div>
       </div>
     </div>
-    <TransitionGroup tag="ul" name="list" role="list" class="flex flex-col bg-gray-50 py-2 gap-y-3 overflow-y-auto"
+    <TransitionGroup tag="ul" name="list" role="list" class="flex flex-col bg-gray-50 p-2 gap-y-3 overflow-y-auto"
                      style="max-height: 400px; height: 350px">
       <li v-for="item in filteredItemsList"
           :key="item.id"
