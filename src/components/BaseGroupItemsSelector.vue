@@ -18,7 +18,7 @@
     </BaseInputContainer>
     <div class="rounded-lg bg-white my-2">
       <div class="py-6 px-2">
-        <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center justify-between ">
           <div v-if="selectedGroup">
             <h2 class="text-xl font-medium text-gray-900">
               {{ selectedGroup[groupListConfig.optionLabel] }}
@@ -26,7 +26,8 @@
             <p class="text-(--p-primary-600) font-medium">{{ filteredSelectedItems.length }} items selected</p>
           </div>
           <div v-else class="text-gray-600">
-            Select A Group to add items
+            <p v-if="!$slots['non-selected-group-message']">Select A Group to update your items</p>
+            <slot name="non-selected-group-message"></slot>
           </div>
         </div>
         <div class="mt-4" v-if="selectedGroup">
@@ -38,12 +39,15 @@
           </Fluid>
 
         </div>
-        <div class="mt-2 text-gray-600">
+        <div class="mt-2 text-gray-600" v-if="selectedGroup">
           {{ filteredItemsList.length }} available items
         </div>
       </div>
     </div>
-    <TransitionGroup tag="ul" name="list" role="list"
+    <TransitionGroup v-if="selectedGroup"
+                     tag="ul"
+                     name="list"
+                     role="list"
                      class="flex flex-col bg-gray-100 border border-gray-200 rounded-md mb-2 p-2 gap-y-3 overflow-y-auto"
                      style="max-height: 400px; height: 350px">
       <li v-for="item in filteredItemsList"
@@ -128,6 +132,18 @@ const filteredSelectedItems = computed(() => {
 function handleSelectItem(option) {
   // Added the clone deep here to avoid mutating the original option object
   selectedItems.value.push(cloneDeep(option))
+}
+
+
+function getNumberOfActiveGroups() {
+  if (!selectedItems.value) {
+    return 0
+  }
+  const groups = new Set()
+  selectedItems.value.forEach(item => {
+    groups.add(get(item, props.itemsGroupKey))
+  })
+  return groups.size
 }
 
 function getNumberOfSelectedItemsByGroup(group) {
