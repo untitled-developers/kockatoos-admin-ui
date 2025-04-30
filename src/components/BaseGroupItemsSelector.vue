@@ -97,6 +97,7 @@ const props = defineProps({
     default: 'name'
   }
 })
+const emit = defineEmits(['select-option'])
 const {get} = useUtils()
 const selectedGroup = ref(null)
 const selectedItems = defineModel('selectedItems')
@@ -126,6 +127,7 @@ const filteredSelectedItems = computed(() => {
 
 function handleSelectItem(option) {
   selectedItems.value.push(option)
+  emit('select-option', option)
 }
 
 function getNumberOfSelectedItemsByGroup(group) {
