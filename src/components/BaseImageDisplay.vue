@@ -1,14 +1,23 @@
 <template>
-  <Image :class="sizeClass" :src="url" preview></Image>
+  <Image v-if="url" :class="[sizeClass]" image-class="object-contain" :src="url" preview></Image>
+  <div
+      v-else
+      :class="['bg-gray-200 flex items-center justify-center rounded-md', sizeClass]"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#a1a1a1" class="w-[85%] h-[85%]">
+      <path
+          d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm40-80h480L570-480 450-320l-90-120-120 160Zm-40 80v-560 560Z"/>
+    </svg>
+
+  </div>
 </template>
 
 <script setup>
-import { Image } from "primevue";
-import { computed } from "vue";
+import {Image} from "primevue";
+import {computed} from "vue";
 
 const props = defineProps({
   url: {
-    type: String,
     required: true
   },
   /**
@@ -32,7 +41,6 @@ const sizeClass = computed(() => {
     large: "size-20"     // 80px
   };
 
-  // Return mapped size or use the value directly as a Tailwind class
   return sizeMap[props.size] || props.size;
 });
 </script>
