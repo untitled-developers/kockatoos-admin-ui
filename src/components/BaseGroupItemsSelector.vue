@@ -23,7 +23,9 @@
             <h2 class="text-xl font-medium text-gray-900">
               {{ selectedGroup[groupListConfig.optionLabel] }}
             </h2>
-            <p class="text-(--p-primary-600) font-medium">{{ filteredSelectedItems.length }} items selected</p>
+            <p class="text-(--p-primary-600) font-medium">
+              {{ filteredSelectedItems.length }} {{ filteredSelectedItems.length === 1 ? 'item' : 'items' }} selected
+            </p>
           </div>
           <div v-else class="text-gray-600">
             <p v-if="!$slots['non-selected-group-message']">Select A Group to update your items</p>
@@ -40,7 +42,7 @@
 
         </div>
         <div class="mt-2 text-gray-600" v-if="selectedGroup">
-          {{ filteredItemsList.length }} available items
+          {{ filteredItemsList.length }} {{ filteredItemsList.length === 1 ? 'available item' : 'available items' }}
         </div>
       </div>
     </div>
