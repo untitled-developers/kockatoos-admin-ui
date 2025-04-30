@@ -67,7 +67,7 @@
 import {Select} from "primevue";
 import {computed, ref} from "vue";
 import BaseInputContainer from "./BaseInputContainer.vue";
-import {ToggleSwitch, InputText, Fluid, IconField, InputIcon} from "primevue";
+import {InputText, Fluid, IconField, InputIcon} from "primevue";
 import useUtils from "../composables/useUtils.js";
 
 const props = defineProps({
@@ -98,7 +98,7 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['select-option'])
-const {get} = useUtils()
+const {get, cloneDeep} = useUtils()
 const selectedGroup = ref(null)
 const selectedItems = defineModel('selectedItems')
 const searchQuery = ref('')
@@ -126,8 +126,8 @@ const filteredSelectedItems = computed(() => {
 })
 
 function handleSelectItem(option) {
-  selectedItems.value.push(option)
-  emit('select-option', option)
+  // Added the clone deep here to avoid mutating the original option object
+  selectedItems.value.push(cloneDeep(option))
 }
 
 function getNumberOfSelectedItemsByGroup(group) {

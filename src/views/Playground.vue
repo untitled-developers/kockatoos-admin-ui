@@ -1,6 +1,9 @@
 <template>
   <Button label="TEST" @click="handleTest"></Button>
-
+  <BaseImageDisplay
+      class="rounded-full"
+      url="https://christian-joe-flowers.s3.eu-west-3.amazonaws.com/public/home_page_blocks/ad60a252-0a8d-11f0-ad5d-0e8eb03c26b0.webp"
+      size="size-64"></BaseImageDisplay>
   <div>
     <div v-html="test"></div>
     <BaseRichEditor v-model="test"></BaseRichEditor>
@@ -82,6 +85,7 @@ import TestDialog from "./components/TestDialog.vue";
 import {useLanguagesStore} from "../stores/LanguagesStore.js";
 import useCreateFormSchema from "../composables/useCreateFormSchema.js";
 import BaseRichEditor from "../components/BaseRichEditor.vue";
+import BaseImageDisplay from "../components/BaseImageDisplay.vue";
 
 const dialogStore = useDialogStore()
 const languagesStore = useLanguagesStore()
