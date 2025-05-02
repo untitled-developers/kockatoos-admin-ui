@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center p-4 gap-x-4">
-    <div class="relative size-24 rounded-full">
+    <div v-if="profileImage" class="relative size-24 rounded-full">
       <img :src="profileImage" class="object-cover rounded-full h-full w-full">
       <div
           class="absolute rounded-full inset-0 bg-linear-to-b from-transparent to-teal-400/20 w-full h-full">
@@ -19,8 +19,7 @@
 <script setup>
 const props = defineProps({
   profileImage: {
-    type: String,
-    required: true
+    type: String
   },
   title: {
     type: String,
