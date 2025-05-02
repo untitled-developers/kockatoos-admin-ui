@@ -1,4 +1,5 @@
 <template>
+  <BaseMultiImageUploader compact></BaseMultiImageUploader>
   <Button label="TEST" @click="handleTest"></Button>
   <BaseImageDisplay
       class="rounded-full"
@@ -86,6 +87,7 @@ import {useLanguagesStore} from "../stores/LanguagesStore.js";
 import useCreateFormSchema from "../composables/useCreateFormSchema.js";
 import BaseRichEditor from "../components/BaseRichEditor.vue";
 import BaseImageDisplay from "../components/BaseImageDisplay.vue";
+import BaseMultiImageUploader from "../components/BaseMultiImageUploader.vue";
 
 const dialogStore = useDialogStore()
 const languagesStore = useLanguagesStore()

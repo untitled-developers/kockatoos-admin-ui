@@ -11,6 +11,7 @@
     <Button :label="compact ? `Upload${uploadStatus}` : 'Upload'"
             icon="pi pi-cloud-upload"
             class="mb-2 w-full"
+            :disabled="isUploading"
             @click="triggerFileInput"></Button>
 
     <!-- Compact mode: Just show number of files -->
@@ -95,14 +96,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useDropZone } from '@vueuse/core'
 import Button from "primevue/button";
 
-const emit = defineEmits(['upload-file',
+const emit = defineEmits([
+  'upload-file',
   'upload-success',
   'upload-error',
-  'file-removed'])
+  'file-removed',
+  'all-uploads-complete'
+])
 
 const props = defineProps({
   maxFileSize: {
@@ -129,15 +133,32 @@ const files = ref([])
 const fileInput = ref(null)
 const inputKey = ref(0)
 const dropZoneRef = ref()
+const previousUploadingCount = ref(0)
 
 // Computed properties for compact mode
 const successCount = computed(() => files.value.filter(f => f.status === STATUS.SUCCESS).length)
 const errorCount = computed(() => files.value.filter(f => f.status === STATUS.ERROR).length)
 const uploadingCount = computed(() => files.value.filter(f => f.status === STATUS.UPLOADING).length)
+const isUploading = computed(() => uploadingCount.value > 0)
 const uploadStatus = computed(() => {
   if (files.value.length === 0) return '';
   if (uploadingCount.value > 0) return ` (${uploadingCount.value} uploading...)`;
   return ` (${successCount.value})`;
+})
+
+// Watch for when uploads complete
+watch(uploadingCount, (newCount, oldCount) => {
+  previousUploadingCount.value = oldCount
+
+  // Check if all uploads have completed (was uploading, now all done)
+  if (oldCount > 0 && newCount === 0 && files.value.length > 0) {
+    emit('all-uploads-complete', {
+      totalFiles: files.value.length,
+      successCount: successCount.value,
+      errorCount: errorCount.value,
+      files: files.value
+    })
+  }
 })
 
 // Only setup dropzone if not in compact mode
