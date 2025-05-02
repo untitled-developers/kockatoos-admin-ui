@@ -1,6 +1,6 @@
 <template>
-<div class="shadow-sm">
-  <Toolbar :pt="{
+  <div class="shadow-sm">
+    <Toolbar :pt="{
       root: {
          style: {
             borderRadius: 0,
@@ -9,57 +9,57 @@
     }
   }
     }">
-    <template #start>
-      <div class="flex items-center gap-x-2">
-        <slot name="actions"></slot>
-        <Button
-            v-if="selectedItems.length > 0"
-            label="Delete"
-            severity="danger"
-            icon="pi pi-trash"
-            @click="handleDelete"
-        ></Button>
+      <template #start>
+        <div class="flex items-center gap-x-2">
+          <slot name="actions"></slot>
+          <Button
+              v-if="selectedItems.length > 0"
+              label="Delete"
+              severity="danger"
+              icon="pi pi-trash"
+              @click="handleDelete"
+          ></Button>
+        </div>
+
+      </template>
+    </Toolbar>
+    <div v-if="modelValue && modelValue.length > 0" class="relative min-h-[100px] border border-gray-300 bg-white">
+      <div
+          v-if="isLoading"
+          class="absolute inset-0 bg-white/50 flex items-center justify-center z-10"
+      >
+        <i class="pi pi-spin pi-spinner text-2xl"></i>
       </div>
 
-    </template>
-  </Toolbar>
-  <div v-if="modelValue" class="relative min-h-[100px] border border-gray-300 bg-white">
-    <div
-        v-if="isLoading"
-        class="absolute inset-0 bg-white/50 flex items-center justify-center z-10"
-    >
-      <i class="pi pi-spin pi-spinner text-2xl"></i>
-    </div>
-
-    <div
-        ref="galleryRef"
-        class="flex flex-wrap gap-4 p-4 bg-white"
-    >
-      <template v-for="(item, index) in modelValue" :key="get(item, idPath)">
-        <div
-            class="cursor-move touch-none"
-            @click="toggleSelectItem(item)"
-        >
+      <div
+          ref="galleryRef"
+          class="flex flex-wrap gap-4 p-4 bg-white"
+      >
+        <template v-for="(item, index) in modelValue" :key="get(item, idPath)">
           <div
-              class="w-48 h-48 relative bg-gray-100 rounded-lg overflow-hidden group transition-all duration-100"
-              :class="[isSelected(item) ? 'selected-item' : '']"
+              class="cursor-move touch-none"
+              @click="toggleSelectItem(item)"
           >
-            <Image
-                :src="get(item, urlPath)"
-                :alt="get(item, namePath)"
-                class="w-full h-full object-cover"
-            />
+            <div
+                class="w-48 h-48 relative bg-gray-100 rounded-lg overflow-hidden group transition-all duration-100"
+                :class="[isSelected(item) ? 'selected-item' : '']"
+            >
+              <Image
+                  :src="get(item, urlPath)"
+                  :alt="get(item, namePath)"
+                  class="w-full h-full object-cover"
+              />
+            </div>
           </div>
-        </div>
-      </template>
+        </template>
+      </div>
+    </div>
+    <div v-else>
+      <div class="p-4 bg-white text-center">
+        <p class="text-gray-500 min-h-[100px] flex items-center justify-center">Your gallery is empty</p>
+      </div>
     </div>
   </div>
-  <div v-else>
-    <div class="p-4 bg-white text-center">
-      <p class="text-gray-500 min-h-[100px] flex items-center justify-center">Your gallery is empty</p>
-    </div>
-  </div>
-</div>
 </template>
 
 <script setup>
