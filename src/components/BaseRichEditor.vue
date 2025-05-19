@@ -346,9 +346,9 @@ export default {
   width: 400px !important;
 }
 
-.ck-content ul {
-  list-style-type: disc !important;
-  padding: revert !important;
+
+.ck-content ol, .ck-content ul {
+  padding: revert;
 }
 
 </style>
