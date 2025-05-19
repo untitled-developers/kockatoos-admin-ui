@@ -2,6 +2,7 @@
 
   <BaseEditDialog ref="test" :loading="loading" header="TEST" @submit="isLoadingFn">
     <template #content>
+      <BaseRichEditor v-model="test"></BaseRichEditor>
       <button @click="isLoadingFn">test</button>
       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a libero sagittis, interdum turpis eu, rutrum
       mi. Nam pulvinar lectus sit amet enim fringilla tempus. Fusce fermentum massa vitae turpis feugiat iaculis. In
@@ -57,13 +58,12 @@
 import BaseEditDialog from "../../components/BaseEditDialog.vue";
 import {onMounted, ref} from "vue";
 import useEditDialog from "../../composables/useEditDialog.js";
+import BaseRichEditor from "../../components/BaseRichEditor.vue";
 
 const test = ref(null)
 
 const {startDialogLoading} = useEditDialog(test)
-onMounted(() => {
-  startDialogLoading()
-})
+
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="ckeditor-classic">
+    <div class="ckeditor-classic" :key="editorKey">
       <ckeditor v-model="editorData" :editor="editor" :config="editorConfig" :disabled="isReadOnly" ref="ckeditor"
                 @ready="onEditorReady"></ckeditor>
       <div class="editor_container__word-count" ref="editorWordCountElement"></div>
@@ -105,6 +105,10 @@ export default {
 
   data() {
     return {
+      /**
+       * Added this due to glitch where the editor would not display the toolbar correctly when placed inside our edit dialog due to the animation
+       */
+      editorKey: 0,
       editorInstance: null,
       isReadOnly: false,
       editor: ClassicEditor,
@@ -285,6 +289,14 @@ export default {
       if (this.editorInstance == null) return;
       this.$emit('input', this.editorInstance.editing.view.document);
     },
+  },
+  mounted() {
+    /**
+     * Added this due to glitch where the editor would not display the toolbar correctly when placed inside our edit dialog due to the animation
+     */
+    setTimeout(() => {
+      this.editorKey++
+    }, 100)
   }
 }
 </script>
@@ -314,6 +326,10 @@ export default {
 .ck-content a {
   color: rgb(0, 0, 238);
   text-decoration: underline;
+}
+
+.ck-on {
+  color: var(--p-primary-color) !important;
 }
 </style>
 <style scoped>
