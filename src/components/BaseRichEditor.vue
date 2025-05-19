@@ -16,6 +16,7 @@
  * Created by: Hussein Al Mawla
  */
 //ToDo work in progress
+import 'ckeditor5/ckeditor5.css';
 import {Ckeditor} from '@ckeditor/ckeditor5-vue';
 import {
   ClassicEditor,
@@ -83,7 +84,7 @@ import {
   Autosave,
 } from 'ckeditor5';
 
-import 'ckeditor5/ckeditor5.css';
+
 
 export default {
   name: "BaseRichEditor",
@@ -302,6 +303,7 @@ export default {
 </script>
 
 <style>
+
 .ck-editor__editable_inline {
   height: 500px !important;
 }
@@ -331,6 +333,24 @@ export default {
 .ck-on {
   color: var(--p-primary-color) !important;
 }
+
+.ck-balloon-panel {
+  z-index: 9999 !important;
+}
+
+.ck-toolbar {
+  z-index: 9999 !important;
+}
+
+.ck-dropdown__panel-visible {
+  width: 400px !important;
+}
+
+.ck-content ul {
+  list-style-type: disc !important;
+  padding: revert !important;
+}
+
 </style>
 <style scoped>
 
