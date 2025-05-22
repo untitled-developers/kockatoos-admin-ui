@@ -1,9 +1,6 @@
 <template>
   <BaseApp>
     <BaseMainLayout :navigation-items="items">
-      <template #right-top>
-        qweqwe
-      </template>
       <template #logo>
         <img src="https://cdn2.thecatapi.com/images/MTczNzcxNA.jpg" class="h-32 w-auto">
       </template>
@@ -20,6 +17,23 @@ import {ref} from "vue";
 import BaseMainLayout from "./components/BaseMainLayout.vue";
 
 const items = ref([
+  {
+    label: 'Forms',
+    items: [
+      {
+        label: 'BaseForm',
+        route: {
+          name: 'base-form'
+        }
+      },
+      {
+        label: 'BaseInputContainer',
+        route: {
+          name: 'base-input-container'
+        }
+      }
+    ]
+  },
   {
     label: 'Playground',
     route: {

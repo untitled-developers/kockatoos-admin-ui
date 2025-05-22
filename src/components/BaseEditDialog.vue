@@ -139,7 +139,7 @@ const emit = defineEmits([
 //---------------------------------------------------
 // Models
 //---------------------------------------------------
-const form = defineModel('form')
+const formData = defineModel('form')
 const formSchema = defineModel('formSchema', {default: () => zod.object({})})
 
 //---------------------------------------------------
@@ -242,7 +242,7 @@ async function handleSubmitRecord() {
     emit('submit')
     closeDialog()
   } catch (error) {
-    alertError('Error submitting form')
+    alertError('Error submitting formData')
     console.log(error)
   } finally {
     stopDialogLoading()
@@ -353,7 +353,7 @@ function startDialogLoading(options = {}) {
   } = options;
 
   const templates = {
-    // For blocking operations (form submissions, API calls, etc.)
+    // For blocking operations (formData submissions, API calls, etc.)
     blocking: {
       active: true,
       message: message ?? 'Processing request',
