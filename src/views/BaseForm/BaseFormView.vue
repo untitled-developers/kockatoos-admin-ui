@@ -2,7 +2,6 @@
   <BasePageContent>
     <BaseCard>
       <BaseForm form-id="test-form"
-                @submit="handleFormSubmit"
                 v-model:form-data="form"
                 v-model:form-schema="formSchema"
                 ref="formRef">
@@ -64,9 +63,6 @@ const formSchema = createFormSchema(zod.object({
   email: zod.string().email("Invalid email address")
 }))
 
-function handleFormSubmit(event, errors) {
-  console.log("Form submitted", event, errors)
-}
 </script>
 
 <style scoped>
