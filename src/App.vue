@@ -35,6 +35,12 @@ const items = ref([
     ]
   },
   {
+    label: 'Functions',
+    route: {
+      name: 'functions'
+    }
+  },
+  {
     label: 'Playground',
     route: {
       name: 'playground'

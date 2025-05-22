@@ -32,6 +32,11 @@ const router = createRouter({
             path: '/base-input-container',
             name: 'base-input-container',
             component: () => import('../views/BaseInputContainer/BaseInputContainerView.vue'),
+        },
+        {
+            path: '/functions',
+            name: 'functions',
+            component: () => import('../views/Functions/FunctionsView.vue'),
         }
 
     ],

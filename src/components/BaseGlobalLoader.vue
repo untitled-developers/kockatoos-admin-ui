@@ -8,8 +8,14 @@
   >
     <div class="flex items-center justify-center">
       <div class="flex flex-col gap-y-2">
-        <ProgressSpinner :dt="progressSpinner"/>
-        <span v-if="loaderStore.message.length > 0" class="text-white font-medium text-2xl">
+        <ProgressSpinner :pt="{
+          circle: {
+            style: {
+              stroke: '#ffffff !important',
+            }
+          }
+        }"/>
+        <span v-if="loaderStore.message?.length > 0" class="text-white font-medium text-2xl">
         {{ loaderStore.message }}
       </span>
       </div>
@@ -21,20 +27,12 @@
 <script setup>
 import Dialog from 'primevue/dialog'
 import ProgressSpinner from 'primevue/progressspinner'
-import {ref} from 'vue'
 import {useLoaderStore} from "../stores/LoaderStore.js";
 
 
 const loaderStore = useLoaderStore()
 
-const progressSpinner = ref({
-  color: {
-    1: 'white',
-    2: 'white',
-    3: 'white',
-    4: 'white'
-  }
-})
+
 </script>
 
 <style>
