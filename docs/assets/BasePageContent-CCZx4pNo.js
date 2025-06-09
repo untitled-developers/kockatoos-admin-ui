@@ -1,1 +1,0 @@
-import{aE as s,c as o,d as t,o as c}from"./index-DsbTFUOJ.js";const n={},a={class:"px-4 py-2"};function r(e,_){return c(),o("div",a,[t(e.$slots,"default")])}const l=s(n,[["render",r]]);export{l as B};
