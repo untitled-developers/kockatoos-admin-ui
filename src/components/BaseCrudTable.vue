@@ -539,6 +539,8 @@ defineExpose({
   silentFetchData,
   startRowLoading,
   stopRowLoading,
+  startTableLoading,
+  stopTableLoading,
   updateRecordData
 })
 

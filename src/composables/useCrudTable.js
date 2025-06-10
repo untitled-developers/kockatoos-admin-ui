@@ -35,11 +35,23 @@ export default function useCrudTable(crudTableRef) {
         crudTableRef.value.updateRecordData(record, newRecordData)
     }
 
+    function startTableLoading() {
+        verifyCrudTableRef()
+        crudTableRef.value.startTableLoading()
+    }
+
+    function stopTableLoading() {
+        verifyCrudTableRef()
+        crudTableRef.value.stopTableLoading()
+    }
+
     return {
         fetchTableData,
         startRowLoading,
         stopRowLoading,
-        updateRecordData
+        updateRecordData,
+        startTableLoading,
+        stopTableLoading
     }
 
 }
