@@ -67,11 +67,10 @@ import BaseEditDialogNavigationButtons from "./BaseEditDialogNavigationButtons.v
 import {watch, computed, ref, onMounted} from "vue";
 import useFreezeRay from "../composables/useFreezeRay.js";
 import useForm from "../composables/useForm.js";
-import useCrudApi from "../composables/useCrudApi.js";
 import useAlerts from "../composables/useAlerts.js";
 import * as zod from 'zod';
 import useUtils from "../composables/useUtils.js";
-import useFetch from "@/composables/useFetch.js";
+import useFetch from "../composables/useFetch.js";
 
 //---------------------------------------------------
 // Props and Emits
