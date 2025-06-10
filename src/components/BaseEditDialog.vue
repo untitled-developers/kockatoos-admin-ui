@@ -71,6 +71,7 @@ import useCrudApi from "../composables/useCrudApi.js";
 import useAlerts from "../composables/useAlerts.js";
 import * as zod from 'zod';
 import useUtils from "../composables/useUtils.js";
+import useFetch from "@/composables/useFetch.js";
 
 //---------------------------------------------------
 // Props and Emits
@@ -126,6 +127,9 @@ const props = defineProps({
   withCloseButton: {
     type: Boolean,
     default: true
+  },
+  requestUrlMapper: {
+    type: Function
   }
 })
 
@@ -145,6 +149,8 @@ const formSchema = defineModel('formSchema', {default: () => zod.object({})})
 //---------------------------------------------------
 // Composables
 //---------------------------------------------------
+const fetch = useFetch();
+
 const {
   getErrors,
   hasErrors
@@ -158,11 +164,6 @@ const {
   freezeApp,
   unfreezeApp
 } = useFreezeRay();
-
-const {
-  create,
-  update
-} = useCrudApi(props.endpoint)
 
 const {
   cloneDeep
@@ -230,6 +231,17 @@ function closeDialog() {
 //---------------------------------------------------
 // Form Handling Methods
 //---------------------------------------------------
+
+function getRequestUrl() {
+  if (props.requestUrlMapper && typeof props.requestUrlMapper === 'function') {
+    return props.requestUrlMapper(props.record)
+  }
+  if (isEditingRecord.value) {
+    return `${props.endpoint}/${props.record.id}`
+  }
+  return props.endpoint
+}
+
 async function handleSubmitRecord() {
   if (hasErrors()) {
     didSubmit.value = true
@@ -250,10 +262,7 @@ async function handleSubmitRecord() {
 }
 
 async function submitData(formData) {
-  if (isEditingRecord.value) {
-    return await update(props.record.id, formData)
-  }
-  return await create(formData)
+  return await fetch.post(getRequestUrl(), formData)
 }
 
 function createFormPayload(data = {}) {
