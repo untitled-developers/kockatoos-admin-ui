@@ -4,12 +4,12 @@
       :show-header="false"
       position="center"
       modal
-      pt:root:class="spinner-dialog"
+      pt:root:class="global-spinner"
   >
     <div class="flex items-center justify-center">
       <div class="flex flex-col gap-y-2">
         <ProgressSpinner :dt="progressSpinner"/>
-        <span v-if="loaderStore.message.length > 0" class="text-white font-medium text-2xl">
+        <span v-if="loaderStore.message?.length > 0" class="text-white text-center font-medium text-2xl">
         {{ loaderStore.message }}
       </span>
       </div>
@@ -38,7 +38,7 @@ const progressSpinner = ref({
 </script>
 
 <style>
-.spinner-dialog {
+.global-spinner {
   background: transparent;
   border: none;
   overflow: hidden;
@@ -46,7 +46,11 @@ const progressSpinner = ref({
   box-shadow: none;
 }
 
-.spinner-dialog .p-dialog-content {
+.global-spinner .p-dialog-content {
   overflow-y: unset;
+}
+
+.global-spinner .p-progressspinner-circle {
+  stroke: white !important;
 }
 </style>
