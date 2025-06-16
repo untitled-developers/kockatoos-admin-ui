@@ -8,7 +8,6 @@ import App from './App.vue'
 import router from './router'
 import {definePreset} from "@primevue/themes";
 import {ConfirmationService, ToastService} from "primevue";
-
 // dont copy the stuff related to axios
 import axios from 'axios';
 window.axios = axios;
