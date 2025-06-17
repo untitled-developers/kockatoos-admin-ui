@@ -1,6 +1,6 @@
 {
   "name": "kockatoos-admin-ui",
-  "version": "1.5.97",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "scripts": {
