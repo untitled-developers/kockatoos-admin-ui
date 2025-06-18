@@ -4,12 +4,18 @@
       :show-header="false"
       position="center"
       modal
-      pt:root:class="global-spinner"
+      pt:root:class="spinner-dialog"
   >
     <div class="flex items-center justify-center">
       <div class="flex flex-col gap-y-2">
-        <ProgressSpinner :dt="progressSpinner"/>
-        <span v-if="loaderStore.message?.length > 0" class="text-white text-center font-medium text-2xl">
+        <ProgressSpinner :pt="{
+          circle: {
+            style: {
+              stroke: '#ffffff !important',
+            }
+          }
+        }"/>
+        <span v-if="loaderStore.message?.length > 0" class="text-white font-medium text-2xl">
         {{ loaderStore.message }}
       </span>
       </div>
@@ -21,24 +27,16 @@
 <script setup>
 import Dialog from 'primevue/dialog'
 import ProgressSpinner from 'primevue/progressspinner'
-import {ref} from 'vue'
 import {useLoaderStore} from "../stores/LoaderStore.js";
 
 
 const loaderStore = useLoaderStore()
 
-const progressSpinner = ref({
-  color: {
-    1: 'white',
-    2: 'white',
-    3: 'white',
-    4: 'white'
-  }
-})
+
 </script>
 
 <style>
-.global-spinner {
+.spinner-dialog {
   background: transparent;
   border: none;
   overflow: hidden;
@@ -46,11 +44,7 @@ const progressSpinner = ref({
   box-shadow: none;
 }
 
-.global-spinner .p-dialog-content {
+.spinner-dialog .p-dialog-content {
   overflow-y: unset;
-}
-
-.global-spinner .p-progressspinner-circle {
-  stroke: white !important;
 }
 </style>

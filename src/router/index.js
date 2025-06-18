@@ -11,17 +11,27 @@ const router = createRouter({
             redirect: '/playground',
         },
         {
-            path: '/playground',
-            name: 'playground',
-            component: () => import('../views/Playground.vue'),
+            path: '/base-form',
+            name: 'base-form',
+            component: () => import('../views/BaseForm/BaseFormView.vue'),
+        },
+        {
+            path: '/base-input-container',
+            name: 'base-input-container',
+            component: () => import('../views/BaseInputContainer/BaseInputContainerView.vue'),
+        },
+        {
+            path: '/use-global-loader',
+            name: 'useGlobalLoader',
+            component: () => import('../views/UseGlobalLoader/UseGlobalLoaderView.vue'),
             meta: {
-                title: 'Payground'
+                title: 'useGlobalLoader'
             }
         },
         {
-            path: '/test-page',
-            name: 'test-page',
-            component: () => import('../views/TestPage.vue'),
+            path: '/functions',
+            name: 'functions',
+            component: () => import('../views/Functions/FunctionsView.vue'),
         }
 
     ],

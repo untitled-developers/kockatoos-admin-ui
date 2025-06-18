@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tailwindcss-primeui";
+@import "prismjs/themes/prism-tomorrow.min.css";
 
 html {
     font-size: 14px;
 }
+

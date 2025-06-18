@@ -160,16 +160,22 @@
     <div
         :class="['flex-grow max-h-screen overflow-auto'
          ]">
-      <div class="px-2 py-2 pl-4 flex relative border-gray-200 border  bg-white  shadow-sm items-center">
-        <Button class="md:block hidden" aria-label="Collapse navbar" text @click="handleToggleNavbar"
-                icon="pi pi-bars"></Button>
-        <button type="button"
-                @click="mobileDrawer = true"
-                class="flex items-center cursor-pointer md:hidden rounded-sm  bg-(--p-primary-500) px-2 py-2 mr-2 text-xs font-semibold text-white shadow-xs hover:bg-(--p-primary-400) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--p-primary-500)">
-          <i class="pi pi-bars"></i>
-        </button>
-        <h2 class="text-lg font-bol text-gray-700">{{ route.meta?.title }}</h2>
-        <div class="ml-auto flex items-center gap-x-2">
+      <div
+          class="px-2 py-2 pl-4 flex justify-between relative border-gray-200 border  bg-white  shadow-sm items-center">
+        <div class="flex-1 flex items-center justify-start">
+          <Button class="md:block hidden" aria-label="Collapse navbar" text @click="handleToggleNavbar"
+                  icon="pi pi-bars"></Button>
+          <button type="button"
+                  @click="mobileDrawer = true"
+                  class="flex items-center cursor-pointer md:hidden rounded-sm  bg-(--p-primary-500) px-2 py-2 mr-2 text-xs font-semibold text-white shadow-xs hover:bg-(--p-primary-400) focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--p-primary-500)">
+            <i class="pi pi-bars"></i>
+          </button>
+          <h2 class="text-lg font-bol text-gray-700">{{ route.meta?.title }}</h2>
+        </div>
+        <div class="flex-none justify-center">
+          <slot name="top-bar-center"></slot>
+        </div>
+        <div class="flex-1 justify-end flex items-center gap-x-2">
           <slot name="right-top"></slot>
           <Button type="button"
                   v-if="withNotifications"
