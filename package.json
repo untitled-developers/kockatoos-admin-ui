@@ -1,6 +1,6 @@
 {
   "name": "kockatoos-admin-ui",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,6 +15,11 @@
     "src/stores",
     "docs"
   ],
+  "exports": {
+    "./components/*": "./src/components/*",
+    "./composables/*": "./src/composables/*",
+    "./stores/*": "./src/stores/*"
+  },
   "peerDependencies": {
     "@primeuix/themes": "^1.0.1",
     "@primevue/themes": "^4.3.3",
@@ -29,17 +34,17 @@
     "tailwindcss-primeui": "^0.6.1",
     "vue": "^3.4.26",
     "vue-router": "^4.3.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "axios": "^1.6.4"
   },
   "optionalDependencies": {
     "@ckeditor/ckeditor5-vue": "^7.3.0",
-    "ckeditor5": "^44.3.0"
+    "ckeditor5": "^44.3.0",
+    "prismjs": "^1.30.0",
+    "fuse.js": "^7.1.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.2.3",
-    "axios": "^1.6.4",
-    "fuse.js": "^7.1.0",
-    "prismjs": "^1.30.0",
+    "@vitejs/plugin-vue": "^5.2.3" ,
     "vite": "^6.2.5",
     "vite-plugin-vue-devtools": "^7.6.8"
   }
