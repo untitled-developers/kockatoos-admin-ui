@@ -167,10 +167,6 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  dialogCloseOnEdit: {
-    type: Boolean,
-    default: false
-  },
   withDelete: {
     type: Boolean,
     default: true
@@ -179,7 +175,6 @@ const props = defineProps({
     type: String,
     default: 'id'
   },
-  //Added to accommodate for pawcuddlz as the sorting queries are different
   customSortMapper: {
     type: Function
   },
@@ -289,15 +284,6 @@ function openEditDialog(record) {
           alertSuccess('Record Created Successfully')
         }
         await fetchData()
-        if (dialogProps.record && !props.dialogCloseOnEdit) {
-          updateDialogProps(editDialogId.value, (oldProps) => {
-            return {
-              ...oldProps,
-              'record': tableData.value.find(row => row.id === oldProps.record.id)
-            }
-          })
-          refreshDialog(editDialogId.value)
-        }
       },
       'next-record': (currentRecord) => {
         const currentRecordIndex = tableData.value.findIndex(row => row.id === currentRecord.id)
