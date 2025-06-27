@@ -25,7 +25,28 @@ const router = createRouter({
             name: 'useGlobalLoader',
             component: () => import('../views/UseGlobalLoader/UseGlobalLoaderView.vue'),
             meta: {
-                title: 'useGlobalLoader'
+                title: 'useGlobalLoader',
+                url: "https://github.com/untitled-developers/kockatoos-admin-ui/blob/main/src/composables/useGlobalLoader.js",
+                description: 'Displays a loader on top of the entire admin panel.',
+                tags: [
+                    'loader',
+                    'global',
+                ]
+            }
+        },
+        {
+            path: '/base-edit-dialog',
+            name: 'BaseEditDialog',
+            component: () => import('../views/BaseEditDialog/BaseEditDialogView.vue'),
+            meta: {
+                title: 'BaseEditDialog',
+                url: "https://github.com/untitled-developers/kockatoos-admin-ui/blob/main/src/components/BaseEditDialog.vue",
+                description: 'Dialog component designed to work with BaseCrudTable for adding, editing, or viewing table records',
+                tags: [
+                    'dialog',
+                    'crud',
+                    'table',
+                ]
             }
         },
         {

@@ -17,10 +17,7 @@
             d="M12.5 6.5a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2m5 0-.447-.894a2 2 0 0 0-1.79-1.106h-.527a2 2 0 0 0-1.789 1.106L7.5 6.5m5 0-1 1h-3l-1-1"></path></svg>Copy</span>
       </button>
     </div>
-    <pre class="rounded-b-lg !mt-0">
-    <code class="language-javascript" ref="code">
-      <slot name="code"></slot>
-    </code>
+    <pre :class="['rounded-b-lg !mt-0', `language-${language}`]"><code ref="code">{{ source }}</code>
   </pre>
   </div>
 </template>
@@ -33,6 +30,14 @@ const props = defineProps({
   title: {
     type: String,
     required: true
+  },
+  source: {
+    type: String,
+    required: true
+  },
+  language: {
+    type: String,
+    default: 'javascript'
   }
 })
 
@@ -40,7 +45,7 @@ const code = ref()
 
 function copyToClipboard() {
   if (code.value) {
-    const text = code.value.textContent || code.value.innerText;
+    const text = code.value.innerText;
     navigator.clipboard.writeText(text).then(() => {
       console.log('Code copied to clipboard');
     }).catch(err => {

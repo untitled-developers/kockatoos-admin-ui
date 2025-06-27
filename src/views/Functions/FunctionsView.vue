@@ -22,8 +22,8 @@ import Button from "primevue/button";
 import BaseCard from "../../components/BaseCard.vue";
 import useGlobalLoader from "../../composables/useGlobalLoader.js";
 import BasePageContent from "../../components/BasePageContent.vue";
-import BaseDocCodePreview from "../../components/BaseDocCodePreview.vue";
-import BaseDocCard from "../../components/BaseDocCard.vue";
+import BaseDocCodePreview from "../../docs/components/BaseDocCodePreview.vue";
+import BaseDoc from "../../docs/components/BaseDoc.vue";
 import DocUseGlobalLoader from "./components/DocUseGlobalLoader.vue";
 
 const {startLoader, stopLoader} = useGlobalLoader()

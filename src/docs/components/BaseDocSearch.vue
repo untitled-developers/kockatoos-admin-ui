@@ -2,11 +2,16 @@
   <div>
     <IconField>
       <InputIcon class="pi pi-search"/>
-      <InputText @input="handleSearchQueryChange" v-model="searchQuery" placeholder="Search" style="width: 400px"/>
+      <InputText @input="handleSearchQueryChange"
+                 @focus="handleSearchInputFocus"
+                 @blur="handleSearchInputBlur"
+                 v-model="searchQuery"
+                 placeholder="Search"
+                 style="width: 400px"/>
     </IconField>
-    <Popover ref="searchResultPopover" @hide="handlePopoverHide">
+    <Popover ref="searchResultPopover" :dismissable="false">
       <div style="width: 400px">
-        <ul>
+        <ul v-if="searchResults.length">
           <li v-for="searchItem in searchResults">
             <router-link :to="{name: searchItem.item.route.name}"
                          class="flex flex-col hover:bg-gray-100 p-2 rounded-sm">
@@ -15,6 +20,14 @@
             </router-link>
           </li>
         </ul>
+        <p class="whitespace-normal break-words" v-else>
+          <template v-if="searchQuery">
+            No results found for <strong>{{ searchQuery }}</strong>.
+          </template>
+          <template v-else>
+            Start typing to search documentation.
+          </template>
+        </p>
       </div>
     </Popover>
   </div>
@@ -27,11 +40,11 @@ import {IconField, InputIcon, InputText, Popover} from "primevue";
 
 import Fuse from "fuse.js";
 import {ref} from "vue";
-import {useDocsStore} from "../docs/DocsStore.js";
+import {useDocsStore} from "../DocsStore.js";
 
-const searchResultPopover = ref(null);
+const searchResultPopover = ref();
 const searchQuery = ref("")
-const searchResults = ref(null);
+const searchResults = ref([]);
 const {docsList} = useDocsStore()
 const fuseOptions = {
   // isCaseSensitive: false,
@@ -50,25 +63,30 @@ const fuseOptions = {
   // fieldNormWeight: 1,
   keys: [
     "title",
-    "description"
+    "description",
+    "tags"
   ]
 };
 const fuse = new Fuse(docsList, fuseOptions);
 
-function handleSearchQueryChange(event) {
-  searchQuery.value = event.target.value
-  searchResults.value = fuse.search(searchQuery.value)
-  if (searchResults.value.length > 0) {
-    searchResultPopover.value.show(event);
-  } else {
-    searchResultPopover.value.hide();
-  }
+function handleSearchInputFocus(event) {
+  searchResultPopover.value.show(event);
 }
 
-function handlePopoverHide() {
-  searchQuery.value = "";
-  searchResults.value = null;
+function handleSearchInputBlur() {
+  setTimeout(() => {
+    if (searchQuery.value.length === 0 || searchResults.value.length === 0) {
+      searchResultPopover.value.hide();
+    }
+  }, 100);
 }
+
+function handleSearchQueryChange(event) {
+
+  searchQuery.value = event.target.value
+  searchResults.value = fuse.search(searchQuery.value)
+}
+
 
 </script>
 

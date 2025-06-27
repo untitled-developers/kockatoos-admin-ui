@@ -15,12 +15,22 @@
 </template>
 <script setup>
 import BaseApp from "./components/BaseApp.vue";
-import { ref} from "vue";
+import {ref} from "vue";
 import BaseMainLayout from "./components/BaseMainLayout.vue";
-import BaseDocSearch from "./components/BaseDocSearch.vue";
+import BaseDocSearch from "./docs/components/BaseDocSearch.vue";
 
 
-const items = ref([
+const items = ref([{
+  label: 'Crud Table',
+  items: [
+    {
+      label: 'BaseEditDialog',
+      route: {
+        name: 'BaseEditDialog'
+      }
+    }
+  ]
+},
   {
     label: 'Forms',
     items: [

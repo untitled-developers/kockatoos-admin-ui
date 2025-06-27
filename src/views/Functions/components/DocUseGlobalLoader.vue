@@ -1,5 +1,5 @@
 <template>
-  <BaseDocCard title="useGlobalLoader">
+  <BaseDoc title="useGlobalLoader">
     <template #description>
       Displays a loader on top of the entire admin panel.
     </template>
@@ -13,13 +13,13 @@
         </template>
       </BaseDocCodePreview>
     </template>
-  </BaseDocCard>
+  </BaseDoc>
 </template>
 
 <script setup>
 
-import BaseDocCard from "../../../components/BaseDocCard.vue";
-import BaseDocCodePreview from "../../../components/BaseDocCodePreview.vue";
+import BaseDoc from "../../../docs/components/BaseDoc.vue";
+import BaseDocCodePreview from "../../../docs/components/BaseDocCodePreview.vue";
 </script>
 
 <style scoped>
