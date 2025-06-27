@@ -71,7 +71,6 @@ import useAlerts from "../composables/useAlerts.js";
 import * as zod from 'zod';
 import useUtils from "../composables/useUtils.js";
 import useFetch from "../composables/useFetch.js";
-
 //---------------------------------------------------
 // Props and Emits
 //---------------------------------------------------
@@ -129,7 +128,7 @@ const props = defineProps({
   },
   requestUrlMapper: {
     type: Function
-  }
+  },
 })
 
 const emit = defineEmits([
@@ -142,7 +141,7 @@ const emit = defineEmits([
 //---------------------------------------------------
 // Models
 //---------------------------------------------------
-const formData = defineModel('form')
+const form = defineModel('form')
 const formSchema = defineModel('formSchema', {default: () => zod.object({})})
 
 //---------------------------------------------------
