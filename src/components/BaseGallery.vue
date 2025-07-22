@@ -190,7 +190,6 @@ const didInitializeSortable = ref(false);
 
 // Initialize sortable functionality
 function initializeSortable() {
-  console.log('Initializing sortable for gallery');
   useSortable(galleryRef, modelValue, {
     animation: 150,
     onUpdate: (event) => {
