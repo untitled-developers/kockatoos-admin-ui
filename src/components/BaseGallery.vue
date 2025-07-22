@@ -54,7 +54,7 @@
         </template>
       </div>
     </div>
-    <div v-else>
+    <div v-else-if="modelValue !== null ">
       <div class="p-4 bg-white text-center">
         <p class="text-gray-500 min-h-[100px] flex items-center justify-center">Your gallery is empty</p>
       </div>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import {ref, watch} from 'vue'
+import {nextTick, ref, watch} from 'vue'
 import {useSortable} from '@vueuse/integrations/useSortable'
 import Button from "primevue/button";
 import {Image, Toolbar} from "primevue";
@@ -186,26 +186,39 @@ function clearSelection() {
 watch(modelValue, () => {
   selectedItems.value = [];
 });
+const didInitializeSortable = ref(false);
 
 // Initialize sortable functionality
-useSortable(galleryRef, modelValue, {
-  animation: 150,
-  onUpdate: (event) => {
-    // Create a shallow copy of the array to maintain reactivity
-    const newArray = [...modelValue.value];
+function initializeSortable() {
+  console.log('Initializing sortable for gallery');
+  useSortable(galleryRef, modelValue, {
+    animation: 150,
+    onUpdate: (event) => {
+      // Create a shallow copy of the array to maintain reactivity
+      const newArray = [...modelValue.value];
 
-    // Swap items based on the indices
-    const temp = newArray[event.oldIndex];
-    newArray[event.oldIndex] = newArray[event.newIndex];
-    newArray[event.newIndex] = temp;
+      // Swap items based on the indices
+      const temp = newArray[event.oldIndex];
+      newArray[event.oldIndex] = newArray[event.newIndex];
+      newArray[event.newIndex] = temp;
 
-    // Update model value with the new order
-    emit('update:modelValue', newArray);
+      // Update model value with the new order
+      emit('update:modelValue', newArray);
 
-    // Handle sort processing
-    handleSort(newArray);
+      // Handle sort processing
+      handleSort(newArray);
+    }
+  });
+  didInitializeSortable.value = true;
+}
+
+watch(galleryRef, (newVal) => {
+  if (newVal && !didInitializeSortable.value) {
+    nextTick(() => {
+      initializeSortable();
+    });
   }
-});
+}, {immediate: true});
 
 // Expose component methods and state
 defineExpose({
