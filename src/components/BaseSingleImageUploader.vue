@@ -1,7 +1,11 @@
 <template>
   <div class="card">
-    <input type="file" @change="handleInputChange" id="imageUpload" class="hidden" name="imageUpload"
-           accept="image/*" ref="fileUploader">
+    <input type="file" @change="handleInputChange"
+           id="imageUpload"
+           class="hidden"
+           name="imageUpload"
+           accept="image/*"
+           ref="fileUploader">
     <div class="flex justify-center bg-gray-50 py-3  w-full">
       <img @click="handleImagePlaceholderClick"
            v-if="imagePreviewUrl"
@@ -29,6 +33,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
+import useAlerts from "@/composables/useAlerts.js";
 
 const props = defineProps({
   image: {
@@ -50,11 +55,16 @@ const props = defineProps({
   objectFit: {
     type: String,
     default: 'object-scale-down'
+  },
+  maxImageSize: {
+    type: Number,
+    default: 2 * 1024 * 1024
   }
 })
 const emit = defineEmits(['change'])
 const fileUploader = ref()
 const imagePreviewUrl = ref('')
+const {alertError} = useAlerts()
 
 function handleImagePlaceholderClick() {
   fileUploader.value.click()
@@ -62,6 +72,10 @@ function handleImagePlaceholderClick() {
 
 function handleInputChange() {
   const newFile = fileUploader.value.files[0]
+  if (newFile.size > props.maxImageSize) {
+    alertError('Image size exceeds the maximum limit of 2MB.')
+    return
+  }
   const reader = new FileReader()
   reader.onload = () => {
     imagePreviewUrl.value = reader.result
