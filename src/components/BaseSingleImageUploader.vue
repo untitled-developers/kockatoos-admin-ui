@@ -33,7 +33,7 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import useAlerts from "@/composables/useAlerts.js";
+import useAlerts from "../composables/useAlerts.js";
 
 const props = defineProps({
   image: {
