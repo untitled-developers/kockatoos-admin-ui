@@ -74,6 +74,7 @@ function handleInputChange() {
   const newFile = fileUploader.value.files[0]
   if (newFile.size > props.maxImageSize) {
     alertError('Image size exceeds the maximum limit of 2MB.')
+    fileUploader.value.value = ''
     return
   }
   const reader = new FileReader()
