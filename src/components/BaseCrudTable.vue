@@ -522,7 +522,7 @@ function updateRecordData(oldRecordData, newRecordData) {
 
 function refreshEditDialog(){
   if (editDialogId) {
-    refreshDialog(editDialogId)
+    refreshDialog(editDialogId.value)
   }
 
 }
