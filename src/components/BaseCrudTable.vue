@@ -520,11 +520,19 @@ function updateRecordData(oldRecordData, newRecordData) {
   }
 }
 
+function refreshEditDialog(){
+  if (editDialogId) {
+    refreshDialog(editDialogId)
+  }
+
+}
+
 defineExpose({
   fetchData,
   silentFetchData,
   startRowLoading,
   stopRowLoading,
+  refreshEditDialog,
   startTableLoading,
   stopTableLoading,
   updateRecordData
