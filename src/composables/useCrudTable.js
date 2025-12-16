@@ -45,9 +45,15 @@ export default function useCrudTable(crudTableRef) {
         crudTableRef.value.stopTableLoading()
     }
 
+    function refreshEditDialog() {
+        verifyCrudTableRef()
+        crudTableRef.value.refreshEditDialog()
+    }
+
     return {
         fetchTableData,
         startRowLoading,
+        refreshEditDialog,
         stopRowLoading,
         updateRecordData,
         startTableLoading,
