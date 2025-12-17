@@ -306,13 +306,10 @@ function openEditDialog(record) {
 
       },
       'refresh-dialog': (newProps) => {
-        const recordIndex = tableData.value.findIndex(r => record.id === r.id)
-        const updatedRecord = tableData.value[recordIndex]
         updateDialogProps(editDialogId.value, (oldProps) => {
           return {
             ...oldProps,
-            ...newProps,
-            record: updatedRecord
+            ...newProps
           }
         })
         refreshDialog(editDialogId.value)
