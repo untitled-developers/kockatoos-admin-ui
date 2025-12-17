@@ -315,6 +315,7 @@ function openEditDialog(record) {
             record: updatedRecord
           }
         })
+        refreshDialog(editDialogId.value)
 
       },
       'previous-record': (currentRecord) => {
