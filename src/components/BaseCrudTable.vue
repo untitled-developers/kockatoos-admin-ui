@@ -305,6 +305,18 @@ function openEditDialog(record) {
         refreshDialog(editDialogId.value)
 
       },
+      'refresh-dialog': (newProps) => {
+        const recordIndex = tableData.value.findIndex(r => record.id === r.id)
+        const updatedRecord = tableData.value[recordIndex]
+        updateDialogProps(editDialogId.value, (oldProps) => {
+          return {
+            ...oldProps,
+            ...newProps,
+            record: updatedRecord
+          }
+        })
+
+      },
       'previous-record': (currentRecord) => {
         const currentRecordIndex = tableData.value.findIndex(row => row.id === currentRecord.id)
         if (currentRecordIndex === -1) {
@@ -520,7 +532,7 @@ function updateRecordData(oldRecordData, newRecordData) {
   }
 }
 
-function refreshEditDialog(){
+function refreshEditDialog() {
   if (editDialogId) {
     refreshDialog(editDialogId.value)
   }
