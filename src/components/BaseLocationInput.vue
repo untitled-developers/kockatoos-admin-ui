@@ -21,6 +21,10 @@ const props = defineProps({
       latitude: 33.888630,
       longitude: 35.495480,
     }),
+  },
+  apiKey: {
+    type: String,
+    default: 'AIzaSyCt890OKURC0lOnc9e6oEcwgn7SkLH1_eQ',
   }
 });
 const emit = defineEmits(['change'])
@@ -59,7 +63,7 @@ const initMap = () => {
 
 onMounted(() => {
   const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCt890OKURC0lOnc9e6oEcwgn7SkLH1_eQ`;
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${props.apiKey}`;
   script.onload = initMap;
   document.head.appendChild(script);
 });
