@@ -53,6 +53,7 @@
                striped-rows
                @row-click="handleRowClick"
                @sort="handleSortChange"
+               :edit-mode="editMode"
                :selection-mode="clickableRows ? 'single' : null"
                v-model:filters="filters"
                v-model:selection="selectedRecords"
@@ -60,12 +61,16 @@
                :rows="paginationQuery.rows"
                :totalRecords="paginationQuery.totalRecords"
                @page="handlePageChange"
+               :meta-key-selection="false"
                :multi-sort-meta="sortingQuery"
                resizable-columns
                column-resize-mode="fit"
                :rows-per-page-options="[10,  50, 100, 500]"
                :loading="isTableLoading"
-               :value="tableData">
+               :value="tableData"
+               @cell-edit-complete="handleCellEditComplete"
+               @update:multi-sort-meta="handleSortChange"
+               @update:filters="handleFilterChange">
       <Column v-if="withSelection" selectionMode="multiple" headerStyle="width: 3rem"/>
       <Column header=""
               aria-label="Actions"
@@ -119,6 +124,10 @@ const props = defineProps({
   },
   defaultQuery: {
     type: Object
+  },
+  editMode: {
+    type: String,
+    default: null
   },
   editDialog: {
     type: Object
@@ -190,8 +199,11 @@ const props = defineProps({
     type: Object,
     default: {}
   },
+  filters: {
+    type: Object,
+    default: () => ({})
+  }
 })
-const filters = defineModel('filters')
 const selectedRecords = defineModel('selectedRecord')
 const emits = defineEmits(['row-click'])
 
@@ -226,6 +238,10 @@ const searchQuery = ref('')
 
 function handleFilterChange() {
   fetchData()
+}
+
+function handleCellEditComplete(data) {
+  emit('cell-edit-complete', data)
 }
 
 const editDialogId = ref(null)
