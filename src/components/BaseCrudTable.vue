@@ -206,6 +206,7 @@ const props = defineProps({
 })
 const selectedRecords = defineModel('selectedRecord')
 const emits = defineEmits(['row-click'])
+const filters = ref(props.filters)
 
 const {
   openDialog,
