@@ -205,7 +205,7 @@ const props = defineProps({
   }
 })
 const selectedRecords = defineModel('selectedRecord')
-const emits = defineEmits(['row-click'])
+const emits = defineEmits(['row-click', 'cell-edit-complete', 'update:multi-sort-meta'])
 const filters = ref(props.filters)
 
 const {
@@ -242,7 +242,7 @@ function handleFilterChange() {
 }
 
 function handleCellEditComplete(data) {
-  emit('cell-edit-complete', data)
+  emits('cell-edit-complete', data)
 }
 
 const editDialogId = ref(null)
