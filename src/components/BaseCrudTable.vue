@@ -14,7 +14,7 @@
           <Button v-if="withAdd && !informational" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
           <Button v-if="withClearFilters && filters"
                   label="Clear Filters"
-                  :badge="getActiveFiltersCount() ?? null"
+                  :badge="getActiveFiltersCount().toString() ?? null"
                   icon="pi pi-filter-slash"
                   severity="secondary"
                   @click="handleClearFilters" :pt="{

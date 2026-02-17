@@ -33,7 +33,7 @@ const hasErrors = computed(()=> {
     props.fields.forEach(field => {
         errorNumber += props.getErrors(field).length
     })
-    return errorNumber
+    return errorNumber.toString()
 })
 </script>
 
