@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow-sm rounded-sm">
+  <div ref="tableRoot" class="crud-table-root shadow-sm rounded-sm">
     <Toolbar :pt="{
       root: {
          style: {
@@ -10,7 +10,7 @@
   }
     }">
       <template #start>
-        <div class="flex gap-x-2">
+        <div class="flex flex-wrap gap-2">
           <Button v-if="withAdd && !informational" icon="pi pi-plus" label="New" @click="handleAddNewButton"></Button>
           <Button v-if="withClearFilters && filters"
                   label="Clear Filters"
@@ -42,7 +42,7 @@
       </template>
     </Toolbar>
     <DataTable class="border border-gray-300 bg-white"
-               scrollable
+               :scrollable="!isMobile"
                :show-gridlines="false"
                filter-display="menu"
                paginator
@@ -63,8 +63,8 @@
                @page="handlePageChange"
                :meta-key-selection="false"
                :multi-sort-meta="sortingQuery"
-               resizable-columns
-               column-resize-mode="fit"
+               :resizable-columns="!isMobile"
+               :column-resize-mode="isMobile ? undefined : 'fit'"
                :rows-per-page-options="[10,  50, 100, 500]"
                :loading="isTableLoading"
                :value="tableData"
@@ -108,13 +108,49 @@ import {
   Toolbar
 } from "primevue";
 import Button from "primevue/button";
-import {onMounted, ref, watch} from "vue";
+import {nextTick, onMounted, onUnmounted, ref, watch} from "vue";
 import useFetch from "../composables/useFetch.js";
 import useDialog from "../composables/useDialog.js";
 import BaseCrudTableActionsDropdown from "./BaseCrudTableActionsDropdown.vue";
 import useAlerts from "../composables/useAlerts.js";
 import useConfirmDialog from "../composables/useConfirmDialog.js";
 import BaseCrudTableActionsButton from "./BaseCrudTableActionsButton.vue";
+
+const MOBILE_BREAKPOINT = 768
+
+const isMobile = ref(false)
+const tableRoot = ref(null)
+
+function checkMobile() {
+  if (typeof window !== 'undefined') {
+    isMobile.value = window.innerWidth < MOBILE_BREAKPOINT
+  }
+}
+
+let cachedHeaders = []
+
+function annotateCellLabels() {
+  if (!isMobile.value || !tableRoot.value) return
+  const thead = tableRoot.value.querySelector('.p-datatable-thead')
+  const tbody = tableRoot.value.querySelector('.p-datatable-tbody')
+  if (!thead || !tbody) return
+
+  if (cachedHeaders.length === 0) {
+    cachedHeaders = Array.from(thead.querySelectorAll('th')).map(th => {
+      const titleEl = th.querySelector('.p-datatable-column-title')
+      return titleEl ? titleEl.textContent.trim() : ''
+    })
+  }
+
+  tbody.querySelectorAll('tr').forEach(row => {
+    const cells = row.querySelectorAll('td')
+    cells.forEach((td, i) => {
+      if (cachedHeaders[i] && td.getAttribute('data-label') !== cachedHeaders[i]) {
+        td.setAttribute('data-label', cachedHeaders[i])
+      }
+    })
+  })
+}
 
 
 const props = defineProps({
@@ -468,6 +504,11 @@ watch(filters, () => {
   fetchData()
 }, {deep: true})
 
+// Annotate table cells with column header labels for mobile responsive layout
+watch(tableData, () => {
+  nextTick(() => annotateCellLabels())
+})
+
 async function getData() {
   const defaultQuery = props.defaultQuery ? props.defaultQuery : {}
   try {
@@ -566,10 +607,130 @@ defineExpose({
 })
 
 onMounted(() => {
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
   fetchData()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile)
 })
 </script>
 
-<style scoped>
+<!--
+  Styles are intentionally not scoped because they need to target PrimeVue DataTable's
+  internal DOM elements. The .crud-table-root prefix ensures specificity to this component only.
+-->
+<style>
+/* Mobile responsive styles for the CRUD table */
+@media screen and (max-width: 767px) {
+  .crud-table-root .p-toolbar {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
 
+  .crud-table-root .p-toolbar .p-toolbar-start,
+  .crud-table-root .p-toolbar .p-toolbar-end {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .crud-table-root .p-toolbar .p-toolbar-center {
+    width: 100%;
+  }
+
+  .crud-table-root .p-toolbar .p-toolbar-end .p-iconfield {
+    width: 100%;
+  }
+
+  .crud-table-root .p-toolbar .p-toolbar-end .p-iconfield .p-inputtext {
+    width: 100%;
+  }
+
+  .crud-table-root .p-datatable-thead {
+    display: none !important;
+  }
+
+  .crud-table-root .p-datatable-tbody > tr {
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    margin: 0 0.5rem 0.75rem 0.5rem;
+    padding: 0.75rem;
+    background: white;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .crud-table-root .p-datatable-tbody > tr > td {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.375rem 0.5rem;
+    border: none !important;
+    width: 50%;
+    box-sizing: border-box;
+    gap: 0.125rem;
+    overflow: hidden;
+  }
+
+  .crud-table-root .p-datatable-tbody > tr > td[data-label]::before {
+    content: attr(data-label);
+    font-weight: 600;
+    font-size: 0.7rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+  }
+
+  /* Actions cell spans full width and sits at the top */
+  .crud-table-root .p-datatable-tbody > tr > td:first-child {
+    width: 100%;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+    border-bottom: 1px solid #f1f5f9 !important;
+    order: -1;
+  }
+
+  /* Don't show label for actions cell */
+  .crud-table-root .p-datatable-tbody > tr > td:first-child::before {
+    display: none;
+  }
+
+  /* Selection checkboxes */
+  .crud-table-root .p-datatable-tbody > tr > td[data-p-selection-column="true"] {
+    width: auto;
+    order: -2;
+  }
+
+  /* Empty message should span full width */
+  .crud-table-root .p-datatable-tbody > tr.p-datatable-empty-message > td {
+    width: 100%;
+  }
+
+  /* Paginator - make compact on mobile */
+  .crud-table-root .p-paginator {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    justify-content: center;
+    padding: 0.5rem;
+  }
+
+  .crud-table-root .p-paginator .p-paginator-rpp-dropdown {
+    margin-left: 0;
+  }
+
+  .crud-table-root .p-datatable-table-container {
+    overflow-x: hidden !important;
+  }
+
+  .crud-table-root .p-datatable-table {
+    table-layout: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
 </style>
