@@ -53,7 +53,18 @@ const router = createRouter({
             path: '/functions',
             name: 'functions',
             component: () => import('../views/Functions/FunctionsView.vue'),
-        }
+        },
+        {
+            path: '/base-file-manager',
+            name: 'BaseFileManager',
+            component: () => import('../views/BaseFileManager/BaseFileManagerView.vue'),
+            meta: {
+                title: 'BaseFileManager',
+                url: 'https://github.com/untitled-developers/kockatoos-admin-ui/blob/main/src/components/BaseFileManager.vue',
+                description: 'File manager with sidebar folder tree and card grid. Display-only; takes a flat list of blobs.',
+                tags: ['file-manager', 'media', 'gallery'],
+            },
+        },
 
     ],
 })
