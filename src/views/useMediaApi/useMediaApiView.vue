@@ -42,7 +42,7 @@ const result = ref(null);
 async function runGet() {
   result.value = 'Loading…';
   try {
-    const res = await useMediaApi().get({ paginate: false, withExistence: 1 });
+    const res = await useMediaApi().get({ paginate: false });
     result.value = JSON.stringify(res?.data ?? res, null, 2);
   } catch (e) { result.value = `Error: ${e.message}`; }
 }

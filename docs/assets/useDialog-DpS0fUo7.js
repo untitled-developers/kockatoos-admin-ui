@@ -1,1 +1,0 @@
-import{a_ as s}from"./index-BHIwW7Jo.js";function p(){const e=s();function a(o,r={}){return e.openDialog(o,{props:r.props||{},handlers:r.handlers||{}})}function i(o){e.closeDialog(o)}function n(o,r){e.updateDialogProps(o,r)}function l(o){e.refreshDialog(o)}return{openDialog:a,closeDialog:i,updateDialogProps:n,refreshDialog:l}}export{p as u};

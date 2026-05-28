@@ -21,8 +21,7 @@
  *
  * Smart wrapper around BaseFileManager. The single-component embed (FR-7) that
  * admin panels mount at their /blobs route. Fetches the full blob library in
- * one round-trip (`paginate=false`) plus per-row file-existence info
- * (`withExistence=1`) and feeds BaseFileManager.
+ * one round-trip (`paginate=false`) and feeds BaseFileManager.
  *
  * Deliberately props-less — embedding the Media Manager is a one-liner:
  * `<BaseMediaManager />`. Forwards toolbar + empty-state slots and the
@@ -48,7 +47,7 @@ const isLoading = ref(true)
 onMounted(async () => {
   try {
     const { get } = useMediaApi()
-    const response = await get({ paginate: false, withExistence: 1 })
+    const response = await get({ paginate: false })
     blobs.value = response.data?.data ?? []
   } finally {
     isLoading.value = false

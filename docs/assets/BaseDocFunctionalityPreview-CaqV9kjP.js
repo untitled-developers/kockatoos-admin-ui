@@ -1,1 +1,0 @@
-import{r as o,aq as r,E as s,aw as t}from"./index-BHIwW7Jo.js";const n={},c={class:"bg-stone-100 p-8 flex border border-stone-300 rounded-md"};function a(e,d){return r(),s("div",c,[t(e.$slots,"default")])}const _=o(n,[["render",a]]);export{_ as B};
