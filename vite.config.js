@@ -11,4 +11,7 @@ export default defineConfig({
         vueDevTools(),
         tailwindcss()
     ],
+    optimizeDeps: {
+        exclude: ['ckeditor5', '@ckeditor/ckeditor5-vue'],
+    },
 })

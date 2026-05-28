@@ -10,7 +10,7 @@
                  style="width: 400px"/>
     </IconField>
     <Popover ref="searchResultPopover" :dismissable="false">
-      <div style="width: 400px">
+      <div style="width: 400px; max-height: 400px; overflow-y: auto">
         <ul v-if="searchResults.length">
           <li v-for="searchItem in searchResults">
             <router-link :to="{name: searchItem.item.route.name}"

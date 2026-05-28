@@ -1,0 +1,1 @@
+import{u as o}from"./useFetch-CIzhyb7H.js";function $(r){const e=o();async function u(t){return e.get(`${r}`,{params:t})}async function n(t){return e.post(`${r}`,t)}async function c(t){return e.delete(`${r}/${t}`)}async function s(t,a){return e.post(`${r}/${t}`,a)}return{get:u,create:n,destroy:c,update:s}}export{$ as u};

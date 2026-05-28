@@ -5,6 +5,10 @@
         <BaseDocCodePreview language="JavaScript" title="Import" :source="importCode">
         </BaseDocCodePreview>
       </BaseDocSection>
+      <BaseDocSection title="Signature">
+        <BaseDocCodePreview language="JavaScript" title="Signature" :source="signatureCode">
+        </BaseDocCodePreview>
+      </BaseDocSection>
       <BaseDocSection title="Examples">
         <BaseDocFunctionalityPreview>
           <div class="flex gap-x-4">
@@ -31,6 +35,12 @@ const {startLoader, stopLoader} = useGlobalLoader()
 const route = useRoute()
 const importCode = "import useGlobalLoader from \"kockatoos-admin-ui/composables/useGlobalLoader.js\";\n" +
     "const {startLoader, stopLoader} = useGlobalLoader()"
+
+const signatureCode = `const { startLoader, stopLoader } = useGlobalLoader();
+
+startLoader()             // shows the global loader without a message
+startLoader('Saving…')   // shows the loader with a custom message overlay
+stopLoader()              // hides the loader`
 
 function handleExampleOneClick() {
   startLoader('With a message')
