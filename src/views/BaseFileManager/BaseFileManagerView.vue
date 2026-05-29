@@ -63,6 +63,9 @@
             <BaseFileManager
               :blobs="sampleBlobs"
               :is-loading="isLoading"
+              directory-path="tree_directory"
+              status-path="status"
+              key-path="key"
               @file-click="onFileClick"
               @folder-click="onFolderClick"
               @navigate="onNavigate"
@@ -147,22 +150,38 @@ function onFileClick(blob) { addLog(`file-click: ${blob.name} (${blob.type})`); 
 function onFolderClick(path) { addLog(`folder-click: "${path}"`); }
 function onNavigate(path) { addLog(`navigate: "${path || '/'}"`); }
 
+// Sample dataset exercising all four reconciliation states. Note: matched/db_only/unverifiable
+// entries have an `id` (a blob row exists). disk_only entries have `id: null` (no blob row).
+// `legacy-uploads/` is entirely disk_only — it demonstrates the folder rollup status.
 const sampleBlobs = [
-  { id: 1,  name: 'readme.md',        url: null,                                 directory: null,              type: 'text/markdown',   size: 1024,    ext: 'md',  created_at: '2025-11-12T08:30:00Z', updated_at: '2025-11-12T09:00:00Z', exists: true },
-  { id: 2,  name: 'logo.png',         url: 'https://picsum.photos/seed/a/400',   directory: null,              type: 'image/png',       size: 45000,   ext: 'png', created_at: '2025-11-13T10:15:00Z', updated_at: '2025-11-13T10:20:00Z', exists: true },
-  { id: 3,  name: 'report.pdf',       url: null,                                 directory: 'blobs',           type: 'application/pdf', size: 102400,  ext: 'pdf', created_at: '2025-11-14T11:00:00Z', updated_at: '2025-11-14T11:05:00Z', exists: true },
-  { id: 4,  name: 'photo.jpg',        url: 'https://picsum.photos/seed/b/400',   directory: 'blobs',           type: 'image/jpeg',      size: 230400,  ext: 'jpg', created_at: '2025-11-15T12:30:00Z', updated_at: '2025-11-15T12:35:00Z', exists: true },
-  { id: 5,  name: 'promo.mp4',        url: null,                                 directory: 'blobs',           type: 'video/mp4',       size: 5242880, ext: 'mp4', created_at: '2025-11-16T13:45:00Z', updated_at: '2025-11-16T13:50:00Z', exists: false },
-  { id: 6,  name: 'jingle.mp3',       url: null,                                 directory: 'blobs',           type: 'audio/mpeg',      size: 3145728, ext: 'mp3', created_at: '2025-11-17T14:00:00Z', updated_at: '2025-11-17T14:10:00Z', exists: true },
-  { id: 7,  name: 'product-1.jpg',    url: 'https://picsum.photos/seed/c/400',   directory: 'products/images', type: 'image/jpeg',      size: 125000,  ext: 'jpg', created_at: '2025-11-18T15:20:00Z', updated_at: '2025-11-18T15:25:00Z', exists: true },
-  { id: 8,  name: 'product-2.jpg',    url: 'https://picsum.photos/seed/d/400',   directory: 'products/images', type: 'image/jpeg',      size: 118000,  ext: 'jpg', created_at: '2025-11-19T16:00:00Z', updated_at: '2025-11-19T16:05:00Z', exists: null },
-  { id: 9,  name: 'product-3.png',    url: 'https://picsum.photos/seed/e/400',   directory: 'products/images', type: 'image/png',       size: 200000,  ext: 'png', created_at: '2025-11-20T08:00:00Z', updated_at: '2025-11-20T08:30:00Z', exists: true },
-  { id: 10, name: 'banner.jpg',       url: 'https://picsum.photos/seed/f/400',   directory: 'products/images', type: 'image/jpeg',      size: 350000,  ext: 'jpg', created_at: '2025-11-21T09:15:00Z', updated_at: '2025-11-21T09:20:00Z', exists: true },
-  { id: 11, name: 'manual-a.pdf',     url: null,                                 directory: 'products/manuals',type: 'application/pdf', size: 2097152, ext: 'pdf', created_at: '2025-11-22T10:30:00Z', updated_at: '2025-11-22T10:35:00Z', exists: true },
-  { id: 12, name: 'manual-b.pdf',     url: null,                                 directory: 'products/manuals',type: 'application/pdf', size: 1572864, ext: 'pdf', created_at: '2025-11-23T11:45:00Z', updated_at: '2025-11-23T11:50:00Z', exists: true },
-  { id: 13, name: 'avatar-alice.jpg', url: 'https://picsum.photos/seed/g/400',   directory: 'users/avatars',   type: 'image/jpeg',      size: 25000,   ext: 'jpg', created_at: '2025-11-24T12:00:00Z', updated_at: '2025-11-24T12:05:00Z', exists: true },
-  { id: 14, name: 'avatar-bob.jpg',   url: 'https://picsum.photos/seed/h/400',   directory: 'users/avatars',   type: 'image/jpeg',      size: 32000,   ext: 'jpg', created_at: '2025-11-25T13:15:00Z', updated_at: '2025-11-25T13:20:00Z', exists: true },
-  { id: 15, name: 'avatar-carol.png', url: 'https://picsum.photos/seed/i/400',   directory: 'users/avatars',   type: 'image/png',       size: 28000,   ext: 'png', created_at: '2025-11-26T14:30:00Z', updated_at: '2025-11-26T14:35:00Z', exists: true },
+  // Root — matched
+  { id: 1,  name: 'readme.md',        url: 'https://picsum.photos/seed/r/400',   directory: null,              tree_directory: '',                 key: 'readme.md',                          type: 'text/markdown',   size: 1024,    ext: 'md',  created_at: '2025-11-12T08:30:00Z', updated_at: '2025-11-12T09:00:00Z', exists: true,  status: 'matched' },
+  { id: 2,  name: 'logo.png',         url: 'https://picsum.photos/seed/a/400',   directory: null,              tree_directory: '',                 key: 'logo.png',                           type: 'image/png',       size: 45000,   ext: 'png', created_at: '2025-11-13T10:15:00Z', updated_at: '2025-11-13T10:20:00Z', exists: true,  status: 'matched' },
+
+  // blobs/ — mix of states
+  { id: 3,  name: 'report.pdf',       url: 'https://picsum.photos/seed/x/400',   directory: 'blobs',           tree_directory: 'blobs',            key: 'blobs/report.pdf',                   type: 'application/pdf', size: 102400,  ext: 'pdf', created_at: '2025-11-14T11:00:00Z', updated_at: '2025-11-14T11:05:00Z', exists: true,  status: 'matched' },
+  { id: 4,  name: 'photo.jpg',        url: 'https://picsum.photos/seed/b/400',   directory: 'blobs',           tree_directory: 'blobs',            key: 'blobs/photo.jpg',                    type: 'image/jpeg',      size: 230400,  ext: 'jpg', created_at: '2025-11-15T12:30:00Z', updated_at: '2025-11-15T12:35:00Z', exists: true,  status: 'matched' },
+  { id: 5,  name: 'promo.mp4',        url: 'https://picsum.photos/seed/y/400',   directory: 'blobs',           tree_directory: 'blobs',            key: 'blobs/promo.mp4',                    type: 'video/mp4',       size: 5242880, ext: 'mp4', created_at: '2025-11-16T13:45:00Z', updated_at: '2025-11-16T13:50:00Z', exists: false, status: 'db_only' },
+  { id: 6,  name: 'external-cdn.mp3', url: 'https://cdn.example.com/audio/jingle.mp3', directory: 'blobs',     tree_directory: 'blobs',            key: null,                                 type: 'audio/mpeg',      size: 3145728, ext: 'mp3', created_at: '2025-11-17T14:00:00Z', updated_at: '2025-11-17T14:10:00Z', exists: null,  status: 'unverifiable' },
+
+  // products/images/ — matched + one disk_only (untracked file inside an otherwise healthy folder)
+  { id: 7,  name: 'product-1.jpg',    url: 'https://picsum.photos/seed/c/400',   directory: 'products/images', tree_directory: 'products/images',  key: 'products/images/product-1.jpg',      type: 'image/jpeg',      size: 125000,  ext: 'jpg', created_at: '2025-11-18T15:20:00Z', updated_at: '2025-11-18T15:25:00Z', exists: true,  status: 'matched' },
+  { id: 8,  name: 'product-2.jpg',    url: 'https://picsum.photos/seed/d/400',   directory: 'products/images', tree_directory: 'products/images',  key: 'products/images/product-2.jpg',      type: 'image/jpeg',      size: 118000,  ext: 'jpg', created_at: '2025-11-19T16:00:00Z', updated_at: '2025-11-19T16:05:00Z', exists: true,  status: 'matched' },
+  { id: null, name: 'rogue-upload.jpg', url: 'https://picsum.photos/seed/rogue/400', directory: null,          tree_directory: 'products/images',  key: 'products/images/rogue-upload.jpg',   type: 'image/jpeg',      size: 88000,   ext: 'jpg', created_at: null,                   updated_at: '2025-12-01T10:00:00Z', exists: true,  status: 'disk_only' },
+
+  // products/manuals/ — all matched
+  { id: 11, name: 'manual-a.pdf',     url: 'https://picsum.photos/seed/m/400',   directory: 'products/manuals',tree_directory: 'products/manuals', key: 'products/manuals/manual-a.pdf',      type: 'application/pdf', size: 2097152, ext: 'pdf', created_at: '2025-11-22T10:30:00Z', updated_at: '2025-11-22T10:35:00Z', exists: true,  status: 'matched' },
+  { id: 12, name: 'manual-b.pdf',     url: 'https://picsum.photos/seed/n/400',   directory: 'products/manuals',tree_directory: 'products/manuals', key: 'products/manuals/manual-b.pdf',      type: 'application/pdf', size: 1572864, ext: 'pdf', created_at: '2025-11-23T11:45:00Z', updated_at: '2025-11-23T11:50:00Z', exists: true,  status: 'matched' },
+
+  // legacy-uploads/ — ENTIRELY disk_only folder (demonstrates all-untracked rollup)
+  { id: null, name: 'old-banner-1.jpg', url: 'https://picsum.photos/seed/old1/400', directory: null,           tree_directory: 'legacy-uploads',   key: 'legacy-uploads/old-banner-1.jpg',    type: 'image/jpeg',      size: 145000,  ext: 'jpg', created_at: null,                   updated_at: '2024-08-01T12:00:00Z', exists: true,  status: 'disk_only' },
+  { id: null, name: 'old-banner-2.jpg', url: 'https://picsum.photos/seed/old2/400', directory: null,           tree_directory: 'legacy-uploads',   key: 'legacy-uploads/old-banner-2.jpg',    type: 'image/jpeg',      size: 162000,  ext: 'jpg', created_at: null,                   updated_at: '2024-08-02T12:00:00Z', exists: true,  status: 'disk_only' },
+  { id: null, name: 'archive.zip',      url: 'https://picsum.photos/seed/old3/400', directory: null,           tree_directory: 'legacy-uploads',   key: 'legacy-uploads/archive.zip',         type: 'application/zip', size: 524288,  ext: 'zip', created_at: null,                   updated_at: '2024-08-03T12:00:00Z', exists: true,  status: 'disk_only' },
+
+  // users/avatars/ — all matched
+  { id: 13, name: 'avatar-alice.jpg', url: 'https://picsum.photos/seed/g/400',   directory: 'users/avatars',   tree_directory: 'users/avatars',    key: 'users/avatars/avatar-alice.jpg',     type: 'image/jpeg',      size: 25000,   ext: 'jpg', created_at: '2025-11-24T12:00:00Z', updated_at: '2025-11-24T12:05:00Z', exists: true,  status: 'matched' },
+  { id: 14, name: 'avatar-bob.jpg',   url: 'https://picsum.photos/seed/h/400',   directory: 'users/avatars',   tree_directory: 'users/avatars',    key: 'users/avatars/avatar-bob.jpg',       type: 'image/jpeg',      size: 32000,   ext: 'jpg', created_at: '2025-11-25T13:15:00Z', updated_at: '2025-11-25T13:20:00Z', exists: true,  status: 'matched' },
+  { id: 15, name: 'avatar-carol.png', url: 'https://picsum.photos/seed/i/400',   directory: 'users/avatars',   tree_directory: 'users/avatars',    key: 'users/avatars/avatar-carol.png',     type: 'image/png',       size: 28000,   ext: 'png', created_at: '2025-11-26T14:30:00Z', updated_at: '2025-11-26T14:35:00Z', exists: true,  status: 'matched' },
 ];
 
 const importCode = `import BaseFileManager from "kockatoos-admin-ui/components/BaseFileManager.vue";`;

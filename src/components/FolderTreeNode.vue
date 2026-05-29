@@ -20,6 +20,12 @@
       </span>
       <i class="pi pi-folder flex-shrink-0" :class="node.path === currentPath ? 'text-primary' : 'text-gray-400'" />
       <span class="flex-1 truncate">{{ node.name }}</span>
+      <i
+        v-if="statusMeta"
+        class="pi pi-circle-fill text-[7px] flex-shrink-0"
+        :class="statusMeta.color"
+        :title="statusMeta.label"
+      />
       <span class="text-xs text-gray-400 flex-shrink-0">({{ totalCount }})</span>
     </div>
     <template v-if="isExpanded && hasSubfolders">
@@ -60,6 +66,14 @@ function recursiveCount(node) {
 }
 
 const totalCount = computed(() => recursiveCount(props.node))
+
+const FOLDER_STATUS_META = {
+  'ok': null,
+  'has-untracked': { color: 'text-amber-500', label: 'Contains untracked files' },
+  'all-untracked': { color: 'text-amber-600', label: 'Entirely untracked' },
+  'has-missing': { color: 'text-red-500', label: 'Contains files missing on disk' },
+}
+const statusMeta = computed(() => FOLDER_STATUS_META[props.node.status] ?? null)
 
 function handleCaretClick(e) {
   e.stopPropagation()

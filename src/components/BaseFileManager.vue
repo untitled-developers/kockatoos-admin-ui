@@ -106,9 +106,17 @@
               <div
                 v-for="folder in currentSubfolders"
                 :key="folder.path"
-                class="aspect-square border border-gray-300 rounded-lg p-3 flex flex-col items-center justify-center hover:shadow-md cursor-pointer transition-shadow bg-white"
+                class="relative aspect-square border border-gray-300 rounded-lg p-3 flex flex-col items-center justify-center hover:shadow-md cursor-pointer transition-shadow bg-white"
                 @click="handleFolderCardClick(folder)"
               >
+                <span
+                  v-if="folderStatusMeta(folder)"
+                  class="absolute top-1 right-1 rounded px-1.5 py-0.5 text-[10px] font-medium leading-none"
+                  :class="folderStatusMeta(folder).tagClass"
+                  :title="folderStatusMeta(folder).label"
+                >
+                  {{ folderStatusMeta(folder).tag }}
+                </span>
                 <i class="pi pi-folder text-5xl text-primary mb-2" />
                 <p class="text-sm font-medium truncate w-full text-center m-0" :title="folder.name">
                   {{ folder.name }}
@@ -134,11 +142,12 @@
                   />
                   <i v-else :class="[iconClassForBlob(blob), 'text-5xl text-gray-300']" />
                   <span
-                    v-if="get(blob, existsPath) === false"
-                    class="absolute top-1 right-1 text-red-500 bg-white rounded-full p-0.5 text-xs leading-none"
-                    title="File missing on disk"
+                    v-if="statusMetaFor(blob)"
+                    class="absolute top-1 right-1 rounded px-1.5 py-0.5 text-[10px] font-medium leading-none"
+                    :class="statusMetaFor(blob).tagClass"
+                    :title="statusMetaFor(blob).label"
                   >
-                    <i class="pi pi-exclamation-triangle text-[11px]" />
+                    {{ statusMetaFor(blob).tag }}
                   </span>
                 </div>
 
@@ -181,44 +190,76 @@
       <template v-if="activeBlob">
         <dl class="divide-y divide-gray-100 text-sm">
           <div
-            v-if="get(activeBlob, existsPath) === false"
-            class="flex items-center gap-2 py-2.5 text-red-600"
+            v-if="statusMetaFor(activeBlob)"
+            class="flex items-center gap-2 py-2.5"
+            :class="statusMetaFor(activeBlob).color"
           >
-            <i class="pi pi-exclamation-triangle" />
-            <span class="text-sm font-medium">File is missing on disk.</span>
+            <i :class="statusMetaFor(activeBlob).icon" />
+            <span class="text-sm font-medium">{{ statusMetaFor(activeBlob).label }}</span>
           </div>
           <div class="flex py-2.5 gap-4">
             <dt class="w-24 flex-shrink-0 text-gray-500 font-medium">Name</dt>
             <dd class="flex-1 break-all text-gray-800">{{ get(activeBlob, namePath) }}</dd>
           </div>
           <div class="flex py-2.5 gap-4">
-            <dt class="w-24 flex-shrink-0 text-gray-500 font-medium">Type</dt>
-            <dd class="flex-1 text-gray-800">{{ get(activeBlob, typePath) || '—' }}</dd>
+            <dt class="w-24 flex-shrink-0 text-gray-500 font-medium">Status</dt>
+            <dd class="flex-1 text-gray-800">{{ get(activeBlob, statusPath) || '' }}</dd>
           </div>
-          <div class="flex py-2.5 gap-4">
-            <dt class="w-24 flex-shrink-0 text-gray-500 font-medium">Size</dt>
-            <dd class="flex-1 text-gray-800">{{ formatBytes(get(activeBlob, sizePath)) || '—' }}</dd>
+
+          <!-- Blob source -->
+          <div class="py-2.5">
+            <p class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-1.5">Blob record</p>
+            <template v-if="hasBlobRow(activeBlob)">
+              <div class="flex py-1 gap-4">
+                <dt class="w-24 flex-shrink-0 text-gray-500">ID</dt>
+                <dd class="flex-1 text-gray-800">{{ get(activeBlob, idPath) }}</dd>
+              </div>
+              <div class="flex py-1 gap-4">
+                <dt class="w-24 flex-shrink-0 text-gray-500">Directory</dt>
+                <dd class="flex-1 text-gray-800 break-all">{{ get(activeBlob, directoryPath) || '/' }}</dd>
+              </div>
+              <div class="flex py-1 gap-4">
+                <dt class="w-24 flex-shrink-0 text-gray-500">Type</dt>
+                <dd class="flex-1 text-gray-800">{{ get(activeBlob, typePath) || '' }}</dd>
+              </div>
+              <div class="flex py-1 gap-4">
+                <dt class="w-24 flex-shrink-0 text-gray-500">Extension</dt>
+                <dd class="flex-1 text-gray-800">{{ get(activeBlob, extPath) || '' }}</dd>
+              </div>
+              <div class="flex py-1 gap-4">
+                <dt class="w-24 flex-shrink-0 text-gray-500">Created</dt>
+                <dd class="flex-1 text-gray-800">{{ formatDate(get(activeBlob, createdAtPath)) }}</dd>
+              </div>
+            </template>
+            <p v-else class="text-xs text-gray-400 italic">Not in blobs table.</p>
           </div>
-          <div class="flex py-2.5 gap-4">
-            <dt class="w-24 flex-shrink-0 text-gray-500 font-medium">Directory</dt>
-            <dd class="flex-1 text-gray-800 break-all">{{ get(activeBlob, directoryPath) || '/' }}</dd>
+
+          <!-- Disk source -->
+          <div class="py-2.5">
+            <p class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-1.5">On disk</p>
+            <template v-if="hasDiskFile(activeBlob)">
+              <div class="flex py-1 gap-4">
+                <dt class="w-24 flex-shrink-0 text-gray-500">Path</dt>
+                <dd class="flex-1 text-gray-800 break-all">{{ get(activeBlob, keyPath) || '' }}</dd>
+              </div>
+              <div class="flex py-1 gap-4">
+                <dt class="w-24 flex-shrink-0 text-gray-500">Size</dt>
+                <dd class="flex-1 text-gray-800">{{ formatBytes(get(activeBlob, sizePath)) || '' }}</dd>
+              </div>
+              <div class="flex py-1 gap-4">
+                <dt class="w-24 flex-shrink-0 text-gray-500">Last modified</dt>
+                <dd class="flex-1 text-gray-800">{{ formatDate(get(activeBlob, updatedAtPath)) }}</dd>
+              </div>
+            </template>
+            <p v-else class="text-xs text-gray-400 italic">
+              {{ get(activeBlob, statusPath) === 'unverifiable' ? 'Cannot verify (external host/bucket).' : 'File missing on disk.' }}
+            </p>
           </div>
-          <div class="flex py-2.5 gap-4">
-            <dt class="w-24 flex-shrink-0 text-gray-500 font-medium">Extension</dt>
-            <dd class="flex-1 text-gray-800">{{ get(activeBlob, extPath) || '—' }}</dd>
-          </div>
-          <div class="flex py-2.5 gap-4">
-            <dt class="w-24 flex-shrink-0 text-gray-500 font-medium">Created</dt>
-            <dd class="flex-1 text-gray-800">{{ formatDate(get(activeBlob, createdAtPath)) }}</dd>
-          </div>
-          <div class="flex py-2.5 gap-4">
-            <dt class="w-24 flex-shrink-0 text-gray-500 font-medium">Updated</dt>
-            <dd class="flex-1 text-gray-800">{{ formatDate(get(activeBlob, updatedAtPath)) }}</dd>
-          </div>
+
           <div class="flex py-2.5 gap-4 items-start">
             <dt class="w-24 flex-shrink-0 text-gray-500 font-medium">URL</dt>
             <dd class="flex-1 flex items-start gap-2 min-w-0">
-              <span class="flex-1 break-all text-gray-800 text-xs">{{ get(activeBlob, urlPath) || '—' }}</span>
+              <span class="flex-1 break-all text-gray-800 text-xs">{{ get(activeBlob, urlPath) || '' }}</span>
               <button
                 v-if="get(activeBlob, urlPath)"
                 class="flex-shrink-0 text-primary border border-primary rounded-md p-1.5 hover:bg-primary-50 transition-colors"
@@ -242,7 +283,7 @@
  *
  * Display-only file manager. Accepts a flat list of blob-shaped objects, derives a
  * folder hierarchy from each blob's `directory` value, and renders a sidebar accordion
- * tree alongside a card grid for the currently viewed folder. Backend-unaware — emits
+ * tree alongside a card grid for the currently viewed folder. Backend-unaware, emits
  * click events for consumers to wire operations.
  *
  * @prop {Array}   blobs         Flat list of blob objects (required).
@@ -296,6 +337,8 @@ const props = defineProps({
   createdAtPath: { type: String, default: 'created_at' },
   updatedAtPath: { type: String, default: 'updated_at' },
   existsPath: { type: String, default: 'exists' },
+  statusPath: { type: String, default: 'status' },
+  keyPath: { type: String, default: 'key' },
   initialPath: { type: String, default: '' },
   isLoading: { type: Boolean, default: false },
 })
@@ -333,7 +376,46 @@ function buildTree(blobs) {
     }
     node.files.push(blob)
   }
+  rollUpStatus(root)
   return root
+}
+
+// Aggregate each folder's status from descendant file statuses (FR-11).
+// Rules: 'all-untracked' if every descendant file is disk_only; 'has-missing' if
+// any db_only; 'has-untracked' if any disk_only (and not all); else 'ok'.
+function rollUpStatus(node) {
+  let total = 0, untracked = 0, missing = 0
+  for (const f of node.files) {
+    total++
+    const s = get(f, props.statusPath)
+    if (s === 'disk_only') untracked++
+    else if (s === 'db_only') missing++
+  }
+  for (const child of Object.values(node.subfolders)) {
+    rollUpStatus(child)
+    total += child._fileCount
+    untracked += child._untrackedCount
+    missing += child._missingCount
+  }
+  node._fileCount = total
+  node._untrackedCount = untracked
+  node._missingCount = missing
+  if (total === 0) node.status = 'ok'
+  else if (missing > 0) node.status = 'has-missing'
+  else if (untracked === total) node.status = 'all-untracked'
+  else if (untracked > 0) node.status = 'has-untracked'
+  else node.status = 'ok'
+}
+
+const FOLDER_STATUS_META = {
+  'ok': null,
+  'has-untracked': { color: 'text-amber-500', label: 'Contains untracked files', tag: 'Has untracked', tagClass: 'bg-amber-100 text-amber-700' },
+  'all-untracked': { color: 'text-amber-600', label: 'Entirely untracked', tag: 'Untracked', tagClass: 'bg-amber-100 text-amber-700' },
+  'has-missing': { color: 'text-red-500', label: 'Contains files missing on disk', tag: 'Has missing', tagClass: 'bg-red-100 text-red-700' },
+}
+
+function folderStatusMeta(folder) {
+  return FOLDER_STATUS_META[folder?.status] ?? null
 }
 
 const tree = computed(() => buildTree(props.blobs))
@@ -439,6 +521,37 @@ function copyToClipboard(blob) {
   })
 }
 
+// ── Reconciliation status ─────────────────────────────────────────────────────
+
+const STATUS_META = {
+  matched: null, // no badge for healthy files
+  disk_only: { icon: 'pi pi-question-circle', color: 'text-amber-500', label: 'Untracked: on disk, no blob row', tag: 'Untracked', tagClass: 'bg-amber-100 text-amber-700' },
+  db_only: { icon: 'pi pi-exclamation-triangle', color: 'text-red-500', label: 'Missing: blob row, no file on disk', tag: 'Missing Disk', tagClass: 'bg-red-100 text-red-700' },
+  unverifiable: { icon: 'pi pi-globe', color: 'text-gray-400', label: 'External: cannot verify against this disk', tag: 'External', tagClass: 'bg-gray-100 text-gray-600' },
+}
+
+function hasBlobRow(blob) {
+  const status = get(blob, props.statusPath)
+  if (status === 'disk_only') return false
+  return get(blob, props.idPath) != null
+}
+
+function hasDiskFile(blob) {
+  const status = get(blob, props.statusPath)
+  if (status === 'matched' || status === 'disk_only') return true
+  if (status === 'db_only' || status === 'unverifiable') return false
+  // No status field, fall back to exists
+  return get(blob, props.existsPath) !== false
+}
+
+function statusMetaFor(blob) {
+  const status = get(blob, props.statusPath)
+  if (status && status in STATUS_META) return STATUS_META[status]
+  // Back-compat: fall back to the legacy exists flag.
+  if (get(blob, props.existsPath) === false) return STATUS_META.db_only
+  return null
+}
+
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
 function formatBytes(n) {
@@ -451,9 +564,9 @@ function formatBytes(n) {
 }
 
 function formatDate(value) {
-  if (!value) return '—'
+  if (!value) return ''
   const d = new Date(value)
-  return isNaN(d.getTime()) ? '—' : d.toLocaleString()
+  return isNaN(d.getTime()) ? '' : d.toLocaleString()
 }
 
 function iconClassForBlob(blob) {
