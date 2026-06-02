@@ -21,11 +21,18 @@ export default function useCrudApi(endpoint) {
         return fetch.post(`${endpoint}/${id}`, data);
     }
 
+    // Disk-only upload. `formData` is a multipart FormData (file + directory);
+    // `config` is forwarded to axios so callers can pass `onUploadProgress`.
+    async function upload(formData, config) {
+        return fetch.post(`${endpoint}/upload`, formData, config);
+    }
+
     return {
         get,
         create,
         destroy,
-        update
+        update,
+        upload
     }
 
 

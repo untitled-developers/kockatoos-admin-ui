@@ -57,11 +57,12 @@ async function runUpdate() {
 
 const importCode = `import useMediaApi from "kockatoos-admin-ui/composables/useMediaApi.js";`;
 
-const signatureCode = `const { get, update } = useMediaApi();
+const signatureCode = `const { get, update, upload } = useMediaApi();
 // Defaults to endpoint: 'api/blobs'
 // Custom endpoint:
-const { get, update } = useMediaApi('api/custom-blobs');
+const { get, update, upload } = useMediaApi('api/custom-blobs');
 
-get(query?)         // GET /api/blobs?...query
-update(id, data)    // POST /api/blobs/:id`;
+get(query?)              // GET  /api/blobs?...query
+update(id, data)         // POST /api/blobs/:id
+upload(formData, config) // POST /api/blobs/upload (disk-only; pass onUploadProgress in config)`;
 </script>

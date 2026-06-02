@@ -111,11 +111,11 @@
               >
                 <span
                   v-if="folderStatusMeta(folder)"
-                  class="absolute top-1 right-1 rounded px-1.5 py-0.5 text-[10px] font-medium leading-none"
-                  :class="folderStatusMeta(folder).tagClass"
+                  class="absolute top-1.5 right-1.5 w-7 h-7 flex items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-black/5"
+                  :class="folderStatusMeta(folder).color"
                   :title="folderStatusMeta(folder).label"
                 >
-                  {{ folderStatusMeta(folder).tag }}
+                  <i :class="[folderStatusMeta(folder).icon, 'text-base']" />
                 </span>
                 <i class="pi pi-folder text-5xl text-primary mb-2" />
                 <p class="text-sm font-medium truncate w-full text-center m-0" :title="folder.name">
@@ -143,11 +143,11 @@
                   <i v-else :class="[iconClassForBlob(blob), 'text-5xl text-gray-300']" />
                   <span
                     v-if="statusMetaFor(blob)"
-                    class="absolute top-1 right-1 rounded px-1.5 py-0.5 text-[10px] font-medium leading-none"
-                    :class="statusMetaFor(blob).tagClass"
+                    class="absolute top-1.5 right-1.5 w-7 h-7 flex items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-black/5"
+                    :class="statusMetaFor(blob).color"
                     :title="statusMetaFor(blob).label"
                   >
-                    {{ statusMetaFor(blob).tag }}
+                    <i :class="[statusMetaFor(blob).icon, 'text-base']" />
                   </span>
                 </div>
 
@@ -307,6 +307,10 @@
  *                               or the field is absent, no badge is shown.
  * @prop {String}  initialPath   Folder to open on mount. '' = root.        Default: ''
  * @prop {Boolean} isLoading     Show skeleton UI while true.                Default: false
+ * @prop {Array}   extraFolders  Folder path strings to inject as (possibly  Default: []
+ *                               empty) navigable folder nodes, in addition
+ *                               to those derived from `blobs`. Used for
+ *                               not-yet-persisted ("virtual") folders.
  *
  * @emits file-click(blob)   A file card was clicked.
  * @emits folder-click(path) A folder card was clicked (fires before internal navigation).
@@ -341,6 +345,7 @@ const props = defineProps({
   keyPath: { type: String, default: 'key' },
   initialPath: { type: String, default: '' },
   isLoading: { type: Boolean, default: false },
+  extraFolders: { type: Array, default: () => [] },
 })
 
 const emit = defineEmits(['file-click', 'folder-click', 'navigate'])
@@ -376,6 +381,24 @@ function buildTree(blobs) {
     }
     node.files.push(blob)
   }
+
+  // Inject virtual (not-yet-persisted) folders so they're visible and navigable
+  // even before they contain any file.
+  for (const folderPath of props.extraFolders) {
+    const clean = (folderPath || '').replace(/^\/+|\/+$/g, '')
+    if (!clean) continue
+    const segments = clean.split('/')
+    let node = root
+    for (let i = 0; i < segments.length; i++) {
+      const seg = segments[i]
+      const path = segments.slice(0, i + 1).join('/')
+      if (!node.subfolders[seg]) {
+        node.subfolders[seg] = { name: seg, path, subfolders: {}, files: [] }
+      }
+      node = node.subfolders[seg]
+    }
+  }
+
   rollUpStatus(root)
   return root
 }
@@ -409,9 +432,9 @@ function rollUpStatus(node) {
 
 const FOLDER_STATUS_META = {
   'ok': null,
-  'has-untracked': { color: 'text-amber-500', label: 'Contains untracked files', tag: 'Has untracked', tagClass: 'bg-amber-100 text-amber-700' },
-  'all-untracked': { color: 'text-amber-600', label: 'Entirely untracked', tag: 'Untracked', tagClass: 'bg-amber-100 text-amber-700' },
-  'has-missing': { color: 'text-red-500', label: 'Contains files missing on disk', tag: 'Has missing', tagClass: 'bg-red-100 text-red-700' },
+  'has-untracked': { icon: 'pi pi-server', color: 'text-amber-600', label: 'Contains untracked (disk-only) files' },
+  'all-untracked': { icon: 'pi pi-server', color: 'text-amber-600', label: 'Entirely untracked (disk-only)' },
+  'has-missing': { icon: 'pi pi-database', color: 'text-red-600', label: 'Contains files missing on disk' },
 }
 
 function folderStatusMeta(folder) {
@@ -471,6 +494,10 @@ function handleFolderCardClick(folder) {
   navigateTo(folder.path)
 }
 
+// Allow a parent (e.g. BaseMediaManager) to drive navigation programmatically,
+// e.g. to jump into a just-created folder.
+defineExpose({ navigateTo })
+
 // ── Breadcrumb ─────────────────────────────────────────────────────────────────
 
 const breadcrumbSegments = computed(() => {
@@ -524,10 +551,10 @@ function copyToClipboard(blob) {
 // ── Reconciliation status ─────────────────────────────────────────────────────
 
 const STATUS_META = {
-  matched: null, // no badge for healthy files
-  disk_only: { icon: 'pi pi-question-circle', color: 'text-amber-500', label: 'Untracked: on disk, no blob row', tag: 'Untracked', tagClass: 'bg-amber-100 text-amber-700' },
-  db_only: { icon: 'pi pi-exclamation-triangle', color: 'text-red-500', label: 'Missing: blob row, no file on disk', tag: 'Missing Disk', tagClass: 'bg-red-100 text-red-700' },
-  unverifiable: { icon: 'pi pi-globe', color: 'text-gray-400', label: 'External: cannot verify against this disk', tag: 'External', tagClass: 'bg-gray-100 text-gray-600' },
+  matched: null, // healthy: lives on disk and in the DB — no indicator
+  disk_only: { icon: 'pi pi-server', color: 'text-amber-600', label: 'Untracked: on disk, no blob row' },
+  db_only: { icon: 'pi pi-database', color: 'text-red-600', label: 'Missing: blob row, no file on disk' },
+  unverifiable: { icon: 'pi pi-globe', color: 'text-sky-600', label: 'External: cannot verify against this disk' },
 }
 
 function hasBlobRow(blob) {

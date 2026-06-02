@@ -5,6 +5,22 @@
         <BaseDocCodePreview title="Import" language="JavaScript" :source="importCode" />
       </BaseDocSection>
 
+      <BaseDocSection title="Props">
+        <table class="w-full text-sm border-collapse">
+          <thead class="text-left text-stone-500">
+            <tr><th class="py-2 pr-4">Name</th><th class="py-2 pr-4">Type</th><th class="py-2 pr-4">Default</th><th class="py-2">Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr class="border-t border-gray-100">
+              <td class="py-2 pr-4"><code>maxFileSize</code></td>
+              <td class="py-2 pr-4"><code>Number</code></td>
+              <td class="py-2 pr-4"><code>5242880</code></td>
+              <td class="py-2">Client-side per-file size cap in bytes. Oversize files are rejected per-file before sending; the backend stays authoritative. The 5 MB default is only a fallback — pass the backend's <code>kockatoos-admin.uploads.max_size</code> so client and server agree.</td>
+            </tr>
+          </tbody>
+        </table>
+      </BaseDocSection>
+
       <BaseDocSection title="Emits">
         <table class="w-full text-sm border-collapse">
           <thead class="text-left text-stone-500">
@@ -34,7 +50,7 @@
 
       <BaseDocSection title="Example">
         <p class="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded p-3 mb-3">
-          BaseMediaManager automatically fetches from the consumer backend's <code>/api/blobs</code> endpoint. In the standalone sandbox there is no backend, so you'll see the loading → empty state. In a running admin panel this renders the full media library.
+          BaseMediaManager automatically fetches from the consumer backend's <code>/api/blobs</code> endpoint and uploads (disk-only) to <code>/api/blobs/upload</code>. Use the <strong>Upload</strong> button or drag-and-drop files anywhere on the manager to add them to the current folder; <strong>New Folder</strong> creates a virtual folder that persists once a file is uploaded into it. In the standalone sandbox there is no backend, so you'll see the loading → empty state and uploads will fail — exercise the full flow in a running admin panel (<code>template</code>).
         </p>
         <BaseDocFunctionalityPreview>
           <div class="h-[500px]">
